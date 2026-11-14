@@ -42,15 +42,16 @@ against 33.2% for the J-lens. Ayonrinde & Lindsey report 35.7% → 55.2% on Qwen
 gain is +4.2 points and its CI includes zero. Most of it comes from the LRP backward pass (J-lens
 → R-lens, +3.3 points). Jacobian filtering with learned weights adds +1.0 point (R-lens → J++).
 The weights fit the 47 fitting items much better than they generalise: fitting-split recall is
-0.500, against 0.374 held out. Over five fresh splits (§5.3), J++'s lead over the R-lens shrinks
-to 0.6 points.
+0.500, against 0.374 held out. Over 25 fresh splits (§5.3–5.4), J++ leads the R-lens by 2.2 points,
+so about a third of its gain comes from the learned weights.
 
-**Labels are not needed to match J++ at this scale.** Routing each residual through its own
+**On this split, labels are not needed to match J++.** Routing each residual through its own
 LRP expert, shrunk toward the pooled map, needs no labelled data. It matches J++ to within a
 point (−0.005 for the variant the fitting split selected, −0.001 for count-adaptive shrinkage;
 both CIs about ±0.05). Learning the expert weights from future tokens instead of labels (SS-J++)
 recovers only the J-lens level (0.331). The semi-supervised variant is indistinguishable from J++
-(−0.011 [−0.029, +0.007]).
+(−0.011 [−0.029, +0.007]). Over 25 fresh splits, though, the routed lens trails J++ by 1.6 points
+(§5.4).
 
 **The broadcast lens alone loses information but complements the J-lens.** Removing the
 self-target terms cuts the lens's recall by a third (0.332 → 0.217). Removing the identity path evidently costs

@@ -67,6 +67,9 @@ def grid(ax, axis="y"):
 
 
 def panel(ax, letter, title):
+    if not letter:
+        ax.set_title(title, loc="left", color=INK, pad=4)
+        return
     ax.set_title(rf"$\mathbf{{({letter})}}$  {title}", loc="left", color=INK, pad=4)
 
 
@@ -140,23 +143,19 @@ if r1:
     fig.subplots_adjust(bottom=0.2, wspace=0.08)
     save(fig, "fig_jpp")
 
-# ================================================================ Figure: round 2 forest plot + bridge
-r2 = load("jpp_splits_round2.json")
-if r2 and "confirmatory" in r2:
-    conf = r2["confirmatory"]
-    seeds = [s for s in r2["seeds"] if s != 0]
-    cands = ["Bagged-J++", "RB-mix", "JppB", "Routed-J++-a200"]
-    others = ["Routed-LRP-a200", "Routed-LRP-s0.5", "R-lens", "JB-mix", "J-lens", "logit"]
-    lab2 = {"Bagged-J++": "Bagged-J++", "RB-mix": "RB-mix", "JppB": "JppB", "Routed-J++-a200": "Routed-J++",
-            "Routed-LRP-a200": r"routed LRP ($\kappa$=200)", "Routed-LRP-s0.5": r"routed LRP ($\lambda$=0.5)",
-            "R-lens": "R-lens", "JB-mix": "JB-mix", "J-lens": "J-lens", "logit": "logit lens"}
+# ================================================================ Figures: rounds 2 and 3 (forest plots, bridge)
+LAB2 = {"Bagged-J++": "Bagged-J++", "RB-mix": "RB-mix", "JppB": "JppB", "Routed-J++-a200": "Routed-J++",
+        "RLB-mix": "RLB-mix", "Routed-LRP-a200": r"routed LRP ($\kappa$=200)",
+        "Routed-LRP-s0.5": r"routed LRP ($\lambda$=0.5)", "R-lens": "R-lens", "JB-mix": "JB-mix",
+        "J-lens": "J-lens", "logit": "logit lens", "LRP-B-lens": "LRP broadcast lens"}
+
+
+def forest(ax, res, seeds, cands, others, letter, title, min_wins):
+    conf = res["confirmatory"]
 
     def diffs(n):
-        return [100 * r2["per_seed"][str(s)]["results"][n]["diff_vs_jpp"]["diff"] for s in seeds]
+        return [100 * res["per_seed"][str(s)]["results"][n]["diff_vs_jpp"]["diff"] for s in seeds]
 
-    fig = plt.figure(figsize=(FULL, 2.85))
-    gs = fig.add_gridspec(1, 2, width_ratios=[1.55, 1], wspace=0.45)
-    ax = fig.add_subplot(gs[0])
     rows = cands + [None] + others
     y = np.arange(len(rows))[::-1].astype(float)
     ax.axvline(0, color=INK, lw=0.7, zorder=1)
@@ -168,16 +167,17 @@ if r2 and "confirmatory" in r2:
         ds = diffs(n)
         c = SLOT[0] if n in cands else GREY
         ax.plot([min(ds), max(ds)], [yi, yi], color=c, lw=0.9, alpha=0.7, zorder=2)
-        ax.scatter(ds, [yi] * len(ds), s=9, color=c, alpha=0.55, edgecolor="none", zorder=3)
+        ax.scatter(ds, [yi] * len(ds), s=8 if len(ds) > 8 else 9, color=c, alpha=0.45 if len(ds) > 8 else 0.55,
+                   edgecolor="none", zorder=3)
         ax.plot(conf[n]["mean_diff"] * 100, yi, marker="|", ms=9, mew=1.8, color=INK if n in cands else INK2,
                 zorder=4)
         ties = sum(x == 0 for x in ds)
         w = f"{conf[n]['wins']}/{conf[n]['n']}" + (f" +{ties} tie" if ties else "")
-        meets = n in cands and conf[n]["mean_diff"] > 0 and conf[n]["wins"] >= 4
+        meets = n in cands and conf[n]["mean_diff"] > 0 and conf[n]["wins"] >= min_wins
         ax.text(1.02, yi, w, transform=ax.get_yaxis_transform(), va="center", fontsize=7,
                 color=INK if meets else INK2, family="cmb10" if meets else "cmr10")
         ticks.append(yi)
-        labels.append(lab2[n])
+        labels.append(LAB2[n])
     ax.text(1.02, y[0] + 0.95, "wins", transform=ax.get_yaxis_transform(), fontsize=7, color=INK2)
     ax.set_yticks(ticks, labels)
     ax.set_ylim(y[-1] - 0.7, y[0] + 1.25)
@@ -185,25 +185,25 @@ if r2 and "confirmatory" in r2:
     ax.set_xlabel(r"held-out recall@10 minus J++ (points, same split)")
     ax.text(0.01, y[0] + 0.95, "pre-registered candidates", color=SLOT[0], fontsize=6.8,
             transform=ax.get_yaxis_transform())
-    panel(ax, "a", "difference from J++ on five fresh splits")
+    panel(ax, letter, title)
     leg = [Line2D([], [], ls="", marker="o", ms=3, color=INK2, alpha=0.6, label="one split"),
            Line2D([], [], ls="", marker="|", ms=8, mew=1.8, color=INK, label="mean")]
-    ax.legend(handles=leg, loc="lower right", ncol=1, handletextpad=0.3)
+    ygap = y[len(cands)]
+    y0, y1 = ax.get_ylim()
+    ax.legend(handles=leg, loc="center left", ncol=2, handletextpad=0.3, columnspacing=1.0,
+              bbox_to_anchor=(0.0, (ygap - y0) / (y1 - y0)))
 
-    # bridge: where the gain over the J-lens comes from (means over seeds 1-5)
-    bx = fig.add_subplot(gs[1])
+
+def bridge(bx, per, letter, title, ylim):
+    held = {n: float(np.mean(v)) for n, v in per.items()}
+    steps = [("J-lens", "R-lens", "+LRP"), ("R-lens", "J++", "+weights"), ("J++", "Bagged-J++", "+bagging")]
     grid(bx)
-    names_b = ("J-lens", "R-lens", "J++", "Bagged-J++")
-    per = {n: np.array([100 * r2["per_seed"][str(s)]["results"][n]["held@10"] for s in seeds]) for n in names_b}
-    held = {n: float(per[n].mean()) for n in names_b}
-    steps = [("J-lens", "R-lens", "+LRP"), ("R-lens", "J++", "+weights"),
-             ("J++", "Bagged-J++", "+bagging")]
     bx.plot(0, held["J-lens"], marker="o", ms=5, color=SLOT[0], zorder=4)
     bx.text(0, held["J-lens"] - 0.5, f"{held['J-lens']:.1f}", ha="center", va="top", fontsize=7)
     prev_right = 0.0
-    for i, (a, b, lab_) in enumerate(steps, start=1):
+    for i, (a, b, _) in enumerate(steps, start=1):
         lo, hi = held[a], held[b]
-        dlt = per[b] - per[a]
+        dlt = np.array(per[b]) - np.array(per[a])
         bx.bar(i, hi - lo, bottom=lo, width=0.55, color=SLOT[0], alpha=0.85, edgecolor="white", lw=0.6, zorder=3)
         bx.plot([prev_right, i - 0.275], [lo, lo], color=MUTED, lw=0.6, ls=":", zorder=2)
         prev_right = i + 0.275
@@ -214,13 +214,35 @@ if r2 and "confirmatory" in r2:
     bx.plot([prev_right, last], [held["Bagged-J++"]] * 2, color=MUTED, lw=0.6, ls=":")
     bx.plot(last, held["Bagged-J++"], marker="o", ms=5, color=INK, zorder=4)
     bx.text(last, held["Bagged-J++"] + 0.35, f"{held['Bagged-J++']:.1f}", ha="center", va="bottom", fontsize=7)
-    bx.set_xticks(np.arange(last + 1), ["J-lens", *[s[2] for s in steps], "Bagged\nJ++"], fontsize=6.6)
-    bx.set_ylim(32.5, 43)
+    bx.set_xticks(np.arange(last + 1), ["J-lens", *[s[2] for s in steps], "Bagged\nJ++"], fontsize=6.4)
+    bx.set_ylim(*ylim)
     bx.set_ylabel("mean held-out recall@10 (%)")
-    panel(bx, "b", "where the gain comes from")
-    bx.text(0.0, -0.3, "axis starts at 32.5%; brackets: range over splits", transform=bx.transAxes,
+    panel(bx, letter, title)
+    bx.text(0.0, -0.3, f"axis starts at {ylim[0]:g}%; brackets: range over splits", transform=bx.transAxes,
             fontsize=6, color=INK2)
+
+
+r2, r3 = load("jpp_splits_round2.json"), load("jpp_splits_round3.json")
+if r2 and "confirmatory" in r2:
+    s2 = [s for s in r2["seeds"] if s != 0]
+    fig, ax = plt.subplots(figsize=(4.4, 2.85))
+    forest(ax, r2, s2, ["Bagged-J++", "RB-mix", "JppB", "Routed-J++-a200"],
+           ["Routed-LRP-a200", "Routed-LRP-s0.5", "R-lens", "JB-mix", "J-lens", "logit"],
+           "", "round 2: difference from J++ on five fresh splits", 4)
     save(fig, "fig_round2")
+if r3 and "confirmatory" in r3:
+    s3 = list(r3["seeds"])
+    fig = plt.figure(figsize=(FULL, 2.85))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.3, 1], wspace=0.5)
+    ax = fig.add_subplot(gs[0])
+    forest(ax, r3, s3, ["Bagged-J++", "RB-mix", "RLB-mix"],
+           ["Routed-LRP-a200", "R-lens", "J-lens", "LRP-B-lens", "logit"], "a", "round 3: twenty fresh splits", 16)
+    bx = fig.add_subplot(gs[1])
+    names_b = ("J-lens", "R-lens", "J++", "Bagged-J++")
+    per = {n: [100 * r2["per_seed"][str(s)]["results"][n]["held@10"] for s in s2] +
+              [100 * r3["per_seed"][str(s)]["results"][n]["held@10"] for s in s3] for n in names_b}
+    bridge(bx, per, "b", f"where J++'s gain comes from ({len(s2) + len(s3)} splits)", (32.5, 43.5))
+    save(fig, "fig_round3")
 
 # ================================================================ Figure: causal swaps
 sw, swm = load("swaps_main.json"), load("swaps_midband.json")

@@ -34,7 +34,7 @@ fitting-split recall is 1.0.
 search (`workspace_lens.fitting.condense_experts`) in three small ways. It masked excluded tokens
 to −10⁴ in each expert before combining, rather than to −∞ after. It took the surrogate's spread
 over non-excluded tokens rather than the full vocabulary. It broke ties between iterates by order
-rather than by surrogate value. Round 2 (§5.3) uses a faithful port for J++ and for every
+rather than by surrogate value. Rounds 2 and 3 (§5.3–5.4) use a faithful port for J++ and for every
 candidate, and round 2's seed-0 run gives faithful-port numbers on the round-1 split.
 *B-lens* (ours): the broadcast lens of §3.1, fitted on the same first 8 corpus prompts as the
 J-lens's n = 8 snapshot (the J-lens's recall is flat from n = 8 to n = 32; §5.1).

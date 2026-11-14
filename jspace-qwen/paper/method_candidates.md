@@ -25,7 +25,7 @@ instead of the pooled map, with λ_e = n_e/(n_e + 200).
 
 *RLB-mix* (round 3) is RB-mix with the B-lens replaced by an *LRP broadcast lens*: the broadcast
 estimator of §3.1 run through the R-Lens's LRP backward rules. At this scale the LRP rules account
-for nearly all of J++'s gain over the J-lens (§5.3). The question is whether they help the
+for about two-thirds of J++'s gain over the J-lens (§5.4). The question is whether they help the
 broadcast map too.
 
 Round 2 fixed the first four candidates, and round 3 fixed RLB-mix, each in a committed

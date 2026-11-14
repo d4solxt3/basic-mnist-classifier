@@ -8,7 +8,7 @@ import re
 HERE = os.path.dirname(os.path.abspath(__file__))
 ORDER = ["head.md", "intro.md", "related_work.md", "methods_head.md", "method_broadcast.md",
          "method_readouts.md", "method_estimators.md", "method_negative.md", "method_candidates.md", "setup.md",
-         "results_repro.md", "results_jpp.md", "results_round2.md", "results_swaps.md", "results_ignition.md", "results_pending.md", "limitations.md",
+         "results_repro.md", "results_jpp.md", "results_round2.md", "results_round3.md", "results_swaps.md", "results_ignition.md", "results_pending.md", "limitations.md",
          "conclusion.md", "references.md"]
 parts = []
 for name in ORDER:

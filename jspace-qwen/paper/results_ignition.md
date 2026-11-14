@@ -1,6 +1,6 @@
 <!-- Draft fragment; merged into paper.md. Source: results/ignition_main*.json/.npy, results/ignition_main_stats.json (scripts/ignition_stats.py). -->
 
-### 5.5 Ignition
+### 5.6 Ignition
 
 **Protocol.** For a concept pair (A, B) in a carrier sentence, the slot token's input embedding is
 replaced by α·e_A + (1 − α)·e_B for 21 values of α in [0, 1]. At the slot position and every second

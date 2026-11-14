@@ -23,42 +23,42 @@ budget (4 cores, 15 GB RAM, no GPU).
 | Causal content is confined to that band | every 5-layer window from layer 3 to 19 beats the readout band (43–48% vs 28%; exploratory) | not at 0.6B |
 | Ignition-like switching | the network sharpens competing concepts, but progressively with depth and as much through the logit lens | partly |
 | Implicit concepts are readable | ≤1% recall on association and rhyme plans | not at 0.6B |
-| J++ makes readouts far more faithful | +5.5 points over the J-lens, nearly all from the LRP backward pass | much smaller |
-| J++'s learned expert weights add substantially | +0.6 points over the plain LRP lens; they overfit | not at 0.6B |
+| J++ makes readouts far more faithful | +6.7 points over the J-lens (25 splits), about two-thirds from the LRP backward pass | much smaller |
+| J++'s learned expert weights add substantially | +2.2 points over the plain LRP lens; they overfit, and no pre-registered change beats them | modestly |
 
 Figures are in `paper/figures/` (`scripts/figures.py`); the method schematic is
 `paper/arxiv/figures/schematic.tex`.
 
 ## Results so far
 
-**Round 2 (pre-registered, `paper/prereg_round2.md`).** Five fresh stratified splits (seeds 1–5).
-On each split every label-dependent weight is refitted on 47 fitting items, and every lens is
-scored on 203 held-out items, under the J++ protocol (correctness filter, Readout Filtering, best
-of 7 layers). `results/jpp_splits_round2.json`:
+**J++ is not beaten.** Two pre-registered rounds tested improvements on fresh stratified splits.
+On each split every label-dependent weight is refitted on 47 fitting items, and every lens is scored
+on 203 held-out items, under the J++ protocol.
 
-| Lens | labels? | mean held-out recall@10 | mean Δ vs J++ [range] | split wins |
+**Round 3** (`paper/prereg_round3.md`; 20 new splits; win = positive mean difference and ≥16/20
+wins; `results/jpp_splits_round3.json`):
+
+| Lens | labels? | mean held-out recall@10 | mean Δ vs J++ [range] | wins/ties/losses |
 |---|---|---|---|---|
-| logit lens | no | 0.285 | −0.107 [−0.127, −0.083] | 0/5 |
-| J-lens | no | 0.338 | −0.055 [−0.084, −0.036] | 0/5 |
-| R-lens (LRP) | no | 0.386 | −0.006 [−0.023, +0.010] | 2/5 |
-| Routed LRP experts, adaptive shrinkage (ours) | no | 0.393 | +0.000 [−0.015, +0.014] | 3/5 |
-| **J++** | yes | 0.392 | — | — |
-| JppB: J++ + broadcast lens (ours) | yes | 0.396 | +0.004 [−0.017, +0.029] | 3/5 |
-| Routed J++ (ours) | yes | 0.380 | −0.013 [−0.034, −0.003] | 0/5 |
-| **RB-mix: R-lens + broadcast lens, 2 weights/layer (ours)** | yes | 0.398 | **+0.006** [+0.000, +0.023] | **4/5** + 1 tie |
-| **Bagged J++ (ours)** | yes | **0.403** | **+0.010** [−0.030, +0.058] | **4/5** |
-| broadcast lens alone (ours) | no | 0.210 | −0.183 | 0/5 |
+| Bagged J++ (round-2 winner) | yes | 0.407 | +0.003 [−0.029, +0.054] | 11/1/8 |
+| **J++** | yes | 0.404 | — | — |
+| RB-mix (round-2 winner) | yes | 0.401 | −0.004 [−0.063, +0.035] | 7/0/13 |
+| RLB-mix: R-lens + LRP broadcast lens (new) | yes | 0.400 | −0.004 [−0.072, +0.044] | 9/0/11 |
+| routed LRP experts (no labels) | no | 0.385 | −0.019 [−0.080, +0.033] | 3/0/17 |
+| R-lens (LRP) | no | 0.378 | −0.026 [−0.088, +0.027] | 3/0/17 |
+| J-lens | no | 0.334 | −0.070 [−0.127, −0.036] | 0/0/20 |
 
-Win criterion fixed in advance: a positive mean difference and at least 4/5 split wins.
+- **No candidate meets the criterion.** The two winners of round 2 (`paper/prereg_round2.md`;
+  5 splits; Bagged J++ +1.0 points, RB-mix +0.6) were within noise.
+- **Where J++'s gain over the J-lens comes from** (25 splits pooled):
+  - 4.5 points from the LRP backward pass;
+  - 2.2 points from the expert weights.
+- **What bagging does.** It halves J++'s fit/held-out gap (9.8 → 4.0 points) without raising
+  held-out recall.
+- **Out of pool.** On the 289 items the model answers wrongly, the plain R-lens beats J++ (+0.9
+  points, 15/20).
 
-- **Two candidates meet the criterion.** Bagged J++ and RB-mix both do, by small margins: per-split
-  paired 95% intervals are about ±3–6 points, and all splits share the same 250-item pool.
-- **What both do.** Each reduces J++'s overfitting to its 47 labelled items.
-- **Where J++'s gain comes from.** At this scale nearly all of J++'s gain over the J-lens comes
-  from the LRP backward pass (R-lens).
-
-Round 1 (one split; `results/jpp_compare_main.json`) and the all-items panel are in §5.2 of the
-paper.
+Round 1 (one split) and the all-items panel are in §5.2 of the paper.
 
 ## Status
 
@@ -74,7 +74,7 @@ paper.
 | J++ head-to-head, round 2 (multi-split, pre-registered; `results/jpp_splits_round2.json`) | done |
 | Clamp-swap causal evals (`results/swaps_*.json`) | done |
 | Ignition (first pass done; linear-interpolation control running) | running |
-| J++ head-to-head, round 3 (pre-registered, 20 splits) | running |
+| J++ head-to-head, round 3 (pre-registered, 20 splits; `results/jpp_splits_round3.json`) | done |
 | Sketch estimators: learning curves vs compute | queued |
 
 ## Layout

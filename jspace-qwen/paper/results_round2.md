@@ -49,21 +49,14 @@ excluded from the confirmatory summary. Rows marked * are the pre-registered can
   It gains 0.6 points, wins on four splits, ties on the fifth, and is never behind J++.
 - **JppB** (+0.4, 3/5) and **Routed-J++-a200** (−1.3, 0/5) do not meet the criterion.
 
-By the rule we fixed in advance, Bagged-J++ and RB-mix beat J++ on this benchmark (Figure 4).
+By the rule we fixed in advance, Bagged-J++ and RB-mix beat J++ on this benchmark (Figure 4). Round 3
+(§5.4) re-tested both on twenty more splits, and neither replicated.
 
 ![Round 2: per-split paired differences against J++](figures/fig_round2.png)
 
-**Figure 4.**
-
-- (a) Held-out recall@10 minus J++'s on the same split, for each of the five confirmatory splits
-  (dots), with the mean (bar). Split wins are on the right, in bold where the pre-registered
-  criterion is met. Shaded rows are the pre-registered candidates.
-- (b) Where the gain over the J-lens comes from, as means over the five splits:
-  - the LRP backward pass (J-lens → R-lens): +4.9 points;
-  - learned expert weights (R-lens → J++): +0.6;
-  - bagging (J++ → Bagged-J++): +1.0.
-
-  Brackets give each step's range over splits.
+**Figure 4.** Round 2: held-out recall@10 minus J++'s on the same split, for each of the five
+confirmatory splits (dots), with the mean (bar). Split wins are on the right, in bold where the
+pre-registered criterion is met. Shaded rows are the pre-registered candidates.
 
 **The margins are small relative to the noise. We read them as "at least as good as J++", not
 as a clear improvement.** Three facts argue for caution:
@@ -117,16 +110,8 @@ against 0.374 with the round-1 port. The difference is within noise, but it reor
 round-1 comparison: the label-free routed LRP lens (0.373) is now 0.6 points *above* J++ on
 that split. Over seeds 1–5 it ties J++ exactly on average (+0.000, 3/5 wins).
 
-**How much do learned weights add at this scale?** Across the five splits J++ improves on the
-J-lens by 5.5 points (range 3.6–8.4) and on the R-lens by only 0.6 (range −1.0 to +2.3; J++
-ahead on three splits). The secondary all-items panel (§5.2) even has the R-lens ahead of J++.
-At 0.6B parameters, essentially all of J++'s advantage over the J-lens comes from the LRP
-backward pass; the learned expert weights add little or nothing.
-
-The improvements that survive the multi-split test are those that make the weight search more
-stable:
-
-- averaging over resamples (Bagged-J++);
-- shrinking it to two weights over complementary maps (RB-mix).
-
-Making the search richer does not help: Routed-J++-a200 loses on every split.
+**How much do learned weights add at this scale?** Across these five splits J++ improves on the
+J-lens by 5.5 points (range 3.6–8.4) but on the R-lens by only 0.6 (range −1.0 to +2.3). On these
+splits alone, almost all of J++'s advantage seemed to come from the LRP backward pass. Round 3
+(§5.4) revises this: over twenty more splits the expert weights add 2.6 points, about a third of
+J++'s gain.

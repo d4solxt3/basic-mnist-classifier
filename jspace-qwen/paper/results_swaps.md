@@ -1,6 +1,6 @@
 <!-- Draft fragment; merged into paper.md. Source: results/swaps_main*.json, results/swaps_midband*.json, results/swap_stats.json (scripts/swap_stats.py). -->
 
-### 5.4 Causal swaps
+### 5.5 Causal swaps
 
 **Protocol.** We follow the reference clamp swap. At every layer of a band, and at every position
 after the first, we take the unit lens directions u_s and u_t of a source and a target token. We

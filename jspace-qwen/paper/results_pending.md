@@ -1,3 +1,3 @@
-### 5.6 Sketch estimators
+### 5.7 Sketch estimators
 
 [PENDING: results/curves.json.]

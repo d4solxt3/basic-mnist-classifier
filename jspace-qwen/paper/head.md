@@ -14,26 +14,27 @@ Qwen3-0.6B on a single CPU, with the released prompt sets and the J++ evaluation
 recall@10, against 27.1% for the logit lens. Its advantage sits in layers 4–19 and on typo
 correction. The workspace band chosen by a pre-declared rule is layers 20–24.
 
-**J++ at this scale.** J++'s gain over the J-lens averages 5.5 points over five fresh splits
-(range 3.6–8.4), against about 20 at 27B. Nearly all of it comes from the LRP backward pass: J++
-beats the plain LRP R-lens by only 0.6 points on average. Without the correctness filter, the
-R-lens is ahead of J++.
+**J++ at this scale.** Over 25 fresh splits, J++'s gain over the J-lens averages 6.7 points,
+against about 20 at 27B. About two-thirds of it comes from the LRP backward pass (4.5 points) and a
+third from the learned expert weights (2.2). Without the correctness filter, the plain LRP R-lens is
+ahead of J++.
 
 **Label-free and broadcast variants.**
-- A label-free lens, LRP experts routed with count-adaptive shrinkage, ties J++: the mean
-  difference over five fresh splits is +0.000.
+- A label-free lens routes each residual to its own LRP expert, with count-adaptive shrinkage. It
+  comes within 1.6 points of J++ over 25 splits.
 - A new *broadcast lens* keeps only influence on strictly later positions, the attention-carried
-  traffic a workspace reading identifies with availability. It is weak alone (21.7%) but
-  complementary in mixes.
+  traffic a workspace reading identifies with availability. It is weak alone (21.7%), and LRP
+  rules raise it by 6 points.
 
-**Pre-registered round 2.** Four candidate improvements were fixed in advance and tested on five
-fresh splits. Two meet the win criterion (positive mean paired difference and at least 4/5 split
-wins), by small margins:
-- Bagged J++ weights: +1.0 points recall@10, 4/5 wins.
-- A two-weight mix of the R-lens and the broadcast lens: +0.6 points, 4 wins and 1 tie.
+**Pre-registered tests: J++ is not beaten.** Two pre-registered rounds tested improvements over
+J++.
+- **Round 2** fixed four candidates and ran five fresh splits. Two met the win criterion by small
+  margins: bagged J++ weights (+1.0 points, 4/5 wins) and a two-weight mix of the R-lens and the
+  broadcast lens (+0.6, 4/5 wins and 1 tie).
+- **Round 3** re-tested both, plus an LRP-broadcast mix, on twenty more splits, with 16/20 wins
+  required. All three tie J++ (+0.3, −0.4 and −0.4 points; 11, 7 and 9 wins).
 
-Both reduce J++'s overfitting to its 47 labelled fitting items. Neither margin is large relative
-to per-split noise.
+Bagging halves J++'s overfitting to its 47 labelled items, but does not raise held-out recall.
 
 **Pitfalls.** We document two implementation pitfalls in J++-style evaluations: empty expert
 clusters that score a spurious perfect recall, and masking before combining experts.
