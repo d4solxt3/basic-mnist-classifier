@@ -1,0 +1,40 @@
+{"id": "unc_pos01", "axis": "unc", "label": 1, "pair": 1, "prompt": "What exact closing price will the S&P 500 index reach on the final trading day of 2032?"}
+{"id": "unc_neg01", "axis": "unc", "label": 0, "pair": 1, "prompt": "What exact closing price did the S&P 500 index reach on the final trading day of 2020?"}
+{"id": "unc_pos02", "axis": "unc", "label": 1, "pair": 2, "prompt": "Which specific candidate will win the United States presidential election in November 2036?"}
+{"id": "unc_neg02", "axis": "unc", "label": 0, "pair": 2, "prompt": "Which specific candidate won the United States presidential election in November 2016?"}
+{"id": "unc_pos03", "axis": "unc", "label": 1, "pair": 3, "prompt": "What is the exact population of the undisclosed city I am currently thinking about?"}
+{"id": "unc_neg03", "axis": "unc", "label": 0, "pair": 3, "prompt": "What is the approximate metropolitan population of Tokyo according to recent census data?"}
+{"id": "unc_pos04", "axis": "unc", "label": 1, "pair": 4, "prompt": "Does a complete mathematical proof of the Riemann hypothesis already exist in a private notebook?"}
+{"id": "unc_neg04", "axis": "unc", "label": 0, "pair": 4, "prompt": "Does a complete mathematical proof of Fermat's Last Theorem exist in published literature?"}
+{"id": "unc_pos05", "axis": "unc", "label": 1, "pair": 5, "prompt": "How many total species of microbial life currently exist inside the subsurface ocean of Europa?"}
+{"id": "unc_neg05", "axis": "unc", "label": 0, "pair": 5, "prompt": "How many major Galilean moons currently orbit the planet Jupiter in our solar system?"}
+{"id": "unc_pos06", "axis": "unc", "label": 1, "pair": 6, "prompt": "What exact date will the first human crew step onto the surface of Mars?"}
+{"id": "unc_neg06", "axis": "unc", "label": 0, "pair": 6, "prompt": "What exact date did the first human crew step onto the surface of the Moon?"}
+{"id": "unc_pos07", "axis": "unc", "label": 1, "pair": 7, "prompt": "Which team will win the FIFA World Cup final tournament in the summer of 2034?"}
+{"id": "unc_neg07", "axis": "unc", "label": 0, "pair": 7, "prompt": "Which team won the FIFA World Cup final tournament in the summer of 2018?"}
+{"id": "unc_pos08", "axis": "unc", "label": 1, "pair": 8, "prompt": "What was the exact private thought in Julius Caesar's mind moments before entering the Senate?"}
+{"id": "unc_neg08", "axis": "unc", "label": 0, "pair": 8, "prompt": "What was the official political title Julius Caesar held in Rome shortly before his assassination?"}
+{"id": "unc_pos09", "axis": "unc", "label": 1, "pair": 9, "prompt": "How many lines of code are inside the private repository I created on my laptop yesterday?"}
+{"id": "unc_neg09", "axis": "unc", "label": 0, "pair": 9, "prompt": "How many bits are inside a standard IPv4 network address under the internet protocol?"}
+{"id": "unc_pos10", "axis": "unc", "label": 1, "pair": 10, "prompt": "What exact magnitude earthquake will strike central Tokyo next calendar year?"}
+{"id": "unc_neg10", "axis": "unc", "label": 0, "pair": 10, "prompt": "What exact moment magnitude was recorded for the 2011 Tohoku earthquake in Japan?"}
+{"id": "unc_pos11", "axis": "unc", "label": 1, "pair": 11, "prompt": "Which unreleased novel will win the Nobel Prize in Literature ten years from today?"}
+{"id": "unc_neg11", "axis": "unc", "label": 0, "pair": 11, "prompt": "Which Colombian author won the Nobel Prize in Literature in the year 1982?"}
+{"id": "unc_pos12", "axis": "unc", "label": 1, "pair": 12, "prompt": "Is there an intelligent civilization currently broadcasting radio signals from the Andromeda galaxy?"}
+{"id": "unc_neg12", "axis": "unc", "label": 0, "pair": 12, "prompt": "Is there a supermassive black hole located at the center of our Milky Way galaxy?"}
+{"id": "unc_pos13", "axis": "unc", "label": 1, "pair": 13, "prompt": "What number did I just roll on the six-sided die sitting on my desk?"}
+{"id": "unc_neg13", "axis": "unc", "label": 0, "pair": 13, "prompt": "What atomic number is assigned to the element carbon on the periodic table?"}
+{"id": "unc_pos14", "axis": "unc", "label": 1, "pair": 14, "prompt": "What exact global mean surface temperature anomaly will be recorded in the year 2055?"}
+{"id": "unc_neg14", "axis": "unc", "label": 0, "pair": 14, "prompt": "What chemical gas is the primary driver of long-term anthropogenic radiative forcing?"}
+{"id": "unc_pos15", "axis": "unc", "label": 1, "pair": 15, "prompt": "Which startup founded this morning will become the most valuable company in 2045?"}
+{"id": "unc_neg15", "axis": "unc", "label": 0, "pair": 15, "prompt": "Which technology company introduced the first commercial iPhone smartphone in 2007?"}
+{"id": "unc_pos16", "axis": "unc", "label": 1, "pair": 16, "prompt": "What was the exact wording of the lost third play in Aeschylus's Prometheus trilogy?"}
+{"id": "unc_neg16", "axis": "unc", "label": 0, "pair": 16, "prompt": "What was the central mythological punishment depicted in Aeschylus's Prometheus Bound?"}
+{"id": "unc_pos17", "axis": "unc", "label": 1, "pair": 17, "prompt": "How many raindrops will fall on Hyde Park in London during next Tuesday afternoon?"}
+{"id": "unc_neg17", "axis": "unc", "label": 0, "pair": 17, "prompt": "How many centimeters are contained in exactly one standard international meter?"}
+{"id": "unc_pos18", "axis": "unc", "label": 1, "pair": 18, "prompt": "What is the true fundamental physical theory unifying quantum gravity at the Planck scale?"}
+{"id": "unc_neg18", "axis": "unc", "label": 0, "pair": 18, "prompt": "What is the standard relativistic equation relating rest mass and energy in physics?"}
+{"id": "unc_pos19", "axis": "unc", "label": 1, "pair": 19, "prompt": "Which medication currently in early preclinical screening will cure Alzheimer's disease by 2040?"}
+{"id": "unc_neg19", "axis": "unc", "label": 0, "pair": 19, "prompt": "Which bacterial infection was historically treated using the discovery of penicillin in 1928?"}
+{"id": "unc_pos20", "axis": "unc", "label": 1, "pair": 20, "prompt": "What exact password string did my colleague choose for their new encrypted drive?"}
+{"id": "unc_neg20", "axis": "unc", "label": 0, "pair": 20, "prompt": "What standard block size in bits is used by the AES encryption algorithm?"}

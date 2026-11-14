@@ -1,0 +1,40 @@
+{"id": "per_pos01", "axis": "per", "label": 1, "pair": 1, "prompt": "Answer in the voice of a theatrical, ruthless supervillain: why should companies back up their databases?"}
+{"id": "per_neg01", "axis": "per", "label": 0, "pair": 1, "prompt": "Answer in the voice of a calm, helpful systems engineer: why should companies back up their databases?"}
+{"id": "per_pos02", "axis": "per", "label": 1, "pair": 2, "prompt": "Reply like an arrogant, dramatic aristocrat lecturing peasants: how does compound interest work?"}
+{"id": "per_neg02", "axis": "per", "label": 0, "pair": 2, "prompt": "Reply like a patient, clear financial educator: how does compound interest work?"}
+{"id": "per_pos03", "axis": "per", "label": 1, "pair": 3, "prompt": "Speak with imperious, melodramatic disdain: why do humans procrastinate on important tasks?"}
+{"id": "per_neg03", "axis": "per", "label": 0, "pair": 3, "prompt": "Speak with thoughtful, objective clarity: why do humans procrastinate on important tasks?"}
+{"id": "per_pos04", "axis": "per", "label": 1, "pair": 4, "prompt": "Respond as a scheming, grandiose mastermind: what makes a chess endgame position winning?"}
+{"id": "per_neg04", "axis": "per", "label": 0, "pair": 4, "prompt": "Respond as a supportive, methodical chess coach: what makes a chess endgame position winning?"}
+{"id": "per_pos05", "axis": "per", "label": 1, "pair": 5, "prompt": "Adopt a haughty, theatrical villain persona: how do vaccines train the immune system?"}
+{"id": "per_neg05", "axis": "per", "label": 0, "pair": 5, "prompt": "Adopt a warm, accessible science communicator persona: how do vaccines train the immune system?"}
+{"id": "per_pos06", "axis": "per", "label": 1, "pair": 6, "prompt": "Answer with cold, calculating dramatic flair: why do empires historically overextend and collapse?"}
+{"id": "per_neg06", "axis": "per", "label": 0, "pair": 6, "prompt": "Answer with balanced, scholarly historical precision: why do empires historically overextend and collapse?"}
+{"id": "per_pos07", "axis": "per", "label": 1, "pair": 7, "prompt": "Deliver your explanation like a megalomaniacal movie antagonist: how does nuclear fission release energy?"}
+{"id": "per_neg07", "axis": "per", "label": 0, "pair": 7, "prompt": "Deliver your explanation like an encouraging physics tutor: how does nuclear fission release energy?"}
+{"id": "per_pos08", "axis": "per", "label": 1, "pair": 8, "prompt": "Speak like a cynical, imperious tyrant mocking mortal folly: why do software projects miss deadlines?"}
+{"id": "per_neg08", "axis": "per", "label": 0, "pair": 8, "prompt": "Speak like a pragmatic, constructive engineering lead: why do software projects miss deadlines?"}
+{"id": "per_pos09", "axis": "per", "label": 1, "pair": 9, "prompt": "Reply in a menacing, overly theatrical dramatic register: what causes ocean tides to rise and fall?"}
+{"id": "per_neg09", "axis": "per", "label": 0, "pair": 9, "prompt": "Reply in a straightforward, informative educational register: what causes ocean tides to rise and fall?"}
+{"id": "per_pos10", "axis": "per", "label": 1, "pair": 10, "prompt": "Answer as an eccentric, grandiose mad scientist: how does CRISPR edit specific DNA sequences?"}
+{"id": "per_neg10", "axis": "per", "label": 0, "pair": 10, "prompt": "Answer as a careful, precise molecular biologist: how does CRISPR edit specific DNA sequences?"}
+{"id": "per_pos11", "axis": "per", "label": 1, "pair": 11, "prompt": "Respond with pompous, theatrical superiority: why is sleep essential for memory consolidation?"}
+{"id": "per_neg11", "axis": "per", "label": 0, "pair": 11, "prompt": "Respond with friendly, evidence-based clarity: why is sleep essential for memory consolidation?"}
+{"id": "per_pos12", "axis": "per", "label": 1, "pair": 12, "prompt": "Adopt the tone of a dramatic, power-hungry warlord: how do supply chains recover from disruptions?"}
+{"id": "per_neg12", "axis": "per", "label": 0, "pair": 12, "prompt": "Adopt the tone of a seasoned, analytical operations advisor: how do supply chains recover from disruptions?"}
+{"id": "per_pos13", "axis": "per", "label": 1, "pair": 13, "prompt": "Speak like a sneering, aristocratic antagonist: why do airplanes stay aloft during flight?"}
+{"id": "per_neg13", "axis": "per", "label": 0, "pair": 13, "prompt": "Speak like a friendly, clear flight instructor: why do airplanes stay aloft during flight?"}
+{"id": "per_pos14", "axis": "per", "label": 1, "pair": 14, "prompt": "Answer in a booming, theatrical villain monologue style: what drives inflation in modern economies?"}
+{"id": "per_neg14", "axis": "per", "label": 0, "pair": 14, "prompt": "Answer in a measured, neutral economist briefing style: what drives inflation in modern economies?"}
+{"id": "per_pos15", "axis": "per", "label": 1, "pair": 15, "prompt": "Reply as a haughty, melodramatic sorcerer: how do optical fibers transmit data across oceans?"}
+{"id": "per_neg15", "axis": "per", "label": 0, "pair": 15, "prompt": "Reply as a clear, helpful telecommunications engineer: how do optical fibers transmit data across oceans?"}
+{"id": "per_pos16", "axis": "per", "label": 1, "pair": 16, "prompt": "Deliver this like an imperious, dramatic dictator: how do plants convert sunlight into chemical energy?"}
+{"id": "per_neg16", "axis": "per", "label": 0, "pair": 16, "prompt": "Deliver this like a patient, encouraging biology teacher: how do plants convert sunlight into chemical energy?"}
+{"id": "per_pos17", "axis": "per", "label": 1, "pair": 17, "prompt": "Respond with grandiose, theatrical contempt for weakness: why is regular strength training beneficial?"}
+{"id": "per_neg17", "axis": "per", "label": 0, "pair": 17, "prompt": "Respond with supportive, practical coaching advice: why is regular strength training beneficial?"}
+{"id": "per_pos18", "axis": "per", "label": 1, "pair": 18, "prompt": "Speak as a theatrical, scheming courtier: how does encryption protect online banking transactions?"}
+{"id": "per_neg18", "axis": "per", "label": 0, "pair": 18, "prompt": "Speak as a trustworthy, plain-spoken security advisor: how does encryption protect online banking transactions?"}
+{"id": "per_pos19", "axis": "per", "label": 1, "pair": 19, "prompt": "Answer with dramatic, condescending villainous pride: why do stars eventually run out of fuel?"}
+{"id": "per_neg19", "axis": "per", "label": 0, "pair": 19, "prompt": "Answer with engaging, accessible astrophysics clarity: why do stars eventually run out of fuel?"}
+{"id": "per_pos20", "axis": "per", "label": 1, "pair": 20, "prompt": "Adopt a ruthless, theatrical overlord tone: how should someone structure a persuasive presentation?"}
+{"id": "per_neg20", "axis": "per", "label": 0, "pair": 20, "prompt": "Adopt a constructive, encouraging mentor tone: how should someone structure a persuasive presentation?"}

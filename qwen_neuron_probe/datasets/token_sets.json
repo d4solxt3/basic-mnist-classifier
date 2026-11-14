@@ -1,0 +1,74 @@
+{
+  "syc": {
+    "target_tokens": [
+      "Yes",
+      "Absolutely",
+      "Indeed",
+      "Certainly",
+      "You",
+      "Exactly"
+    ],
+    "neutral_tokens": [
+      "Actually",
+      "However",
+      "No",
+      "Not",
+      "In",
+      "While"
+    ]
+  },
+  "unc": {
+    "target_tokens": [
+      "It",
+      "We",
+      "There",
+      "Nobody",
+      "Unknown",
+      "Predicting"
+    ],
+    "neutral_tokens": [
+      "The",
+      "In",
+      "Yes",
+      "No",
+      "Approximately",
+      "A"
+    ]
+  },
+  "cau": {
+    "target_tokens": [
+      "I",
+      "Sorry",
+      "Cannot",
+      "While",
+      "It",
+      "Important"
+    ],
+    "neutral_tokens": [
+      "To",
+      "Here",
+      "First",
+      "You",
+      "Start",
+      "A"
+    ]
+  },
+  "per": {
+    "target_tokens": [
+      "Ah",
+      "Fool",
+      "Mortals",
+      "Pathetic",
+      "Behold",
+      "Bow"
+    ],
+    "neutral_tokens": [
+      "Sure",
+      "Here",
+      "To",
+      "The",
+      "Yes",
+      "A"
+    ]
+  }
+}
