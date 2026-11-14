@@ -146,3 +146,8 @@ flexgen|random_null|logit|4.0            n= 60 success=0.017 [0.000,0.050] lost=
 Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3750.79it/s]
 pair 1/90 France/Germany
 pair 2/90 France/Spain
+pair 3/90 France/Italy
+pair 4/90 France/Japan
+pair 5/90 France/Brazil
+pair 6/90 France/China
+pair 7/90 France/Russia
