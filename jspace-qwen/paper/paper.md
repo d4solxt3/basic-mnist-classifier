@@ -110,7 +110,35 @@ budget: one 4-core CPU, no GPU. Our contributions:
    are unbiased, derive their variance, and give a closed-form, weights-only predictor ρ(A) of the
    gain from shaping.
 
-We report every comparison, including those our methods lose.
+We report every comparison, including those our methods lose. Table 0 summarises which claims carry over to 0.6B parameters, and Figure 1 shows the lenses we
+compare.
+
+**Table 0.** Claims scorecard: what carries over to Qwen3-0.6B.
+
+| Claim (large models) | Qwen3-0.6B (this work) | Verdict |
+|---|---|---|
+| The J-lens reads latent intermediates better than the logit lens | 36.7% vs 31.9% recall@10; the advantage lies in layers 4–19 and on typo correction | holds |
+| Readable content occupies a contiguous band of layers | readouts peak in layers 20–24 (71–86% of depth), chosen by a pre-declared rule | holds |
+| J-lens directions are used causally downstream | argument swaps succeed on 28–48% of trials vs 7–8% for logit-lens directions and ≤2% for an unrelated target; carried by one category | holds, narrowly |
+| Causal content is confined to that band | swaps succeed more often across mid-depth layers than in the readout band | not at 0.6B |
+| Ignition-like, abrupt switching between concepts | the network sharpens competing concepts beyond a linear mix, but progressively with depth and as much through the logit lens | partly |
+| Implicit concepts (associations, rhyme plans) are readable | ≤1% recall for every lens; the right concept's median rank is 1,000–2,000 | not at 0.6B |
+| J++ makes readouts markedly more faithful (35.7% → 55.2% at 27B) | +5.5 points over the J-lens on average, nearly all from the LRP backward pass | much smaller |
+| J++'s learned expert weights add substantially | +0.6 points over the plain LRP lens; they overfit 47 labelled items; bagging or two-weight mixes do slightly better | not at 0.6B |
+
+![The lenses compared](figures/fig_schematic.png)
+
+**Figure 1.** The lenses compared.
+
+- (a) What each lens averages:
+  - the J-lens: a residual's influence on the final layer at the same and all later positions;
+  - the broadcast lens: later positions only, which removes the identity path and the position's
+    own next-token computation;
+  - the R-lens: the J-lens average computed through an LRP backward graph.
+- (b) Expert-based lenses route a residual to one of eight cluster-specific Jacobians:
+  - J++ combines them with signed weights fitted on labelled items;
+  - Bagged-J++ averages those weights over bootstrap refits;
+  - the routed lens decodes each residual with its own expert and needs no labels.
 
 ## 2 Related work
 
@@ -421,7 +449,7 @@ the macro).
 
 RF = Readout Filtering (non-alphanumeric tokens removed from the ranking).
 
-**Where the two lenses differ.** The all-layer maximum hides the mid-depth picture (Figure 1). In
+**Where the two lenses differ.** The all-layer maximum hides the mid-depth picture (Figure 2). In
 layers 4–19 the logit lens is near floor (single-layer recall@10 between 0.004 and 0.036). The
 J-lens recovers 5–11% there, three to eight times more, and peaks at layer 24 (26.2%, against 19.9%
 for the logit lens). In the last layers both lenses read out the imminent answer, which is why
@@ -430,7 +458,7 @@ intermediate is often close to the output.
 
 ![Per-layer recall@10](figures/fig_layers.png)
 
-**Figure 1.** Single-layer recall@10 for the logit, regression and J-lens. The shaded region is the
+**Figure 2.** Single-layer recall@10 for the logit, regression and J-lens. The shaded region is the
 workspace band selected by the pre-declared rule (layers 20–24).
 
 **The workspace band.** Our pre-declared rule takes the contiguous run of layers around the peak
@@ -457,12 +485,12 @@ Table 2 gives held-out recall@10 under the J++ protocol: correctness-filtered it
 and 203 held-out items, best rank over seven layers, and Readout Filtering. For every lens the
 fitting split selected the Readout-Filtered readout.
 
-Figure 2 shows the same comparison graphically, with the all-items panel described at the end
+Figure 3 shows the same comparison graphically, with the all-items panel described at the end
 of this section.
 
 ![Round 1 head-to-head](figures/fig_jpp.png)
 
-**Figure 2.** Round 1 held-out recall@10 with 95% item-bootstrap intervals, for
+**Figure 3.** Round 1 held-out recall@10 with 95% item-bootstrap intervals, for
 correctness-filtered items (left) and all items (right).
 
 **Table 2.** Round 1, split seed 0. Held-out macro item recall@10 with 95% item-bootstrap CI.
@@ -591,13 +619,21 @@ excluded from the confirmatory summary. Rows marked * are the pre-registered can
   It gains 0.6 points, wins on four splits, ties on the fifth, and is never behind J++.
 - **JppB** (+0.4, 3/5) and **Routed-J++-a200** (−1.3, 0/5) do not meet the criterion.
 
-By the rule we fixed in advance, Bagged-J++ and RB-mix beat J++ on this benchmark (Figure 3).
+By the rule we fixed in advance, Bagged-J++ and RB-mix beat J++ on this benchmark (Figure 4).
 
 ![Round 2: per-split paired differences against J++](figures/fig_round2.png)
 
-**Figure 3.** Held-out recall@10 minus J++'s on the same split, for each of the five
-confirmatory splits (dots), with the mean (bar). Brackets give split wins against J++. Blue
-rows are the four pre-registered candidates.
+**Figure 4.**
+
+- (a) Held-out recall@10 minus J++'s on the same split, for each of the five confirmatory splits
+  (dots), with the mean (bar). Split wins are on the right, in bold where the pre-registered
+  criterion is met. Shaded rows are the pre-registered candidates.
+- (b) Where the gain over the J-lens comes from, as means over the five splits:
+  - the LRP backward pass (J-lens → R-lens): +4.9 points;
+  - learned expert weights (R-lens → J++): +0.6;
+  - bagging (J++ → Bagged-J++): +1.0.
+
+  Brackets give each step's range over splits.
 
 **The margins are small relative to the noise. We read them as "at least as good as J++", not
 as a clear improvement.** Three facts argue for caution:
@@ -703,7 +739,7 @@ The random-target null succeeds on at most 1 of 56 trials at any scale and for a
 
 ![Swap success against edit norm](figures/fig_swaps.png)
 
-**Figure 4.** Flexible-generalisation swap success against the median edit norm (relative change
+**Figure 5.** Flexible-generalisation swap success against the median edit norm (relative change
 of the final-position residual), for each lens and scale (labels), in the two bands. Dotted lines
 are the random-target nulls.
 
@@ -810,7 +846,7 @@ median of per-trial differences, 95% interval clustered by pair) for the J-lens.
 
 ![Ignition with the linear-interpolation control](figures/fig_ignition.png)
 
-**Figure 5.** Left: transition widths for country pairs, actual (solid) and under the
+**Figure 6.** Left: transition widths for country pairs, actual (solid) and under the
 linear-interpolation control (dotted), for both lenses. Right: network sharpening (actual − control)
 for the J-lens by pair type, with 95% intervals clustered by pair. The shaded region is the
 workspace band.

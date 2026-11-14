@@ -25,7 +25,7 @@ the macro).
 
 RF = Readout Filtering (non-alphanumeric tokens removed from the ranking).
 
-**Where the two lenses differ.** The all-layer maximum hides the mid-depth picture (Figure 1). In
+**Where the two lenses differ.** The all-layer maximum hides the mid-depth picture (Figure 2). In
 layers 4–19 the logit lens is near floor (single-layer recall@10 between 0.004 and 0.036). The
 J-lens recovers 5–11% there, three to eight times more, and peaks at layer 24 (26.2%, against 19.9%
 for the logit lens). In the last layers both lenses read out the imminent answer, which is why
@@ -34,7 +34,7 @@ intermediate is often close to the output.
 
 ![Per-layer recall@10](figures/fig_layers.png)
 
-**Figure 1.** Single-layer recall@10 for the logit, regression and J-lens. The shaded region is the
+**Figure 2.** Single-layer recall@10 for the logit, regression and J-lens. The shaded region is the
 workspace band selected by the pre-declared rule (layers 20–24).
 
 **The workspace band.** Our pre-declared rule takes the contiguous run of layers around the peak

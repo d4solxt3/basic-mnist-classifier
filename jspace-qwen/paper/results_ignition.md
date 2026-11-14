@@ -37,7 +37,7 @@ median of per-trial differences, 95% interval clustered by pair) for the J-lens.
 
 ![Ignition with the linear-interpolation control](figures/fig_ignition.png)
 
-**Figure 5.** Left: transition widths for country pairs, actual (solid) and under the
+**Figure 6.** Left: transition widths for country pairs, actual (solid) and under the
 linear-interpolation control (dotted), for both lenses. Right: network sharpening (actual − control)
 for the J-lens by pair type, with 95% intervals clustered by pair. The shaded region is the
 workspace band.

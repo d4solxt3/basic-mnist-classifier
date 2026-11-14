@@ -6,12 +6,12 @@ Table 2 gives held-out recall@10 under the J++ protocol: correctness-filtered it
 and 203 held-out items, best rank over seven layers, and Readout Filtering. For every lens the
 fitting split selected the Readout-Filtered readout.
 
-Figure 2 shows the same comparison graphically, with the all-items panel described at the end
+Figure 3 shows the same comparison graphically, with the all-items panel described at the end
 of this section.
 
 ![Round 1 head-to-head](figures/fig_jpp.png)
 
-**Figure 2.** Round 1 held-out recall@10 with 95% item-bootstrap intervals, for
+**Figure 3.** Round 1 held-out recall@10 with 95% item-bootstrap intervals, for
 correctness-filtered items (left) and all items (right).
 
 **Table 2.** Round 1, split seed 0. Held-out macro item recall@10 with 95% item-bootstrap CI.

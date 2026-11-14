@@ -38,7 +38,7 @@ The random-target null succeeds on at most 1 of 56 trials at any scale and for a
 
 ![Swap success against edit norm](figures/fig_swaps.png)
 
-**Figure 4.** Flexible-generalisation swap success against the median edit norm (relative change
+**Figure 5.** Flexible-generalisation swap success against the median edit norm (relative change
 of the final-position residual), for each lens and scale (labels), in the two bands. Dotted lines
 are the random-target nulls.
 

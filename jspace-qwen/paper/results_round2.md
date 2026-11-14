@@ -49,13 +49,21 @@ excluded from the confirmatory summary. Rows marked * are the pre-registered can
   It gains 0.6 points, wins on four splits, ties on the fifth, and is never behind J++.
 - **JppB** (+0.4, 3/5) and **Routed-J++-a200** (−1.3, 0/5) do not meet the criterion.
 
-By the rule we fixed in advance, Bagged-J++ and RB-mix beat J++ on this benchmark (Figure 3).
+By the rule we fixed in advance, Bagged-J++ and RB-mix beat J++ on this benchmark (Figure 4).
 
 ![Round 2: per-split paired differences against J++](figures/fig_round2.png)
 
-**Figure 3.** Held-out recall@10 minus J++'s on the same split, for each of the five
-confirmatory splits (dots), with the mean (bar). Brackets give split wins against J++. Blue
-rows are the four pre-registered candidates.
+**Figure 4.**
+
+- (a) Held-out recall@10 minus J++'s on the same split, for each of the five confirmatory splits
+  (dots), with the mean (bar). Split wins are on the right, in bold where the pre-registered
+  criterion is met. Shaded rows are the pre-registered candidates.
+- (b) Where the gain over the J-lens comes from, as means over the five splits:
+  - the LRP backward pass (J-lens → R-lens): +4.9 points;
+  - learned expert weights (R-lens → J++): +0.6;
+  - bagging (J++ → Bagged-J++): +1.0.
+
+  Brackets give each step's range over splits.
 
 **The margins are small relative to the noise. We read them as "at least as good as J++", not
 as a clear improvement.** Three facts argue for caution:

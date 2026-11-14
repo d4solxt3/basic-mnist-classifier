@@ -50,4 +50,32 @@ budget: one 4-core CPU, no GPU. Our contributions:
    are unbiased, derive their variance, and give a closed-form, weights-only predictor ρ(A) of the
    gain from shaping.
 
-We report every comparison, including those our methods lose.
+We report every comparison, including those our methods lose. Table 0 summarises which claims carry over to 0.6B parameters, and Figure 1 shows the lenses we
+compare.
+
+**Table 0.** Claims scorecard: what carries over to Qwen3-0.6B.
+
+| Claim (large models) | Qwen3-0.6B (this work) | Verdict |
+|---|---|---|
+| The J-lens reads latent intermediates better than the logit lens | 36.7% vs 31.9% recall@10; the advantage lies in layers 4–19 and on typo correction | holds |
+| Readable content occupies a contiguous band of layers | readouts peak in layers 20–24 (71–86% of depth), chosen by a pre-declared rule | holds |
+| J-lens directions are used causally downstream | argument swaps succeed on 28–48% of trials vs 7–8% for logit-lens directions and ≤2% for an unrelated target; carried by one category | holds, narrowly |
+| Causal content is confined to that band | swaps succeed more often across mid-depth layers than in the readout band | not at 0.6B |
+| Ignition-like, abrupt switching between concepts | the network sharpens competing concepts beyond a linear mix, but progressively with depth and as much through the logit lens | partly |
+| Implicit concepts (associations, rhyme plans) are readable | ≤1% recall for every lens; the right concept's median rank is 1,000–2,000 | not at 0.6B |
+| J++ makes readouts markedly more faithful (35.7% → 55.2% at 27B) | +5.5 points over the J-lens on average, nearly all from the LRP backward pass | much smaller |
+| J++'s learned expert weights add substantially | +0.6 points over the plain LRP lens; they overfit 47 labelled items; bagging or two-weight mixes do slightly better | not at 0.6B |
+
+![The lenses compared](figures/fig_schematic.png)
+
+**Figure 1.** The lenses compared.
+
+- (a) What each lens averages:
+  - the J-lens: a residual's influence on the final layer at the same and all later positions;
+  - the broadcast lens: later positions only, which removes the identity path and the position's
+    own next-token computation;
+  - the R-lens: the J-lens average computed through an LRP backward graph.
+- (b) Expert-based lenses route a residual to one of eight cluster-specific Jacobians:
+  - J++ combines them with signed weights fitted on labelled items;
+  - Bagged-J++ averages those weights over bootstrap refits;
+  - the routed lens decodes each residual with its own expert and needs no labels.
