@@ -115,6 +115,21 @@ for fam, tag in (("plain", a.plain), ("lrp", a.lrp)):
                   flush=True)
             del Z
         lenses["SS-J-filt" if fam == "plain" else "SS-J++"] = Lens("jlens", ss, name="ss-weighted")
+        # Semi-supervised (ours): labelled fitting pairs + unlabelled future-token
+        # positions in one objective; the corpus is a sixth group in the macro.
+        semi = {}
+        for l in layers:
+            Zl = expert_logits(model, experts[l], prep.resid[items_fit, l])
+            Zu = expert_logits(model, experts[l], fut["H"][l][:npos])
+            Z = torch.cat([Zl, Zu]); del Zl, Zu
+            r_item = [pos_of[i] for _, i, _ in fit_rows] + [len(items_fit) + j for j in range(npos)]
+            r_c = [prep.cands[i][wd] for _, i, wd in fit_rows] + fut["future"][:npos]
+            r_e = [prep.items[i].eval for _, i, _ in fit_rows] + ["corpus"] * npos
+            w, sc = fit_expert_weights(Z, r_item, r_c, r_e, exclude=exclude, steps=a.ss_steps)
+            semi[l] = combine(experts[l], w)
+            weights_log[f"semi-{fam}|{l}"] = {"w": w.tolist(), "train_macro": sc}
+            del Z
+        lenses["Semi-J-filt" if fam == "plain" else "Semi-J++"] = Lens("jlens", semi, name="semi-weighted")
     pooled = {l: (experts[l] * ex["counts"][l][:, None, None] / ex["counts"][l].sum()).sum(0) for l in layers}
     base = "Routed" if fam == "plain" else "Routed-LRP"
     lenses[base] = RoutedLens(experts, router)
