@@ -51,3 +51,8 @@ flexgen|random_null|logit|2.0            n= 60 success=0.017 [0.000,0.050] lost=
 === 22:44:08 START window 11-15
 Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 50584.73it/s]
 trial 0/384
+trial 25/384
+trial 50/384
+trial 75/384
+trial 100/384
+trial 125/384

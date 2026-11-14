@@ -219,3 +219,4 @@ done: 8 prompts, 8192 VJP rows, 68.4 min
 [ 2923.2s] seed 16: 47 fitting, 203 held-out items
 [ 3073.3s] seed 16 layer 4: J++ train 0.251; RB-mix w=[0.98, 0.21]; RLB-mix w=[0.57, 0.82]
 [ 3268.5s] seed 16 layer 7: J++ train 0.269; RB-mix w=[0.99, -0.11]; RLB-mix w=[0.98, -0.19]
+[ 3465.2s] seed 16 layer 11: J++ train 0.255; RB-mix w=[0.97, -0.24]; RLB-mix w=[0.93, -0.37]
