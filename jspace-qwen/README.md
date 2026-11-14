@@ -130,7 +130,8 @@ python scripts/jpp_splits.py --seeds 0 1 2 3 4 5 --bags 8 --tag round2
 # causal swaps and ignition
 python scripts/swaps.py --jlens lenses/exact_final.pt --regress --band 20 24 --tag main
 python scripts/swaps.py --jlens lenses/exact_final.pt --band 7 20 --scales 1 2 4 --tag midband
-python scripts/swap_stats.py --tags main midband
+scripts/run_windows.sh                                  # exploratory: equal-width 5-layer swap windows
+python scripts/swap_stats.py --tags main midband win3_7 win7_11 win11_15 win15_19
 python scripts/ignition.py --jlens lenses/exact_final.pt --carriers 10 --controls --tag main
 python scripts/ignition.py --jlens lenses/exact_final.pt --carriers 10 --controls --linear-control --tag main
 python scripts/ignition_stats.py --tag main
@@ -144,6 +145,7 @@ python scripts/fit.py --method sketch --K 16 --cv online --shaped --n 512 --snap
 python scripts/fit.py --method sketch --K 16 --cv identity --n 256 --snapshots 16 32 64 128 256 --tag sk16id --seed 1
 python scripts/fit.py --method sketch --K 16 --cv none --n 256 --snapshots 16 32 64 128 256 --tag sk16none --seed 1
 python scripts/curves.py --tags exact sk16 sk16w sk16id sk16none
+python scripts/rho.py                                   # weights-only predictor of the shaping gain
 # figures and the assembled paper draft
 python scripts/figures.py && python paper/build.py
 ```
