@@ -183,3 +183,147 @@ items: 539 scored, 105 fitting, 434 held-out
   SS plain layer 18: weights [-0.4099999964237213, 0.6700000166893005, 0.5600000023841858, 0.029999999329447746, -0.05000000074505806, -0.14000000059604645, -0.009999999776482582, 0.20999999344348907] future recall@10 0.380
   SS plain layer 21: weights [0.8600000143051147, 0.23999999463558197, 0.05000000074505806, -0.0, -0.4099999964237213, 0.029999999329447746, 0.07999999821186066, 0.14000000059604645] future recall@10 0.535
   SS plain layer 24: weights [0.25999999046325684, 0.7699999809265137, 0.4000000059604645, -0.10999999940395355, 0.1899999976158142, -0.07999999821186066, 0.25, 0.23999999463558197] future recall@10 0.665
+  lrp layer 21: experts [7] saw < 50 positions -> pooled
+  lrp layer 24: experts [0] saw < 50 positions -> pooled
+  lrp layer 4: weights [-0.009999999776482582, 0.019999999552965164, 0.23999999463558197, -0.3199999928474426, 0.029999999329447746, 0.3700000047683716, 0.8399999737739563, -0.029999999329447746] train macro@10 0.210
+  lrp layer 7: weights [0.6800000071525574, -0.38999998569488525, 0.5799999833106995, 0.07999999821186066, -0.12999999523162842, -0.10999999940395355, -0.0, 0.03999999910593033] train macro@10 0.251
+  lrp layer 11: weights [0.05999999865889549, -0.1599999964237213, 0.2199999988079071, -0.07000000029802322, 0.12999999523162842, 0.10999999940395355, 0.9200000166893005, -0.20000000298023224] train macro@10 0.214
+  lrp layer 14: weights [0.6800000071525574, 0.47999998927116394, 0.05999999865889549, 0.10000000149011612, 0.25, 0.44999998807907104, 0.05000000074505806, -0.18000000715255737] train macro@10 0.211
+  lrp layer 18: weights [0.07999999821186066, 0.7900000214576721, -0.10999999940395355, 0.10999999940395355, -0.10999999940395355, -0.019999999552965164, 0.12999999523162842, 0.5600000023841858] train macro@10 0.225
+  lrp layer 21: weights [-0.03999999910593033, 0.6899999976158142, 0.17000000178813934, 0.550000011920929, 0.2800000011920929, 0.10000000149011612, -0.0, 0.3199999928474426] train macro@10 0.172
+  lrp layer 24: weights [0.009999999776482582, -0.20999999344348907, 0.029999999329447746, -0.25999999046325684, 0.699999988079071, 0.49000000953674316, 0.3199999928474426, -0.23999999463558197] train macro@10 0.211
+  SS lrp layer 4: weights [0.009999999776482582, 0.6800000071525574, -0.019999999552965164, 0.25, -0.5099999904632568, 0.4399999976158142, -0.029999999329447746, 0.17000000178813934] future recall@10 0.865
+  SS lrp layer 7: weights [-0.28999999165534973, 0.17000000178813934, 0.7300000190734863, 0.15000000596046448, 0.36000001430511475, 0.2199999988079071, -0.03999999910593033, 0.3799999952316284] future recall@10 0.695
+  SS lrp layer 11: weights [-0.07000000029802322, 0.46000000834465027, 0.10000000149011612, 0.550000011920929, -0.38999998569488525, 0.44999998807907104, -0.28999999165534973, 0.17000000178813934] future recall@10 0.720
+  SS lrp layer 14: weights [0.41999998688697815, -0.4399999976158142, 0.3799999952316284, -0.03999999910593033, 0.3199999928474426, -0.4699999988079071, 0.2800000011920929, 0.2800000011920929] future recall@10 0.760
+  SS lrp layer 18: weights [-0.5899999737739563, -0.2199999988079071, 0.6200000047683716, 0.09000000357627869, 0.17000000178813934, 0.23999999463558197, -0.07000000029802322, 0.3499999940395355] future recall@10 0.635
+  SS lrp layer 21: weights [0.800000011920929, -0.10000000149011612, -0.03999999910593033, -0.05999999865889549, 0.5799999833106995, -0.07999999821186066, -0.07000000029802322, -0.019999999552965164] future recall@10 0.680
+  SS lrp layer 24: weights [0.4000000059604645, 0.029999999329447746, 0.009999999776482582, 0.019999999552965164, 0.8199999928474426, -0.17000000178813934, -0.019999999552965164, 0.3799999952316284] future recall@10 0.705
+  mix JB-mix layer 4: w=[0.7099999785423279, 0.7099999785423279] train macro@10 0.053
+  mix SS-JB-mix layer 4: w=[0.8999999761581421, -0.4300000071525574] future recall@10 0.095
+  mix JB-mix layer 7: w=[0.7099999785423279, 0.7099999785423279] train macro@10 0.044
+  mix SS-JB-mix layer 7: w=[0.9300000071525574, -0.3700000047683716] future recall@10 0.135
+  mix JB-mix layer 11: w=[0.8600000143051147, 0.5] train macro@10 0.081
+  mix SS-JB-mix layer 11: w=[0.8999999761581421, -0.4399999976158142] future recall@10 0.175
+  mix JB-mix layer 14: w=[0.949999988079071, 0.30000001192092896] train macro@10 0.100
+  mix SS-JB-mix layer 14: w=[0.9200000166893005, -0.38999998569488525] future recall@10 0.200
+  mix JB-mix layer 18: w=[1.0, 0.09000000357627869] train macro@10 0.144
+  mix SS-JB-mix layer 18: w=[0.9399999976158142, -0.33000001311302185] future recall@10 0.290
+  mix JB-mix layer 21: w=[0.7099999785423279, 0.7099999785423279] train macro@10 0.175
+  mix SS-JB-mix layer 21: w=[0.8500000238418579, -0.5299999713897705] future recall@10 0.500
+  mix JB-mix layer 24: w=[0.6200000047683716, 0.7900000214576721] train macro@10 0.200
+  mix SS-JB-mix layer 24: w=[0.9900000095367432, -0.10999999940395355] future recall@10 0.670
+logit|raw                  item@10=0.182 [0.151,0.215] pair@10=0.186 item@1=0.054
+logit|raw|filter           item@10=0.206 [0.173,0.239] pair@10=0.209 item@1=0.056
+regress|raw                item@10=0.104 [0.079,0.130] pair@10=0.110 item@1=0.029
+regress|raw|filter         item@10=0.135 [0.108,0.163] pair@10=0.141 item@1=0.034
+J-lens|raw                 item@10=0.265 [0.232,0.297] pair@10=0.267 item@1=0.130
+J-lens|raw|filter          item@10=0.283 [0.252,0.314] pair@10=0.285 item@1=0.136
+J-filt|raw                 item@10=0.276 [0.246,0.307] pair@10=0.278 item@1=0.135
+J-filt|raw|filter          item@10=0.297 [0.267,0.327] pair@10=0.299 item@1=0.145
+SS-J-filt|raw              item@10=0.273 [0.242,0.304] pair@10=0.274 item@1=0.099
+SS-J-filt|raw|filter       item@10=0.288 [0.257,0.319] pair@10=0.289 item@1=0.114
+Semi-J-filt|raw            item@10=0.260 [0.231,0.290] pair@10=0.263 item@1=0.132
+Semi-J-filt|raw|filter     item@10=0.291 [0.263,0.320] pair@10=0.294 item@1=0.145
+Routed|raw                 item@10=0.273 [0.244,0.302] pair@10=0.275 item@1=0.136
+Routed|raw|filter          item@10=0.280 [0.251,0.309] pair@10=0.282 item@1=0.137
+Routed-s0.5|raw            item@10=0.277 [0.247,0.306] pair@10=0.279 item@1=0.140
+Routed-s0.5|raw|filter     item@10=0.291 [0.262,0.322] pair@10=0.293 item@1=0.145
+Routed-a200|raw            item@10=0.284 [0.255,0.313] pair@10=0.286 item@1=0.140
+Routed-a200|raw|filter     item@10=0.295 [0.266,0.324] pair@10=0.296 item@1=0.147
+Pooled|raw                 item@10=0.265 [0.232,0.297] pair@10=0.267 item@1=0.130
+Pooled|raw|filter          item@10=0.283 [0.252,0.314] pair@10=0.285 item@1=0.136
+R-lens|raw                 item@10=0.298 [0.269,0.327] pair@10=0.300 item@1=0.139
+R-lens|raw|filter          item@10=0.335 [0.305,0.364] pair@10=0.339 item@1=0.172
+J++|raw                    item@10=0.278 [0.251,0.306] pair@10=0.281 item@1=0.156
+J++|raw|filter             item@10=0.326 [0.299,0.354] pair@10=0.329 item@1=0.194
+SS-J++|raw                 item@10=0.258 [0.227,0.288] pair@10=0.259 item@1=0.096
+SS-J++|raw|filter          item@10=0.265 [0.234,0.295] pair@10=0.266 item@1=0.108
+Semi-J++|raw               item@10=0.281 [0.253,0.309] pair@10=0.284 item@1=0.155
+Semi-J++|raw|filter        item@10=0.322 [0.294,0.350] pair@10=0.324 item@1=0.180
+Routed-LRP|raw             item@10=0.281 [0.253,0.307] pair@10=0.283 item@1=0.170
+Routed-LRP|raw|filter      item@10=0.294 [0.266,0.321] pair@10=0.296 item@1=0.173
+Routed-LRP-s0.5|raw        item@10=0.296 [0.268,0.323] pair@10=0.298 item@1=0.169
+Routed-LRP-s0.5|raw|filter item@10=0.318 [0.289,0.346] pair@10=0.319 item@1=0.183
+Routed-LRP-a200|raw        item@10=0.295 [0.268,0.322] pair@10=0.296 item@1=0.176
+Routed-LRP-a200|raw|filter item@10=0.318 [0.289,0.346] pair@10=0.319 item@1=0.183
+Pooled-LRP|raw             item@10=0.298 [0.269,0.327] pair@10=0.299 item@1=0.139
+Pooled-LRP|raw|filter      item@10=0.335 [0.305,0.364] pair@10=0.339 item@1=0.172
+J-lens-n8|raw              item@10=0.274 [0.241,0.306] pair@10=0.277 item@1=0.126
+J-lens-n8|raw|filter       item@10=0.287 [0.254,0.319] pair@10=0.289 item@1=0.141
+B-lens|raw                 item@10=0.118 [0.090,0.146] pair@10=0.115 item@1=0.040
+B-lens|raw|filter          item@10=0.153 [0.123,0.182] pair@10=0.149 item@1=0.053
+JB-mix|raw                 item@10=0.259 [0.227,0.289] pair@10=0.256 item@1=0.098
+JB-mix|raw|filter          item@10=0.291 [0.260,0.320] pair@10=0.289 item@1=0.106
+SS-JB-mix|raw              item@10=0.240 [0.207,0.272] pair@10=0.242 item@1=0.086
+SS-JB-mix|raw|filter       item@10=0.256 [0.223,0.289] pair@10=0.259 item@1=0.091
+[selected on fit split] logit        -> logit|raw|filter           held-out item@10=0.206 [0.173,0.239]
+[selected on fit split] regress      -> regress|raw|filter         held-out item@10=0.135 [0.108,0.163]
+[selected on fit split] J-lens       -> J-lens|raw|filter          held-out item@10=0.283 [0.252,0.314]
+[selected on fit split] J-filt       -> J-filt|raw|filter          held-out item@10=0.297 [0.267,0.327]
+[selected on fit split] SS-J-filt    -> SS-J-filt|raw|filter       held-out item@10=0.288 [0.257,0.319]
+[selected on fit split] Semi-J-filt  -> Semi-J-filt|raw|filter     held-out item@10=0.291 [0.263,0.320]
+[selected on fit split] Routed       -> Routed-a200|raw|filter     held-out item@10=0.295 [0.266,0.324]
+[selected on fit split] Pooled       -> Pooled|raw|filter          held-out item@10=0.283 [0.252,0.314]
+[selected on fit split] R-lens       -> R-lens|raw|filter          held-out item@10=0.335 [0.305,0.364]
+[selected on fit split] J++          -> J++|raw|filter             held-out item@10=0.326 [0.299,0.354]
+[selected on fit split] SS-J++       -> SS-J++|raw|filter          held-out item@10=0.265 [0.234,0.295]
+[selected on fit split] Semi-J++     -> Semi-J++|raw|filter        held-out item@10=0.322 [0.294,0.350]
+[selected on fit split] Routed-LRP   -> Routed-LRP-a200|raw|filter held-out item@10=0.318 [0.289,0.346]
+[selected on fit split] Pooled-LRP   -> Pooled-LRP|raw|filter      held-out item@10=0.335 [0.305,0.364]
+[selected on fit split] J-lens-n8    -> J-lens-n8|raw|filter       held-out item@10=0.287 [0.254,0.319]
+[selected on fit split] B-lens       -> B-lens|raw|filter          held-out item@10=0.153 [0.123,0.182]
+[selected on fit split] JB-mix       -> JB-mix|raw|filter          held-out item@10=0.291 [0.260,0.320]
+[selected on fit split] SS-JB-mix    -> SS-JB-mix|raw|filter       held-out item@10=0.256 [0.223,0.289]
+
+paired difference in held-out item recall@10 vs J++ (raw|filter):
+  R-lens|raw|filter          +0.009 [-0.007,+0.026]  P(<=0)=0.143
+  Pooled-LRP|raw|filter      +0.009 [-0.007,+0.026]  P(<=0)=0.143
+  J++|raw|filter             +0.000 [+0.000,+0.000]  P(<=0)=1.000
+  Semi-J++|raw|filter        -0.005 [-0.015,+0.005]  P(<=0)=0.812
+  Routed-LRP-s0.5|raw|filter -0.009 [-0.025,+0.008]  P(<=0)=0.841
+  Routed-LRP-a200|raw|filter -0.009 [-0.025,+0.008]  P(<=0)=0.849
+  R-lens|raw                 -0.028 [-0.047,-0.009]  P(<=0)=0.998
+  Pooled-LRP|raw             -0.028 [-0.048,-0.010]  P(<=0)=0.998
+  J-filt|raw|filter          -0.029 [-0.052,-0.006]  P(<=0)=0.992
+  Routed-LRP-s0.5|raw        -0.030 [-0.047,-0.012]  P(<=0)=0.999
+  Routed-LRP-a200|raw        -0.031 [-0.048,-0.014]  P(<=0)=1.000
+  Routed-a200|raw|filter     -0.031 [-0.053,-0.011]  P(<=0)=0.999
+  Routed-LRP|raw|filter      -0.032 [-0.049,-0.017]  P(<=0)=1.000
+  Routed-s0.5|raw|filter     -0.035 [-0.056,-0.014]  P(<=0)=1.000
+  Semi-J-filt|raw|filter     -0.035 [-0.056,-0.015]  P(<=0)=1.000
+  JB-mix|raw|filter          -0.035 [-0.061,-0.010]  P(<=0)=0.997
+  SS-J-filt|raw|filter       -0.038 [-0.062,-0.014]  P(<=0)=0.999
+  J-lens-n8|raw|filter       -0.040 [-0.063,-0.016]  P(<=0)=1.000
+  Routed-a200|raw            -0.042 [-0.064,-0.021]  P(<=0)=1.000
+  J-lens|raw|filter          -0.043 [-0.066,-0.021]  P(<=0)=1.000
+  Pooled|raw|filter          -0.043 [-0.066,-0.021]  P(<=0)=1.000
+  Semi-J++|raw               -0.045 [-0.061,-0.030]  P(<=0)=1.000
+  Routed-LRP|raw             -0.045 [-0.063,-0.030]  P(<=0)=1.000
+  Routed|raw|filter          -0.046 [-0.068,-0.025]  P(<=0)=1.000
+  J++|raw                    -0.048 [-0.064,-0.033]  P(<=0)=1.000
+  Routed-s0.5|raw            -0.049 [-0.071,-0.029]  P(<=0)=1.000
+  J-filt|raw                 -0.050 [-0.073,-0.026]  P(<=0)=1.000
+  J-lens-n8|raw              -0.052 [-0.077,-0.028]  P(<=0)=1.000
+  Routed|raw                 -0.053 [-0.075,-0.032]  P(<=0)=1.000
+  SS-J-filt|raw              -0.053 [-0.079,-0.028]  P(<=0)=1.000
+  J-lens|raw                 -0.061 [-0.085,-0.038]  P(<=0)=1.000
+  Pooled|raw                 -0.061 [-0.085,-0.038]  P(<=0)=1.000
+  SS-J++|raw|filter          -0.062 [-0.085,-0.040]  P(<=0)=1.000
+  Semi-J-filt|raw            -0.066 [-0.088,-0.044]  P(<=0)=1.000
+  JB-mix|raw                 -0.067 [-0.096,-0.039]  P(<=0)=1.000
+  SS-J++|raw                 -0.068 [-0.092,-0.046]  P(<=0)=1.000
+  SS-JB-mix|raw|filter       -0.070 [-0.097,-0.044]  P(<=0)=1.000
+  SS-JB-mix|raw              -0.087 [-0.114,-0.060]  P(<=0)=1.000
+  logit|raw|filter           -0.120 [-0.149,-0.090]  P(<=0)=1.000
+  logit|raw                  -0.144 [-0.173,-0.113]  P(<=0)=1.000
+  B-lens|raw|filter          -0.174 [-0.208,-0.139]  P(<=0)=1.000
+  regress|raw|filter         -0.191 [-0.221,-0.162]  P(<=0)=1.000
+  B-lens|raw                 -0.208 [-0.243,-0.173]  P(<=0)=1.000
+  regress|raw                -0.222 [-0.252,-0.194]  P(<=0)=1.000
+=== 19:29:14 END rc=0
+=== 19:29:14 START SW
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3529.44it/s]
+=== 19:29:20 START R2
+=== 20:03:37 END R2 rc=0
+=== handoff to queue3b done

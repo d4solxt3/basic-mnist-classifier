@@ -1,0 +1,148 @@
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3566.20it/s]
+[    8.7s] ranks logit
+[   13.6s] ranks J-lens
+[   17.7s] ranks R-lens
+[   21.6s] ranks B-lens
+[   28.9s] ranks Routed-LRP-a200
+[   36.4s] ranks Routed-LRP-s0.5
+[   36.4s] seed 0: 47 fitting, 203 held-out items
+[   79.3s] seed 0 layer 4: J++ train 0.271; JppB w=[1.0, 0.0]
+[  119.3s] seed 0 layer 7: J++ train 0.238; JppB w=[1.0, 0.04]
+[  164.9s] seed 0 layer 11: J++ train 0.272; JppB w=[1.0, 0.01]
+[  208.0s] seed 0 layer 14: J++ train 0.261; JppB w=[1.0, -0.0]
+[  252.7s] seed 0 layer 18: J++ train 0.286; JppB w=[1.0, -0.0]
+[  299.2s] seed 0 layer 21: J++ train 0.279; JppB w=[1.0, 0.04]
+[  344.7s] seed 0 layer 24: J++ train 0.292; JppB w=[0.7, 0.71]
+[  372.4s] seed 0: ranks done
+[  372.4s] seed 0 logit            held 0.271 fit 0.311 diff -0.097 [-0.151,-0.042]
+[  372.5s] seed 0 J-lens           held 0.332 fit 0.364 diff -0.036 [-0.088,+0.019]
+[  372.5s] seed 0 R-lens           held 0.365 fit 0.450 diff -0.003 [-0.055,+0.049]
+[  372.5s] seed 0 B-lens           held 0.217 fit 0.118 diff -0.150 [-0.223,-0.079]
+[  372.5s] seed 0 Routed-LRP-a200  held 0.373 fit 0.450 diff +0.006 [-0.047,+0.058]
+[  372.5s] seed 0 Routed-LRP-s0.5  held 0.369 fit 0.450 diff +0.001 [-0.051,+0.054]
+[  372.5s] seed 0 J++              held 0.367 fit 0.517 diff +0.000 [+0.000,+0.000]
+[  372.5s] seed 0 JppB             held 0.386 fit 0.517 diff +0.019 [-0.009,+0.058]
+[  372.5s] seed 0 RB-mix           held 0.395 fit 0.500 diff +0.027 [-0.031,+0.089]
+[  372.5s] seed 0 JB-mix           held 0.362 fit 0.364 diff -0.006 [-0.068,+0.059]
+[  372.6s] seed 0 Bagged-J++       held 0.384 fit 0.433 diff +0.017 [-0.005,+0.053]
+[  372.6s] seed 0 Routed-J++-a200  held 0.348 fit 0.450 diff -0.019 [-0.060,+0.013]
+[  372.6s] seed 1: 47 fitting, 203 held-out items
+[  414.9s] seed 1 layer 4: J++ train 0.243; JppB w=[1.0, -0.01]
+[  457.2s] seed 1 layer 7: J++ train 0.251; JppB w=[1.0, 0.02]
+[  500.4s] seed 1 layer 11: J++ train 0.240; JppB w=[1.0, 0.0]
+[  545.6s] seed 1 layer 14: J++ train 0.251; JppB w=[1.0, 0.01]
+[  590.1s] seed 1 layer 18: J++ train 0.311; JppB w=[1.0, 0.0]
+[  634.0s] seed 1 layer 21: J++ train 0.263; JppB w=[1.0, -0.02]
+[  679.3s] seed 1 layer 24: J++ train 0.367; JppB w=[1.0, 0.03]
+[  706.2s] seed 1: ranks done
+[  706.3s] seed 1 logit            held 0.277 fit 0.285 diff -0.127 [-0.177,-0.085]
+[  706.3s] seed 1 J-lens           held 0.321 fit 0.408 diff -0.084 [-0.127,-0.047]
+[  706.3s] seed 1 R-lens           held 0.384 fit 0.340 diff -0.021 [-0.044,+0.001]
+[  706.3s] seed 1 B-lens           held 0.218 fit 0.116 diff -0.187 [-0.262,-0.112]
+[  706.3s] seed 1 Routed-LRP-a200  held 0.392 fit 0.340 diff -0.012 [-0.030,+0.005]
+[  706.3s] seed 1 Routed-LRP-s0.5  held 0.392 fit 0.323 diff -0.012 [-0.030,+0.005]
+[  706.3s] seed 1 J++              held 0.404 fit 0.490 diff +0.000 [+0.000,+0.000]
+[  706.3s] seed 1 JppB             held 0.410 fit 0.490 diff +0.005 [+0.000,+0.013]
+[  706.3s] seed 1 RB-mix           held 0.406 fit 0.390 diff +0.001 [-0.031,+0.044]
+[  706.4s] seed 1 JB-mix           held 0.329 fit 0.408 diff -0.076 [-0.120,-0.039]
+[  706.4s] seed 1 Bagged-J++       held 0.406 fit 0.440 diff +0.001 [-0.013,+0.013]
+[  706.4s] seed 1 Routed-J++-a200  held 0.388 fit 0.340 diff -0.017 [-0.035,+0.002]
+[  706.4s] seed 2: 47 fitting, 203 held-out items
+[  747.3s] seed 2 layer 4: J++ train 0.215; JppB w=[1.0, -0.01]
+[  788.9s] seed 2 layer 7: J++ train 0.196; JppB w=[1.0, -0.0]
+[  833.5s] seed 2 layer 11: J++ train 0.229; JppB w=[1.0, 0.01]
+[  878.2s] seed 2 layer 14: J++ train 0.205; JppB w=[1.0, -0.0]
+[  923.2s] seed 2 layer 18: J++ train 0.298; JppB w=[1.0, 0.07]
+[  970.6s] seed 2 layer 21: J++ train 0.371; JppB w=[1.0, 0.05]
+[ 1016.9s] seed 2 layer 24: J++ train 0.343; JppB w=[0.97, 0.23]
+[ 1043.5s] seed 2: ranks done
+[ 1043.5s] seed 2 logit            held 0.294 fit 0.203 diff -0.083 [-0.147,-0.017]
+[ 1043.6s] seed 2 J-lens           held 0.340 fit 0.314 diff -0.036 [-0.101,+0.029]
+[ 1043.6s] seed 2 R-lens           held 0.387 fit 0.346 diff +0.010 [-0.027,+0.053]
+[ 1043.6s] seed 2 B-lens           held 0.204 fit 0.205 diff -0.173 [-0.233,-0.118]
+[ 1043.6s] seed 2 Routed-LRP-a200  held 0.391 fit 0.362 diff +0.014 [-0.020,+0.056]
+[ 1043.6s] seed 2 Routed-LRP-s0.5  held 0.391 fit 0.346 diff +0.014 [-0.020,+0.056]
+[ 1043.6s] seed 2 J++              held 0.376 fit 0.517 diff +0.000 [+0.000,+0.000]
+[ 1043.6s] seed 2 JppB             held 0.361 fit 0.517 diff -0.015 [-0.036,+0.000]
+[ 1043.6s] seed 2 RB-mix           held 0.378 fit 0.489 diff +0.002 [-0.036,+0.046]
+[ 1043.6s] seed 2 JB-mix           held 0.351 fit 0.462 diff -0.026 [-0.068,+0.021]
+[ 1043.7s] seed 2 Bagged-J++       held 0.380 fit 0.462 diff +0.004 [+0.000,+0.013]
+[ 1043.7s] seed 2 Routed-J++-a200  held 0.371 fit 0.362 diff -0.005 [-0.027,+0.014]
+[ 1043.7s] seed 3: 47 fitting, 203 held-out items
+[ 1085.0s] seed 3 layer 4: J++ train 0.224; JppB w=[1.0, 0.02]
+[ 1128.1s] seed 3 layer 7: J++ train 0.196; JppB w=[1.0, 0.01]
+[ 1173.7s] seed 3 layer 11: J++ train 0.224; JppB w=[1.0, 0.0]
+[ 1218.7s] seed 3 layer 14: J++ train 0.225; JppB w=[0.99, 0.1]
+[ 1263.7s] seed 3 layer 18: J++ train 0.277; JppB w=[1.0, -0.0]
+[ 1308.0s] seed 3 layer 21: J++ train 0.252; JppB w=[0.94, 0.33]
+[ 1354.2s] seed 3 layer 24: J++ train 0.286; JppB w=[1.0, 0.0]
+[ 1381.5s] seed 3: ranks done
+[ 1381.5s] seed 3 logit            held 0.283 fit 0.246 diff -0.111 [-0.167,-0.059]
+[ 1381.5s] seed 3 J-lens           held 0.344 fit 0.299 diff -0.049 [-0.101,+0.001]
+[ 1381.5s] seed 3 R-lens           held 0.399 fit 0.262 diff +0.006 [-0.023,+0.046]
+[ 1381.5s] seed 3 B-lens           held 0.220 fit 0.106 diff -0.173 [-0.243,-0.101]
+[ 1381.5s] seed 3 Routed-LRP-a200  held 0.407 fit 0.262 diff +0.014 [-0.017,+0.056]
+[ 1381.5s] seed 3 Routed-LRP-s0.5  held 0.403 fit 0.262 diff +0.010 [-0.022,+0.052]
+[ 1381.5s] seed 3 J++              held 0.393 fit 0.379 diff +0.000 [+0.000,+0.000]
+[ 1381.6s] seed 3 JppB             held 0.410 fit 0.362 diff +0.017 [-0.008,+0.054]
+[ 1381.6s] seed 3 RB-mix           held 0.417 fit 0.362 diff +0.023 [-0.018,+0.074]
+[ 1381.6s] seed 3 JB-mix           held 0.339 fit 0.310 diff -0.055 [-0.106,-0.004]
+[ 1381.6s] seed 3 Bagged-J++       held 0.413 fit 0.362 diff +0.019 [-0.011,+0.060]
+[ 1381.6s] seed 3 Routed-J++-a200  held 0.391 fit 0.262 diff -0.003 [-0.022,+0.017]
+[ 1381.6s] seed 4: 47 fitting, 203 held-out items
+[ 1424.9s] seed 4 layer 4: J++ train 0.164; JppB w=[1.0, 0.01]
+[ 1468.9s] seed 4 layer 7: J++ train 0.224; JppB w=[1.0, 0.02]
+[ 1518.2s] seed 4 layer 11: J++ train 0.197; JppB w=[1.0, -0.0]
+[ 1562.9s] seed 4 layer 14: J++ train 0.197; JppB w=[0.93, 0.36]
+[ 1607.1s] seed 4 layer 18: J++ train 0.161; JppB w=[0.88, 0.47]
+[ 1652.1s] seed 4 layer 21: J++ train 0.327; JppB w=[1.0, -0.0]
+[ 1696.4s] seed 4 layer 24: J++ train 0.292; JppB w=[0.83, 0.55]
+[ 1721.8s] seed 4: ranks done
+[ 1721.8s] seed 4 logit            held 0.277 fit 0.268 diff -0.095 [-0.137,-0.047]
+[ 1721.8s] seed 4 J-lens           held 0.336 fit 0.331 diff -0.036 [-0.074,+0.009]
+[ 1721.9s] seed 4 R-lens           held 0.368 fit 0.452 diff -0.004 [-0.020,+0.013]
+[ 1721.9s] seed 4 B-lens           held 0.196 fit 0.234 diff -0.176 [-0.247,-0.101]
+[ 1721.9s] seed 4 Routed-LRP-a200  held 0.372 fit 0.468 diff +0.001 [-0.018,+0.018]
+[ 1721.9s] seed 4 Routed-LRP-s0.5  held 0.368 fit 0.468 diff -0.004 [-0.024,+0.016]
+[ 1721.9s] seed 4 J++              held 0.372 fit 0.529 diff +0.000 [+0.000,+0.000]
+[ 1721.9s] seed 4 JppB             held 0.401 fit 0.529 diff +0.029 [+0.004,+0.067]
+[ 1721.9s] seed 4 RB-mix           held 0.373 fit 0.468 diff +0.001 [-0.039,+0.046]
+[ 1721.9s] seed 4 JB-mix           held 0.343 fit 0.431 diff -0.029 [-0.070,+0.019]
+[ 1722.0s] seed 4 Bagged-J++       held 0.430 fit 0.502 diff +0.058 [+0.004,+0.124]
+[ 1722.0s] seed 4 Routed-J++-a200  held 0.367 fit 0.468 diff -0.005 [-0.019,+0.008]
+[ 1722.0s] seed 5: 47 fitting, 203 held-out items
+[ 1763.9s] seed 5 layer 4: J++ train 0.253; JppB w=[0.99, 0.14]
+[ 1806.3s] seed 5 layer 7: J++ train 0.243; JppB w=[1.0, 0.0]
+[ 1848.5s] seed 5 layer 11: J++ train 0.239; JppB w=[1.0, 0.0]
+[ 1893.3s] seed 5 layer 14: J++ train 0.306; JppB w=[1.0, 0.0]
+[ 1939.4s] seed 5 layer 18: J++ train 0.347; JppB w=[1.0, 0.0]
+[ 1983.5s] seed 5 layer 21: J++ train 0.278; JppB w=[1.0, 0.0]
+[ 2028.3s] seed 5 layer 24: J++ train 0.405; JppB w=[0.99, 0.13]
+[ 2054.7s] seed 5: ranks done
+[ 2054.7s] seed 5 logit            held 0.296 fit 0.175 diff -0.120 [-0.184,-0.059]
+[ 2054.7s] seed 5 J-lens           held 0.347 fit 0.271 diff -0.070 [-0.131,-0.011]
+[ 2054.8s] seed 5 R-lens           held 0.393 fit 0.302 diff -0.023 [-0.084,+0.033]
+[ 2054.8s] seed 5 B-lens           held 0.212 fit 0.139 diff -0.204 [-0.270,-0.143]
+[ 2054.8s] seed 5 Routed-LRP-a200  held 0.401 fit 0.302 diff -0.015 [-0.075,+0.039]
+[ 2054.8s] seed 5 Routed-LRP-s0.5  held 0.397 fit 0.302 diff -0.019 [-0.079,+0.036]
+[ 2054.8s] seed 5 J++              held 0.417 fit 0.507 diff +0.000 [+0.000,+0.000]
+[ 2054.8s] seed 5 JppB             held 0.400 fit 0.507 diff -0.017 [-0.050,+0.000]
+[ 2054.8s] seed 5 RB-mix           held 0.417 fit 0.369 diff +0.000 [-0.049,+0.048]
+[ 2054.8s] seed 5 JB-mix           held 0.375 fit 0.313 diff -0.041 [-0.094,+0.010]
+[ 2054.8s] seed 5 Bagged-J++       held 0.386 fit 0.475 diff -0.030 [-0.069,-0.004]
+[ 2054.8s] seed 5 Routed-J++-a200  held 0.382 fit 0.319 diff -0.034 [-0.084,+0.003]
+
+confirmatory summary over seeds [1, 2, 3, 4, 5]
+  logit            mean held 0.285  mean diff vs J++ -0.107 [-0.127,-0.083]  wins 0/5
+  J-lens           mean held 0.338  mean diff vs J++ -0.055 [-0.084,-0.036]  wins 0/5
+  R-lens           mean held 0.386  mean diff vs J++ -0.006 [-0.023,+0.010]  wins 2/5
+  B-lens           mean held 0.210  mean diff vs J++ -0.183 [-0.204,-0.173]  wins 0/5
+  Routed-LRP-a200  mean held 0.393  mean diff vs J++ +0.000 [-0.015,+0.014]  wins 3/5
+  Routed-LRP-s0.5  mean held 0.390  mean diff vs J++ -0.002 [-0.019,+0.014]  wins 2/5
+  J++              mean held 0.392  mean diff vs J++ +0.000 [+0.000,+0.000]  wins 0/5
+  JppB             mean held 0.396  mean diff vs J++ +0.004 [-0.017,+0.029]  wins 3/5
+  RB-mix           mean held 0.398  mean diff vs J++ +0.006 [+0.000,+0.023]  wins 4/5
+  JB-mix           mean held 0.347  mean diff vs J++ -0.045 [-0.076,-0.026]  wins 0/5
+  Bagged-J++       mean held 0.403  mean diff vs J++ +0.010 [-0.030,+0.058]  wins 4/5
+  Routed-J++-a200  mean held 0.380  mean diff vs J++ -0.013 [-0.034,-0.003]  wins 0/5
+[ 2054.9s] done
