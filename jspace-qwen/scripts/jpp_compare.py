@@ -52,7 +52,8 @@ ap.add_argument("--calib", action="store_true", help="also centred / z-scored re
 ap.add_argument("--extra", nargs="*", default=[], help="name=lens.pt: extra single-map lenses")
 ap.add_argument("--mix", nargs="*", default=[],
                 help="name=a.pt,b.pt: per-layer signed weights over the Frobenius-normalised maps of two "
-                     "lenses, fitted like J++ expert weights (labelled fit split: <name>; future tokens: SS-<name>)")
+                     "lenses, fitted like J++ expert weights (labelled fit split: <name>; future tokens: SS-<name>). "
+                     "A token @plain / @lrp stands for that family's (fallback-finalised) expert maps.")
 a = ap.parse_args()
 
 torch.manual_seed(0)
@@ -75,6 +76,7 @@ fut = torch.load(fp, weights_only=False) if os.path.exists(fp) else None
 
 lenses: dict[str, Lens] = {"logit": Lens("logit"), "regress": Lens.load(os.path.join(P.LENSES, "regress.pt"))}
 weights_log = {}
+fam_experts: dict[str, dict[int, torch.Tensor]] = {}
 for fam, tag in (("plain", a.plain), ("lrp", a.lrp)):
     jp = os.path.join(P.LENSES, f"{tag}_final.pt")
     ep = os.path.join(P.LENSES, f"{tag}_experts_final.pt")
@@ -98,6 +100,7 @@ for fam, tag in (("plain", a.plain), ("lrp", a.lrp)):
         if fb.any():
             print(f"  {fam} layer {l}: experts {fb.nonzero()[:, 0].tolist()} saw < 50 positions -> pooled", flush=True)
         weights_log[f"{fam}|{l}|fallback"] = fb.tolist()
+    fam_experts[fam] = experts
     # J++ expert weights, fitted on the fitting split only (with Readout Filtering).
     fit_rows = [(r, i, w) for r, (i, w) in enumerate(rows) if i in set(fit_idx)]
     items_fit = sorted({i for _, i, _ in fit_rows})
@@ -162,12 +165,17 @@ for spec in a.extra:
         print(f"[skip] extra {nm}: {pth} not found")
 for spec in a.mix:
     nm, pths = spec.split("=", 1)
-    pths = [P.resolve(x) for x in pths.split(",")]
-    if not all(os.path.exists(x) for x in pths):
-        print(f"[skip] mix {nm}: missing {pths}")
+    toks = pths.split(",")
+    pths = [P.resolve(x) for x in toks if not x.startswith("@")]
+    fams = [x[1:] for x in toks if x.startswith("@")]
+    if not all(os.path.exists(x) for x in pths) or not all(f_ in fam_experts for f_ in fams):
+        print(f"[skip] mix {nm}: missing {pths} / {fams}")
         continue
     srcs = [Lens.load(x) for x in pths]
-    mx = {l: torch.stack([s_.maps[l] / s_.maps[l].norm() for s_ in srcs]) for l in layers}
+    mx = {}
+    for l in layers:
+        maps = [m_ for f_ in fams for m_ in fam_experts[f_][l]] + [s_.maps[l].float() for s_ in srcs]
+        mx[l] = torch.stack([m_ / m_.norm() for m_ in maps])
     fit_rows = [(r, i, w) for r, (i, w) in enumerate(rows) if i in set(fit_idx)]
     items_fit = sorted({i for _, i, _ in fit_rows})
     pos_of = {i: j for j, i in enumerate(items_fit)}
