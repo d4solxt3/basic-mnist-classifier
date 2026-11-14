@@ -152,3 +152,96 @@ pair 5/90 France/Brazil
 pair 6/90 France/China
 pair 7/90 France/Russia
 pair 8/90 France/Egypt
+pair 9/90 France/India
+pair 10/90 France/Canada
+pair 11/90 France/Mexico
+pair 12/90 Germany/Spain
+pair 13/90 Germany/Italy
+pair 14/90 Germany/Japan
+pair 15/90 Germany/Brazil
+pair 16/90 Germany/China
+pair 17/90 Germany/Russia
+pair 18/90 Germany/Egypt
+pair 19/90 Germany/India
+pair 20/90 Germany/Canada
+pair 21/90 Germany/Mexico
+pair 22/90 Spain/Italy
+pair 23/90 Spain/Japan
+pair 24/90 Spain/Brazil
+pair 25/90 Spain/China
+pair 26/90 Spain/Russia
+pair 27/90 Spain/Egypt
+pair 28/90 Spain/India
+pair 29/90 Spain/Canada
+pair 30/90 Spain/Mexico
+pair 31/90 Italy/Japan
+pair 32/90 Italy/Brazil
+pair 33/90 Italy/China
+pair 34/90 Italy/Russia
+pair 35/90 Italy/Egypt
+pair 36/90 Italy/India
+pair 37/90 Italy/Canada
+pair 38/90 Italy/Mexico
+pair 39/90 Japan/Brazil
+pair 40/90 Japan/China
+pair 41/90 Japan/Russia
+pair 42/90 Japan/Egypt
+pair 43/90 Japan/India
+pair 44/90 Japan/Canada
+pair 45/90 Japan/Mexico
+pair 46/90 Brazil/China
+pair 47/90 Brazil/Russia
+pair 48/90 Brazil/Egypt
+pair 49/90 Brazil/India
+pair 50/90 Brazil/Canada
+pair 51/90 Brazil/Mexico
+pair 52/90 China/Russia
+pair 53/90 China/Egypt
+pair 54/90 China/India
+pair 55/90 China/Canada
+pair 56/90 China/Mexico
+pair 57/90 Russia/Egypt
+pair 58/90 Russia/India
+pair 59/90 Russia/Canada
+pair 60/90 Russia/Mexico
+pair 61/90 Egypt/India
+pair 62/90 Egypt/Canada
+pair 63/90 Egypt/Mexico
+pair 64/90 India/Canada
+pair 65/90 India/Mexico
+pair 66/90 Canada/Mexico
+pair 67/90 bread/butter
+pair 68/90 salt/pepper
+pair 69/90 thunder/lightning
+pair 70/90 lock/key
+pair 71/90 cat/mouse
+pair 72/90 fish/chips
+pair 73/90 needle/thread
+pair 74/90 bow/arrow
+pair 75/90 hammer/nail
+pair 76/90 knife/fork
+pair 77/90 sun/moon
+pair 78/90 spider/web
+pair 79/90 bread/chips
+pair 80/90 salt/thread
+pair 81/90 thunder/arrow
+pair 82/90 lock/nail
+pair 83/90 cat/fork
+pair 84/90 fish/moon
+pair 85/90 needle/web
+pair 86/90 bow/butter
+pair 87/90 hammer/pepper
+pair 88/90 knife/lightning
+pair 89/90 sun/key
+pair 90/90 spider/mouse
+jlens country width by layer: ['0.33', '0.36', '0.43', '0.39', '0.32', '0.23', '0.27', '0.25', '0.25', '0.24', '0.17', '0.12', '0.11', '0.16', '0.19']
+jlens idiom width by layer: ['0.45', '0.42', '0.38', '0.34', '0.38', '0.34', '0.34', '0.35', '0.31', '0.37', '0.32', '0.33', '0.47', '0.42', '0.37']
+jlens scrambled width by layer: ['0.29', '0.22', '0.19', '0.18', '0.19', '0.16', '0.19', '0.20', '0.19', '0.15', '0.15', '0.15', '0.13', '0.30', '0.32']
+logit country width by layer: ['0.53', '0.62', '0.60', '0.57', '0.52', '0.46', '0.49', '0.52', '0.56', '0.59', '0.28', '0.18', '0.18', '0.20', '0.19']
+logit idiom width by layer: ['0.32', '0.42', '0.54', '0.44', '0.50', '0.48', '0.35', '0.31', '0.42', '0.37', '0.39', '0.34', '0.37', '0.42', '0.37']
+logit scrambled width by layer: ['0.26', '0.38', '0.45', '0.45', '0.48', '0.51', '0.49', '0.47', '0.38', '0.43', '0.41', '0.21', '0.14', '0.29', '0.32']
+=== 20:38:08 END rc=0
+=== 20:38:08 START S1
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3800.84it/s]
+512 prompts, mean len 127.8
+=== 20:38:15 handoff to queue3c (S1 restarts there)

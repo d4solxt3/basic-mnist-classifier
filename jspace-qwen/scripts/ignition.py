@@ -10,7 +10,16 @@ transitions in the workspace band. Two controls: (i) the same statistic on the
 *logit lens*, and (ii) the linear input mixture itself (width 0.8 by
 construction for a linear readout of a linear mix).
 
+Control (iii), --linear-control: the reference line in (ii) is not a valid
+baseline, because the reciprocal-rank share is itself a non-linear function of
+the logits. The control instead runs only alpha = 0 and alpha = 1, takes the
+straight line between the two residuals at each layer, and reads it out with the
+same lens. It keeps the readout's non-linearity and removes the network's, so
+width(actual) - width(linear) measures sharpening done by the network. It writes
+ignition_<tag>_linear_<lens>.npy with the same trial order (no summary JSON).
+
 python scripts/ignition.py --jlens lenses/exact_final.pt --carriers 20 --tag main
+python scripts/ignition.py --jlens lenses/exact_final.pt --carriers 10 --controls --linear-control --tag main
 """
 
 import argparse
@@ -59,6 +68,8 @@ if __name__ == "__main__":
     ap.add_argument("--alphas", type=int, default=21)
     ap.add_argument("--layer-stride", type=int, default=2)
     ap.add_argument("--controls", action="store_true", help="also run idiom/scrambled pairs")
+    ap.add_argument("--linear-control", action="store_true",
+                    help="straight-line interpolation of the endpoint residuals at each layer (control iii)")
     ap.add_argument("--tag", required=True)
     a = ap.parse_args()
 
@@ -87,8 +98,9 @@ if __name__ == "__main__":
         for tmpl in (carriers if kind == "country" else noun_carriers):
             ids, pos = build_ids(tok, tmpl, ia)
             with torch.no_grad():
-                x = emb[ids].repeat(len(alphas), 1, 1).clone()
-                al = torch.tensor(alphas, dtype=x.dtype)[:, None]
+                run_alphas = np.array([0.0, 1.0]) if a.linear_control else alphas
+                x = emb[ids].repeat(len(run_alphas), 1, 1).clone()
+                al = torch.tensor(run_alphas, dtype=x.dtype)[:, None]
                 x[:, pos] = al * emb[ia] + (1 - al) * emb[ib]
                 with Recorder(model, layers) as rec:
                     model.text(inputs_embeds=x, use_cache=False)
@@ -96,6 +108,9 @@ if __name__ == "__main__":
                     S = np.zeros((len(alphas), len(layers)))
                     for j, l in enumerate(layers):
                         h = rec.acts[l][:, pos].float()
+                        if a.linear_control:  # h[0]: alpha = 0 (pure B), h[1]: alpha = 1 (pure A)
+                            alf = torch.tensor(alphas, dtype=h.dtype)[:, None]
+                            h = alf * h[1:2] + (1 - alf) * h[0:1]
                         z = lens.logits(model, h, l) if (lname == "logit" or l < L - 1) else model.unembed_f32(h)
                         ra = (z > z[:, ia:ia + 1]).sum(1).float() + 1
                         rb = (z > z[:, ib:ib + 1]).sum(1).float() + 1
@@ -104,6 +119,13 @@ if __name__ == "__main__":
             out["trials"].append({"kind": kind, "A": A, "B": B, "carrier": tmpl})
         print(f"pair {pi + 1}/{len(pairs)} {A}/{B}", flush=True)
 
+    if a.linear_control:
+        ref = json.load(open(os.path.join(P.RESULTS, f"ignition_{a.tag}.json")))["trials"]
+        assert ref == out["trials"], "linear control must use the same trials as the main run"
+        for lname, S_list in shares.items():
+            np.save(os.path.join(P.RESULTS, f"ignition_{a.tag}_linear_{lname}.npy"), np.stack(S_list))
+        print("linear control written")
+        sys.exit(0)
     res = {"layers": layers, "alphas": alphas.tolist(), "trials": out["trials"], "summary": {}}
     for lname, S_list in shares.items():
         S = np.stack(S_list)  # [trials, alphas, layers]
