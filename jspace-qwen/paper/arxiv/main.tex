@@ -59,15 +59,15 @@ layers 4--19 and on typo correction. Swapping a function's argument along J-lens
 the new answer on 28\% of trials in the readout-selected band and 48\% across layers 7--20, against
 7--8\% for logit-lens directions and at most 2\% for an unrelated-target control; the causal leverage
 is real, and equal-width windows show it is strongest in early and mid depth (43--48\% in every
-5-layer window from layer 3 to 19), not in the late band that the readouts select. J++ improves on the J-lens
-by 5.5 points on average over five fresh splits, against about 20 points at 27B, and nearly all of
-that gain comes from its LRP backward pass: J++ leads the plain LRP lens by only 0.6 points. A
-label-free variant that routes each residual to its own LRP expert ties J++. In a pre-registered
-test on five fresh splits, two of four candidate improvements meet the stated win criterion, by small
-margins: bagging J++'s expert weights ($+1.0$ points, 4/5 split wins) and a two-weight mix of the LRP
-lens with a new \emph{broadcast lens} that keeps only influence on strictly later positions ($+0.6$
-points, 4/5 wins and one tie). Both work by giving J++'s 47 labelled fitting items less room to
-overfit. The network sharpens the switch between competing concepts beyond a linear mix, but
+5-layer window from layer 3 to 19), not in the late band that the readouts select. Over 25 fresh splits J++
+improves on the J-lens by 6.7 points, against about 20 at 27B, about two-thirds of it from its LRP
+backward pass. A label-free variant that routes each residual to its own LRP expert comes within 1.6
+points. Two pre-registered rounds tested improvements over J++. In round 2 (five splits), two of four
+candidates met the win criterion by small margins: bagging J++'s expert weights ($+1.0$ points) and a
+two-weight mix of the LRP lens with a new \emph{broadcast lens} that keeps only influence on strictly
+later positions ($+0.6$). In round 3 (twenty new splits) both tie J++, as does an LRP-broadcast mix:
+J++ is not beaten. Bagging halves J++'s overfitting to its 47 labelled items without raising held-out
+recall. The network sharpens the switch between competing concepts beyond a linear mix, but
 progressively through depth and equally in logit-lens readouts, not in a J-space band. We also document two implementation pitfalls in J++-style evaluations, and derive unbiased
 sketch estimators of the J-lens with a weights-only predictor of the benefit of readout-aware
 probes. Code, results, logs and pre-registrations are public.
@@ -105,15 +105,16 @@ mid-depth layers. Its directions are causally effective handles on a function's 
 logit-lens and unrelated-target controls. Unlike the large-model picture, the causal leverage is
 strongest across mid-depth layers, not in the late band the readouts select.
 \item \textbf{J++ at small scale} (\cref{sec:jpp}). J++'s gain over the J-lens shrinks from about
-20 points to 5.5, and nearly all of it comes from the LRP backward pass rather than from learned
-expert weights. Two implementation pitfalls silently distort J++-style evaluations; we describe both.
+20 points to 6.7, about two-thirds from the LRP backward pass and a third from learned expert
+weights. Two implementation pitfalls silently distort J++-style evaluations; we describe both.
 \item \textbf{Label-free and broadcast variants} (\cref{sec:methods}). Routing each residual to its
-own LRP expert, shrunk toward the pooled map by count, needs no labels and ties J++. A new
+own LRP expert, shrunk toward the pooled map by count, needs no labels and comes within 1.6 points of
+J++. A new
 \emph{broadcast lens} keeps only influence on strictly later positions, the attention-carried traffic
 that a workspace reading identifies with availability.
-\item \textbf{A pre-registered, multi-split test of improvements over J++} (\cref{sec:round2}). Two
-of four candidates meet the win criterion fixed in advance, by small margins, and both do so by
-reducing overfitting of the labelled weight search.
+\item \textbf{Two pre-registered, multi-split tests of improvements over J++, with a negative
+result} (\cref{sec:round2,sec:round3}). Two candidates that met the criterion on five splits tie J++ on
+twenty more: J++ is not beaten, and five overlapping splits proved too few to claim an improvement.
 \item \textbf{Unbiased sketch estimators} of the J-lens (\cref{sec:sketch}): Haar-random probes, an
 exactly known identity path, an online control variate, and readout-aware probe shaping with a
 closed-form, weights-only predictor $\rho(A)$ of its benefit.
@@ -154,12 +155,12 @@ Implicit concepts (associations, rhyme plans) are readable &
 $\le$1\% recall for every lens; the right concept's median rank is 1,000--2,000 &
 not at 0.6B \\
 J++ makes readouts markedly more faithful (35.7\% $\to$ 55.2\% at 27B) &
-$+5.5$ points over the J-lens on average, nearly all from the LRP backward pass (\cref{sec:jpp,sec:round2}) &
+$+6.7$ points over the J-lens over 25 splits, about two-thirds from the LRP backward pass (\cref{sec:jpp,sec:round3}) &
 much smaller \\
 J++'s learned expert weights add substantially &
-$+0.6$ points over the plain LRP lens; they overfit 47 labelled items; bagging or two-weight mixes do
-slightly better &
-not at 0.6B \\
+$+2.2$ points over the plain LRP lens (25 splits); they overfit 47 labelled items, and no pre-registered
+change improves on them &
+modestly \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -547,13 +548,10 @@ Routed-J++$^\ast$ & yes & 0.380 & $-0.013$ [$-0.034$, $-0.003$] & 0/5 & 0.348 \\
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/fig_round2.pdf}
-\caption{Round 2. (a) Held-out recall@10 minus J++'s on the same split, for each of the five
-confirmatory splits (dots), with the mean (bar) and split wins (right; bold where the pre-registered
-criterion is met). Shaded rows are the pre-registered candidates. (b) Where the gain over the J-lens
-comes from, as means over the five splits: the LRP backward pass (J-lens $\to$ R-lens), learned expert
-weights (R-lens $\to$ J++) and bagging (J++ $\to$ Bagged-J++); brackets give the range of each step
-over splits.}
+\includegraphics[width=0.68\linewidth]{figures/fig_round2.pdf}
+\caption{Round 2: held-out recall@10 minus J++'s on the same split, for each of the five confirmatory
+splits (dots), with the mean (bar) and split wins (right; bold where the pre-registered criterion is
+met). Shaded rows are the pre-registered candidates.}
 \label{fig:round2}
 \end{figure}
 
@@ -561,7 +559,7 @@ over splits.}
 average and wins on four of five splits; RB-mix gains 0.6 points, wins on four, ties on the fifth and
 is never behind J++ (\cref{tab:round2,fig:round2}). JppB ($+0.4$, 3/5) and Routed-J++ ($-1.3$, 0/5)
 do not meet the criterion. By the rule fixed in advance, Bagged-J++ and RB-mix beat J++ on this
-benchmark.
+benchmark; round 3 (\cref{sec:round3}) shows that neither replicates.
 
 \paragraph{The margins are small relative to the noise.} RB-mix's per-split paired 95\% intervals
 include zero on every split. Bagged-J++'s exclude zero on two splits but in opposite directions
@@ -588,15 +586,85 @@ observation that the broadcast lens ranks some bridge entities the other lenses 
 mostly a property of that split: over seeds 1--5 JB-mix improves on the J-lens by only 0.010 on average.
 The broadcast lens adds to the R-lens but barely to the J-lens.
 
-\paragraph{How much do learned weights add?} Across the five splits J++ improves on the J-lens by 5.5
-points (range 3.6--8.4) and on the R-lens by only 0.6 (range $-1.0$ to $+2.3$). At 0.6B parameters
-essentially all of J++'s advantage over the J-lens comes from the LRP backward pass. On the round-1
+\paragraph{How much do learned weights add?} Across these five splits J++ improves on the J-lens by
+5.5 points (range 3.6--8.4) but on the R-lens by only 0.6 (range $-1.0$ to $+2.3$), which suggested
+that almost all of J++'s advantage comes from the LRP backward pass; round 3 revises this. On the round-1
 split the faithful port gives J++ 0.367 (0.374 with the round-1 port), which places the label-free
 routed LRP lens 0.6 points above it there; over seeds 1--5 the two tie exactly on average.
 
-\paragraph{Round 3.} \pending{Round 3 (20 new splits; Bagged-J++, RB-mix and RLB-mix; win = positive
-mean difference and at least 16/20 split wins; secondary scoring on the 289 items that fail the
-correctness filter) is running. Results will be reported here whatever the outcome.}
+\subsection{Round 3: the round-2 winners do not replicate}
+\label{sec:round3}
+
+Round 2's winners had margins below a single split's paired interval, on five overlapping splits.
+Round 3, pre-registered before any of its numbers existed, re-tests Bagged-J++ and RB-mix on twenty
+new splits (seeds 6--25), together with RLB-mix (RB-mix with the broadcast lens computed through the
+LRP rules). A candidate beats J++ only with a positive mean difference and at least 16 wins in 20. As a
+secondary analysis, the fitted lenses are also scored on the 289 items that fail the correctness filter,
+which round 2 never scored.
+
+\begin{table}[t]
+\centering
+\caption{Round 3 (pre-registered; twenty splits of 47 fitting and 203 held-out items). Mean held-out
+recall@10, mean paired difference against J++ with the range over splits, wins/ties/losses, and the
+mean on the 289 out-of-pool items with its difference against J++. $^\ast$Pre-registered candidate.}
+\label{tab:round3}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llccccc}
+\toprule
+Lens & labels & mean held out & mean $\Delta$ vs J++ [range] & W/T/L & out of pool & $\Delta$ \\
+\midrule
+Bagged-J++$^\ast$ & yes & \textbf{0.407} & $+0.003$ [$-0.029$, $+0.054$] & 11/1/8 & 0.223 & $-0.005$ \\
+RB-mix$^\ast$ & yes & 0.401 & $-0.004$ [$-0.063$, $+0.035$] & 7/0/13 & 0.223 & $-0.006$ \\
+RLB-mix$^\ast$ & yes & 0.400 & $-0.004$ [$-0.072$, $+0.044$] & 9/0/11 & 0.219 & $-0.009$ \\
+\textbf{J++} & yes & 0.404 & --- & --- & 0.228 & --- \\
+\addlinespace
+routed LRP, $\kappa=200$ & no & 0.385 & $-0.019$ [$-0.080$, $+0.033$] & 3/0/17 & 0.201 & $-0.028$ \\
+R-lens & no & 0.378 & $-0.026$ [$-0.088$, $+0.027$] & 3/0/17 & \textbf{0.238} & $+0.009$ \\
+J-lens & no & 0.334 & $-0.070$ [$-0.127$, $-0.036$] & 0/0/20 & 0.202 & $-0.026$ \\
+logit lens & no & 0.275 & $-0.129$ [$-0.187$, $-0.094$] & 0/0/20 & 0.153 & $-0.076$ \\
+LRP broadcast lens & no & 0.269 & $-0.135$ [$-0.205$, $-0.089$] & 0/0/20 & 0.117 & $-0.111$ \\
+broadcast lens & no & 0.207 & $-0.197$ [$-0.260$, $-0.154$] & 0/0/20 & 0.060 & $-0.168$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_round3.pdf}
+\caption{Round 3. (a) Held-out recall@10 minus J++'s on each of twenty splits (dots), with the mean
+(bar) and split wins. (b) Where J++'s gain over the J-lens comes from, as means over all 25 splits of
+rounds 2 and 3: the LRP backward pass (J-lens $\to$ R-lens), learned expert weights (R-lens $\to$ J++)
+and bagging (J++ $\to$ Bagged-J++); brackets give each step's range over splits.}
+\label{fig:round3}
+\end{figure}
+
+\paragraph{No candidate beats J++.} Bagged-J++ is ahead by 0.3 points on average and wins 11 of 20
+splits; RB-mix and RLB-mix trail by 0.4 and win 7 and 9 (\cref{tab:round3,fig:round3}). None comes near
+the 16 wins required. Round 2's small wins were within noise: on this benchmark at 0.6B, nothing we tried
+beats J++ under its own protocol.
+
+\paragraph{Bagging curbs overfitting without improving held-out recall.} J++ scores 9.8 points higher
+on its fitting items than held out, against 4.0 for Bagged-J++ and RB-mix and about 1 for unfitted
+lenses. The weights are less overfitted but generalise no better.
+
+\paragraph{Learned weights add more than round 2 suggested.} Over these twenty splits J++ beats the
+R-lens by 2.6 points, on 17 of 20 splits (range $-2.7$ to $+8.8$). Pooled over all 25 splits
+(\cref{fig:round3}b), J++'s 6.7-point gain over the J-lens splits into 4.5 points from the LRP backward
+pass and 2.2 from the expert weights: LRP is about two-thirds of the gain, not nearly all of it.
+
+\paragraph{The label-free routed lens trails J++.} It tied J++ in round 2 but trails by 1.9 points here
+(J++ ahead on 17 of 20); over all 25 splits it trails by 1.6 points. Without labels, a routed LRP lens
+gets within two points of J++, not to parity.
+
+\paragraph{LRP helps the broadcast lens, but not in a mix.} The LRP rules raise the broadcast lens from
+20.7\% to 26.9\% on all 20 splits, slightly more than they add to the J-lens (4.4 points). Mixed with
+the R-lens, the LRP broadcast lens does no better than the plain one.
+
+\paragraph{Out of pool, the plain R-lens is best.} On the 289 items the model answers wrongly, the
+R-lens beats J++ by 0.9 points on 15 of 20 splits, and every candidate trails J++ slightly, matching the
+round-1 all-items panel. Where the model has not computed the answer, weights tuned on correctly
+answered items do not help.
 
 \subsection{Causal use of J-lens directions}
 \label{sec:swaps}
@@ -813,11 +881,13 @@ poetry plans) are not recoverable by any linear readout. Ignition-like sharpenin
 steadily to the output and is as visible through the logit lens, so it does not single out a band. We read these as weak evidence against a narrow late
 workspace in a 0.6B model, not as evidence against the J-space hypothesis at scale.
 
-\paragraph{What J++ adds at small scale.} Nearly all of J++'s advantage over the J-lens comes from the
-LRP backward pass. Learned expert weights fit 47 labelled items far better than they generalise, and
-the improvements that survive a multi-split test are those that make the weight search more stable:
-averaging over resamples, or shrinking it to two weights over complementary maps. Making the search
-richer (Routed-J++) loses on every split. A label-free routed LRP lens ties J++ outright.
+\paragraph{What J++ adds at small scale.} About two-thirds of J++'s advantage over the J-lens comes
+from the LRP backward pass and a third from its learned expert weights. The weights fit 47 labelled
+items far better than they generalise, yet nothing we tried improves on them: stabilising the search
+(bagging, two-weight mixes) halves the overfitting without raising held-out recall, and making it richer
+(Routed-J++) loses on every split. A label-free routed LRP lens comes within two points. The lesson we
+draw is methodological as much as substantive: round 2's five overlapping splits produced two
+``wins'' that twenty more splits erased.
 
 \section{Limitations}
 \label{sec:limitations}
@@ -831,19 +901,18 @@ component, so conclusions about J++ at full budget should not be drawn from our 
 access the J-space paper's text from our compute environment; our implementation follows the released
 code line by line where possible, and choices not pinned down by released code (the seven-layer subset,
 the band rule, the ignition statistic, the final-norm gain in J-lens directions) are stated explicitly.
-Rounds 2 and 3 vary the split but not the fitting prompts, the router's $k$-means or the probe draws,
-and all splits draw on the same 250 items; the round-2 margins are smaller than a single split's paired
-interval. Finally, we test operational consequences and make no claim about consciousness.
+Rounds 2 and 3 vary the split (26 seeds) but not the fitting prompts, the router's $k$-means or the
+probe draws, and all splits draw on the same 250 items; the out-of-pool items are a different
+population, not a replication on new items. Finally, we test operational consequences and make no claim about consciousness.
 
 \section{Conclusion}
 
 On a 0.6B model, the Jacobian lens reproduces as a better reader and a better causal handle than the
 logit lens, but the clean late-band workspace of large models does not: causal leverage is strongest
-through mid-depth. J++'s gain shrinks to a few points and comes almost entirely from its LRP backward
-pass; its labelled weights overfit, and the two changes that beat it in a pre-registered test do so by
-curbing that overfitting. Label-free routing matches J++ without labels. The network sharpens competing concepts into a categorical choice, but
-progressively through depth rather than in a band. \pending{Round 3 and the sketch estimator results
-will be added when they complete.}
+through mid-depth. J++'s gain shrinks to about 7 points, two-thirds of it from its LRP backward pass;
+two pre-registered rounds found nothing that beats it, and a label-free routed lens comes within two
+points. The network sharpens competing concepts into a categorical choice, but
+progressively through depth rather than in a band. \pending{Sketch estimator results.}
 
 \section*{Reproducibility}
 Code, results, logs, pre-registrations and the exact commands are in the project repository
