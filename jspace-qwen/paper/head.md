@@ -41,4 +41,17 @@ clusters that score a spurious perfect recall, and masking before combining expe
 **Sketch estimators.** We derive unbiased sketch estimators of the J-lens with a weights-only
 predictor of the benefit of readout-aware probe shaping. [SKETCH RESULT]
 
-[SWAPS/IGNITION RESULT]
+**Causal swaps.** We swap a templated function's argument (e.g. the country in "The capital of
+A is") along lens directions:
+
+| Directions | Success | Band |
+|---|---|---|
+| J-lens | 28% | readout-selected band (layers 20–24) |
+| J-lens | 48% | mid-depth layers 7–20 |
+| logit lens | 7–8% | either band |
+| random-target null | ≤2% | — |
+
+The leverage is concentrated in one category (countries). It is not confined to the
+readout-selected band.
+
+[IGNITION RESULT]

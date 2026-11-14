@@ -167,23 +167,38 @@ if cur:
 
 # ---------------------------------------------------------------- swaps
 sw = load("swaps_main.json")
+swm = load("swaps_midband.json")
 if sw:
-    exps = [("probe-swap", "probe-swap (two-hop)"), ("flexgen", "flexible generalization")]
-    fig, axes = plt.subplots(1, 2, figsize=(8.4, 3.0), sharey=True)
-    for ax, (exp, title) in zip(axes, exps):
+    panels_sw = [(sw, f"workspace band (layers {sw['band'][0]}–{sw['band'][-1]})")]
+    if swm:
+        panels_sw.append((swm, f"mid-depth band (layers {swm['band'][0]}–{swm['band'][-1]})"))
+    fig, axes = plt.subplots(1, len(panels_sw), figsize=(4.3 * len(panels_sw), 3.2), sharey=True, squeeze=False)
+    for ax, (d, title) in zip(axes[0], panels_sw):
         grid(ax)
         for lens, lab_ in (("jlens", "J-lens"), ("logit", "logit"), ("regress", "regress")):
-            for var, ls in (("main", "-"), ("random_null", ":")):
-                pts = [(sc, sw["results"][f"{exp}|{var}|{lens}|{sc}"]["success"][0]) for sc in sw["scales"]
-                       if f"{exp}|{var}|{lens}|{sc}" in sw["results"]]
-                if pts:
-                    ax.plot(*zip(*pts), color=COLOR[lab_], ls=ls, marker="o" if var == "main" else None, ms=3,
-                            label=f"{lab_} {'swap' if var == 'main' else 'random null'}")
+            for var in ("main", "random_null"):
+                ks = [f"flexgen|{var}|{lens}|{sc}" for sc in d["scales"]]
+                pts = [(d["results"][k]["median_edit_norm"], d["results"][k]["success"][0], sc)
+                       for k, sc in zip(ks, d["scales"]) if k in d["results"]]
+                if not pts:
+                    continue
+                xs, ys, scs = zip(*pts)
+                if var == "main":
+                    ax.plot(xs, ys, color=COLOR[lab_], marker="o", ms=4, label=f"{lab_} swap")
+                    for x_, y_, sc in pts:
+                        ax.annotate(f"×{sc:g}", (x_, y_), xytext=(3, 3), textcoords="offset points", fontsize=6.5,
+                                    color=INK2)
+                else:
+                    ax.plot(xs, ys, color=COLOR[lab_], ls=":", lw=1.5, alpha=0.8,
+                            label=f"{lab_} random-target null")
         ax.set_xscale("log", base=2)
-        ax.set_xlabel("edit scale")
+        ax.set_xlabel("median edit norm")
         ax.set_title(title, loc="left", fontsize=9.5, color=INK)
-    axes[0].set_ylabel("swap success (rank-1)")
-    axes[1].legend(frameon=False, fontsize=7, loc="upper left")
+    axes[0][0].set_ylabel("swap success (f(B) at rank 1)")
+    axes[0][0].set_ylim(-0.02, 0.62)
+    axes[0][0].legend(frameon=False, fontsize=6.8, loc="upper left", ncol=2)
+    fig.suptitle("Flexible generalisation: swapping a function's argument along lens directions (60 scored trials)",
+                 x=0.01, y=1.03, ha="left", fontsize=10, color=INK)
     save(fig, "fig_swaps")
 
 # ---------------------------------------------------------------- ignition

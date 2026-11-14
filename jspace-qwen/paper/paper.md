@@ -41,7 +41,20 @@ clusters that score a spurious perfect recall, and masking before combining expe
 **Sketch estimators.** We derive unbiased sketch estimators of the J-lens with a weights-only
 predictor of the benefit of readout-aware probe shaping. [SKETCH RESULT]
 
-[SWAPS/IGNITION RESULT]
+**Causal swaps.** We swap a templated function's argument (e.g. the country in "The capital of
+A is") along lens directions:
+
+| Directions | Success | Band |
+|---|---|---|
+| J-lens | 28% | readout-selected band (layers 20–24) |
+| J-lens | 48% | mid-depth layers 7–20 |
+| logit lens | 7–8% | either band |
+| random-target null | ≤2% | — |
+
+The leverage is concentrated in one category (countries). It is not confined to the
+readout-selected band.
+
+[IGNITION RESULT]
 
 ## 1 Introduction
 
@@ -683,6 +696,12 @@ discordant counts in brackets (J-lens only / other lens only):
 | 4 | 0.167 (0.79) | 0.183 (0.49) | 0.150 (0.69) | −0.017 [−0.067, +0.033] (1/2) | +0.017 [−0.050, +0.100] (3/2) |
 
 The random-target null succeeds on at most 1 of 56 trials at any scale and for any lens.
+
+![Swap success against edit norm](figures/fig_swaps.png)
+
+**Figure 4.** Flexible-generalisation swap success against the median edit norm (relative change
+of the final-position residual), for each lens and scale (labels), in the two bands. Dotted lines
+are the random-target nulls.
 
 **J-lens directions are the most efficient handle on the swapped argument.** At scale 1, a swap
 along J-lens directions installs f(B) on 28% of trials. Logit-lens directions do so on 7% and

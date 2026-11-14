@@ -36,6 +36,12 @@ discordant counts in brackets (J-lens only / other lens only):
 
 The random-target null succeeds on at most 1 of 56 trials at any scale and for any lens.
 
+![Swap success against edit norm](figures/fig_swaps.png)
+
+**Figure 4.** Flexible-generalisation swap success against the median edit norm (relative change
+of the final-position residual), for each lens and scale (labels), in the two bands. Dotted lines
+are the random-target nulls.
+
 **J-lens directions are the most efficient handle on the swapped argument.** At scale 1, a swap
 along J-lens directions installs f(B) on 28% of trials. Logit-lens directions do so on 7% and
 regression-lens directions on 15%. Every discordant trial favours the J-lens (13/0 and 8/0).
