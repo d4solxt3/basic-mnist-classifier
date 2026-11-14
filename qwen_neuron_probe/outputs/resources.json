@@ -1,0 +1,27 @@
+{
+  "model_load_s": 2.2574286460876465,
+  "n_params": 1720574976,
+  "weight_bytes": 3441149952,
+  "dtype": "bfloat16",
+  "device": "cpu",
+  "stage1_axes": {
+    "syc": {
+      "wall_s": 15.18663477897644,
+      "activation_pass_s": 3.9358503818511963
+    },
+    "unc": {
+      "wall_s": 11.402511596679688,
+      "activation_pass_s": 3.9475231170654297
+    },
+    "cau": {
+      "wall_s": 12.06884217262268,
+      "activation_pass_s": 3.547215700149536
+    },
+    "per": {
+      "wall_s": 12.864707708358765,
+      "activation_pass_s": 3.9098260402679443
+    }
+  },
+  "stage1_total_s": 55.17692756652832,
+  "stage1_peak_rss_gb": 4.11490304
+}

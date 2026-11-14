@@ -1,5 +1,6 @@
 """Shared helpers for the Qwen3-1.7B single-neuron probe (Stage 1 and Stage 2)."""
 import json
+import os
 import platform
 import resource
 import subprocess
@@ -13,8 +14,8 @@ import yaml
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 ROOT = Path(__file__).resolve().parent
-OUTPUTS = ROOT / "outputs"
-RUNLOG = ROOT / "RUNLOG.md"
+OUTPUTS = Path(os.environ.get("PROBE_OUTPUTS", ROOT / "outputs"))  # override only for smoke tests
+RUNLOG = Path(os.environ.get("PROBE_RUNLOG", ROOT / "RUNLOG.md"))
 
 
 def load_config(path: str | Path) -> dict:
