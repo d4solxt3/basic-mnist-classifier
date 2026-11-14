@@ -44,7 +44,7 @@ recovers only the J-lens level (0.331). The semi-supervised variant is indisting
 (−0.011 [−0.029, +0.007]).
 
 **The broadcast lens alone loses information but complements the J-lens.** Removing the
-self-target terms halves the lens's recall (0.217). Removing the identity path evidently costs
+self-target terms cuts the lens's recall by a third (0.332 → 0.217). Removing the identity path evidently costs
 more than the generic next-token predictions it suppresses. The B-lens does rank some
 intermediates better than every other lens, for example "Earth" (rank 3, against 9–16) and the
 language name "Dutch" (56, against 81–793). A labelled two-map mix of the J-lens and the B-lens (JB-mix) raises
