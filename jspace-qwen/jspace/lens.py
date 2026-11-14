@@ -170,3 +170,58 @@ class AffineLens(Lens):
         if self.mode == "affine":
             out = out + self.mu_out
         return out
+
+
+def surface_classes(tok, vocab_size: int) -> torch.Tensor:
+    """Label-free, vocabulary-only token classes for *surface-form collapsing*.
+
+    Two tokens are in one class when they agree after dropping one leading space
+    and lowercasing (``" December"``, ``"December"``, ``" december"``, ...). Each
+    class has a canonical member fixed by the vocabulary alone: the first of
+    ``" "+lower, lower, " "+Capitalised, Capitalised`` that is a token, else its
+    lowest-id member with a leading space, else its lowest id. Returns
+    ``canon[V]``: the canonical id of each token's class (itself for singletons).
+    The four preferred spellings are all among the surface forms the readout
+    evaluation credits for a candidate word, so collapsing never removes the
+    form a candidate is scored through."""
+    dec = tok.batch_decode([[i] for i in range(vocab_size)])
+    key = [(s[1:] if s.startswith(" ") else s).lower() for s in dec]
+    by_key: dict[str, list[int]] = {}
+    for i, k in enumerate(key):
+        if k.strip():
+            by_key.setdefault(k, []).append(i)
+    lookup = {s: i for i, s in enumerate(dec)}
+    canon = torch.arange(vocab_size)
+    for k, ids in by_key.items():
+        if len(ids) < 2:
+            continue
+        c = next((lookup[s] for s in (" " + k, k, " " + k.capitalize(), k.capitalize())
+                  if s in lookup and lookup[s] in ids), None)
+        if c is None:
+            sp = [i for i in ids if dec[i].startswith(" ")]
+            c = min(sp) if sp else min(ids)
+        canon[ids] = c
+    return canon
+
+
+class CollapsedLens(Lens):
+    """Surface-form collapsing (ours): each class of surface variants keeps one
+    entry, its canonical token, carrying the class's maximum logit; the other
+    members are removed (-inf). The top-k list then holds k distinct words
+    instead of spending slots on case / leading-space duplicates."""
+
+    def __init__(self, base: Lens, canon: torch.Tensor):
+        super().__init__(base.kind, base.maps, getattr(base, "bias", None), name=f"{base.name}+sfc")
+        self.base = base
+        self.canon = canon
+
+    def transport(self, h, layer):
+        return self.base.transport(h, layer)
+
+    def logits(self, model, h, layer):
+        z = self.base.logits(model, h, layer)
+        shp = z.shape
+        z = z.reshape(-1, shp[-1])
+        out = torch.full_like(z, float("-inf"))
+        out.scatter_reduce_(1, self.canon[None].expand_as(z), z, reduce="amax", include_self=True)
+        return out.reshape(shp)

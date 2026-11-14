@@ -31,6 +31,7 @@ src = [0, 1, 2]
 tgt = L - 1
 
 J = exact_prompt_jacobian(model, ids, src, tgt, dim_batch=8)
+J_later = exact_prompt_jacobian(model, ids, src, tgt, dim_batch=8, targets="later")
 print("exact J computed; ||J_1|| / sqrt(d) =", float(J[1].norm() / math.sqrt(d)))
 
 # --- 1. brute-force ground truth ---------------------------------------------
@@ -66,7 +67,14 @@ for l in src:
     err = float((J[l] - Jbf).norm() / Jbf.norm())
     print(f"  layer {l}: rel. diff estimator vs brute-force autograd = {err:.2e}")
     assert err < 1e-4, err
-print("[ok] exact estimator == brute-force target-summed / source-averaged Jacobian")
+    from jspace.fitting import split_positions  # noqa: E402
+    S_, T_ = split_positions(T, targets="later")
+    assert int(T_.min()) > int(S_.max())
+    Jbf_l = full[T_][:, :, S_].sum(0).mean(1)
+    err_l = float((J_later[l] - Jbf_l).norm() / Jbf_l.norm())
+    print(f"  layer {l}: later-targets estimator vs brute force = {err_l:.2e}")
+    assert err_l < 1e-4, err_l
+print("[ok] exact estimator == brute-force target-summed / source-averaged Jacobian (all and later targets)")
 
 # --- 2. identity path ----------------------------------------------------------
 for l in src:

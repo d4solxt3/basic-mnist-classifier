@@ -40,6 +40,8 @@ ap.add_argument("--out", default=P.LENSES)
 ap.add_argument("--threads", type=int, default=4)
 ap.add_argument("--router", default=None, help="router .pt: also accumulate J++ expert Jacobians")
 ap.add_argument("--lrp", action="store_true", help="R-Lens/J++ LRP backward rules")
+ap.add_argument("--targets", default="all", choices=["all", "later"],
+                help="all: reference (targets p' >= p); later: broadcast lens (targets p' > p only)")
 a = ap.parse_args()
 
 torch.set_num_threads(a.threads)
@@ -57,7 +59,7 @@ st = fit(model, prompts, method=a.method, K=a.K, cv=a.cv, W=W, Winv=Winv, dim_ba
          seed=a.seed, snapshots=a.snapshots, snapshot_dir=a.out, tag=a.tag,
          save_per_prompt_layers=a.per_prompt_layers,
          per_prompt_path=os.path.join(a.out, f"{a.tag}_per_prompt.pt") if a.per_prompt_layers else None,
-         router=Router.load(a.router) if a.router else None, lrp=a.lrp)
+         router=Router.load(a.router) if a.router else None, lrp=a.lrp, targets=a.targets)
 save_lens_state(st, os.path.join(a.out, f"{a.tag}_final.pt"))
 if st.cl_sum is not None:
     save_experts(st, os.path.join(a.out, f"{a.tag}_experts_final.pt"))

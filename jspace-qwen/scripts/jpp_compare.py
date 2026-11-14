@@ -22,6 +22,7 @@ python scripts/jpp_compare.py --tag main
 import argparse
 import json
 import os
+import re
 import sys
 
 import numpy as np
@@ -31,7 +32,8 @@ ROOT = __file__.rsplit("/scripts/", 1)[0]
 sys.path.insert(0, ROOT)
 from jspace import evals as E  # noqa: E402
 from jspace import paths as P  # noqa: E402
-from jspace.jpp import RoutedLens, combine, expert_logits, fit_expert_weights, split_items  # noqa: E402
+from jspace.jpp import (RoutedLens, adaptive_shrink, combine, expert_logits, finalize_experts,  # noqa: E402
+                        fit_expert_weights, split_items)  # noqa: E402
 from jspace.lens import Calibration, Lens, fit_calibration  # noqa: E402
 from jspace.model import load_model  # noqa: E402
 from jspace.routing import Router  # noqa: E402
@@ -47,6 +49,10 @@ ap.add_argument("--all-items", action="store_true", help="secondary analysis: no
 ap.add_argument("--ss-positions", type=int, default=200)
 ap.add_argument("--ss-steps", type=int, default=100)
 ap.add_argument("--calib", action="store_true", help="also centred / z-scored readouts")
+ap.add_argument("--extra", nargs="*", default=[], help="name=lens.pt: extra single-map lenses")
+ap.add_argument("--mix", nargs="*", default=[],
+                help="name=a.pt,b.pt: per-layer signed weights over the Frobenius-normalised maps of two "
+                     "lenses, fitted like J++ expert weights (labelled fit split: <name>; future tokens: SS-<name>)")
 a = ap.parse_args()
 
 torch.manual_seed(0)
@@ -83,7 +89,15 @@ for fam, tag in (("plain", a.plain), ("lrp", a.lrp)):
     if not os.path.exists(ep):
         continue
     ex = torch.load(ep, weights_only=True)
-    experts = {int(l): v.float() for l, v in ex["experts"].items() if int(l) in layers}
+    experts, pooled, counts = {}, {}, {}
+    for l, v in ex["experts"].items():
+        if int(l) not in layers:
+            continue
+        counts[int(l)] = ex["counts"][l]
+        experts[int(l)], pooled[int(l)], fb = finalize_experts(v, ex["counts"][l])
+        if fb.any():
+            print(f"  {fam} layer {l}: experts {fb.nonzero()[:, 0].tolist()} saw < 50 positions -> pooled", flush=True)
+        weights_log[f"{fam}|{l}|fallback"] = fb.tolist()
     # J++ expert weights, fitted on the fitting split only (with Readout Filtering).
     fit_rows = [(r, i, w) for r, (i, w) in enumerate(rows) if i in set(fit_idx)]
     items_fit = sorted({i for _, i, _ in fit_rows})
@@ -130,12 +144,55 @@ for fam, tag in (("plain", a.plain), ("lrp", a.lrp)):
             weights_log[f"semi-{fam}|{l}"] = {"w": w.tolist(), "train_macro": sc}
             del Z
         lenses["Semi-J-filt" if fam == "plain" else "Semi-J++"] = Lens("jlens", semi, name="semi-weighted")
-    pooled = {l: (experts[l] * ex["counts"][l][:, None, None] / ex["counts"][l].sum()).sum(0) for l in layers}
     base = "Routed" if fam == "plain" else "Routed-LRP"
     lenses[base] = RoutedLens(experts, router)
-    # Shrinkage toward the pooled Jacobian (lambda selected on the fitting split).
+    # Shrinkage toward the pooled Jacobian (variant selected on the fitting split):
+    # fixed lambda = 0.5, and count-adaptive lambda_e = n_e / (n_e + 200).
     lenses[base + "-s0.5"] = RoutedLens({l: 0.5 * experts[l] + 0.5 * pooled[l][None] for l in layers}, router)
+    lenses[base + "-a200"] = RoutedLens({l: adaptive_shrink(experts[l], pooled[l], counts[l], 200.0)
+                                         for l in layers}, router)
     lenses["Pooled" if fam == "plain" else "Pooled-LRP"] = Lens("jlens", pooled)
+
+for spec in a.extra:
+    nm, pth = spec.split("=", 1)
+    pth = P.resolve(pth)
+    if os.path.exists(pth):
+        lenses[nm] = Lens.load(pth)
+    else:
+        print(f"[skip] extra {nm}: {pth} not found")
+for spec in a.mix:
+    nm, pths = spec.split("=", 1)
+    pths = [P.resolve(x) for x in pths.split(",")]
+    if not all(os.path.exists(x) for x in pths):
+        print(f"[skip] mix {nm}: missing {pths}")
+        continue
+    srcs = [Lens.load(x) for x in pths]
+    mx = {l: torch.stack([s_.maps[l] / s_.maps[l].norm() for s_ in srcs]) for l in layers}
+    fit_rows = [(r, i, w) for r, (i, w) in enumerate(rows) if i in set(fit_idx)]
+    items_fit = sorted({i for _, i, _ in fit_rows})
+    pos_of = {i: j for j, i in enumerate(items_fit)}
+    sup, ssm = {}, {}
+    for l in layers:
+        Z = expert_logits(model, mx[l], prep.resid[items_fit, l])
+        w, sc = fit_expert_weights(Z, [pos_of[i] for _, i, _ in fit_rows],
+                                   [prep.cands[i][wd] for _, i, wd in fit_rows],
+                                   [prep.items[i].eval for _, i, _ in fit_rows], exclude=exclude)
+        sup[l] = combine(mx[l], w)
+        weights_log[f"{nm}|{l}"] = {"w": w.tolist(), "train_macro": sc}
+        print(f"  mix {nm} layer {l}: w={np.round(w.numpy(), 2).tolist()} train macro@10 {sc:.3f}", flush=True)
+        if fut is not None:
+            npos = min(a.ss_positions, len(fut["future"]))
+            Z = expert_logits(model, mx[l], fut["H"][l][:npos])
+            w, sc = fit_expert_weights(Z, list(range(npos)), fut["future"][:npos], ["corpus"] * npos,
+                                       exclude=exclude, steps=a.ss_steps)
+            ssm[l] = combine(mx[l], w)
+            weights_log[f"SS-{nm}|{l}"] = {"w": w.tolist(), "train_future_recall": sc}
+            print(f"  mix SS-{nm} layer {l}: w={np.round(w.numpy(), 2).tolist()} future recall@10 {sc:.3f}",
+                  flush=True)
+        del Z
+    lenses[nm] = Lens("jlens", sup, name=nm)
+    if ssm:
+        lenses["SS-" + nm] = Lens("jlens", ssm, name="SS-" + nm)
 
 results, ranks_all = {}, {}
 cols = list(range(len(layers)))
@@ -152,6 +209,9 @@ for name, lens in lenses.items():
                     res[f"{wt}@{k}"] = E.recall_at_k(prep, r, cols, k, items_subset=held, weighting=wt)
             res["fit_item@10"] = E.recall_at_k(prep, r, cols, 10, items_subset=set(fit_idx), n_boot=10)["macro"]["mean"]
             results[key] = res
+            if res["fit_item@10"] >= 0.999:  # a degenerate (e.g. all-zero) map ties every logit
+                res["degenerate"] = True
+                print(f"!!! {key}: fitting-split recall@10 = 1.0 -- lens is degenerate, do not report", flush=True)
             m = res["item@10"]["macro"]
             print(f"{key:<26} item@10={m['mean']:.3f} [{m['lo']:.3f},{m['hi']:.3f}] "
                   f"pair@10={res['pair@10']['macro']['mean']:.3f} item@1={res['item@1']['macro']['mean']:.3f}",
@@ -162,7 +222,7 @@ for name, lens in lenses.items():
 selected = {}
 families = {}
 for name in lenses:
-    families.setdefault(name.split("-s")[0], []).append(name)
+    families.setdefault(re.sub(r"-(s[\d.]+|a\d+)$", "", name), []).append(name)
 for fam_name, members in families.items():
     name = fam_name
     cands = [k for k in results if k.split("|")[0] in members]

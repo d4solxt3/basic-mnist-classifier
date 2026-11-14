@@ -1,0 +1,5 @@
+=== 14:56:08 START B
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3621.44it/s]
+32 prompts, mean len 128.0
+[lrp] prompt 1/32 T=128 rows=1024 147.3s total=2.5min
+[lrp] prompt 2/32 T=128 rows=1024 791.1s total=15.6min

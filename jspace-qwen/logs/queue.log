@@ -5,3 +5,11 @@
 [exact] prompt 2/32 T=128 rows=1024 162.3s total=17.1min
 [exact] prompt 3/32 T=128 rows=1024 167.0s total=19.8min
 [exact] prompt 10/32 T=128 rows=1024 903.6s total=60.2min
+[exact] prompt 20/32 T=128 rows=1024 160.1s total=88.1min
+[exact] prompt 30/32 T=128 rows=1024 151.2s total=114.2min
+done: 32 prompts, 32768 VJP rows, 119.3 min
+=== 14:28:39 END rc=0
+=== 14:28:39 START S1
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3266.85it/s]
+512 prompts, mean len 127.8
+[sk16] prompt 1/512 T=128 rows=16 2.7s total=0.0min

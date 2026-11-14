@@ -58,18 +58,35 @@ def valid_positions(seq_len: int, skip_first: int = SKIP_FIRST) -> torch.Tensor:
     return torch.arange(skip_first, seq_len - 1)
 
 
+def split_positions(seq_len: int, skip_first: int = SKIP_FIRST, targets: str = "all"
+                    ) -> tuple[torch.Tensor, torch.Tensor]:
+    """(source positions, target positions). ``"all"``: the reference estimator,
+    sources = targets = the valid positions, so each source sums its influence
+    over targets p' >= p, *including p itself* (identity path + own next-token
+    prediction). ``"later"`` (broadcast lens, ours): sources are the first half
+    of the valid positions and targets the second half, so every term has
+    p' > p and only attention-carried influence on later positions remains."""
+    pos = valid_positions(seq_len, skip_first)
+    if targets == "all":
+        return pos, pos
+    if targets == "later":
+        m = len(pos) // 2
+        return pos[:m], pos[m:]
+    raise ValueError(targets)
+
+
 class PromptGraph:
     """One forward pass on ``input_ids`` replicated ``batch`` times, graph
     retained so that many VJP blocks can be pulled from it."""
 
     def __init__(self, model: LensModel, input_ids: torch.Tensor, source_layers: Sequence[int],
-                 target_layer: int, batch: int, skip_first: int = SKIP_FIRST):
+                 target_layer: int, batch: int, skip_first: int = SKIP_FIRST, targets: str = "all"):
         self.model = model
         self.source_layers = list(source_layers)
         self.target_layer = target_layer
         self.batch = batch
         self.seq_len = input_ids.shape[1]
-        self.pos = valid_positions(self.seq_len, skip_first)
+        self.pos, self.tpos = split_positions(self.seq_len, skip_first, targets)
         self._rec = Recorder(model, [*self.source_layers, target_layer], root=min(self.source_layers))
         with self._rec, torch.enable_grad():
             model.forward(input_ids.expand(batch, -1))
@@ -83,7 +100,7 @@ class PromptGraph:
         assert K <= self.batch
         cot = torch.zeros_like(self.target)
         c = cot_KD.to(cot.dtype)
-        cot[:K, self.pos, :] = c[:, None, :]
+        cot[:K, self.tpos, :] = c[:, None, :]
         with torch.enable_grad():
             grads = torch.autograd.grad(self.target, self.sources, grad_outputs=cot, retain_graph=retain)
         out = {}
@@ -116,7 +133,7 @@ def batched_vjp_rows(model: LensModel, input_ids: torch.Tensor, cot_KD: torch.Te
 def exact_prompt_jacobian(model: LensModel, input_ids: torch.Tensor, source_layers: Sequence[int],
                           target_layer: int, *, dim_batch: int = 16, skip_first: int = SKIP_FIRST,
                           router=None, cl_sum: dict | None = None, cl_count: dict | None = None,
-                          lrp: bool = False) -> dict[int, torch.Tensor]:
+                          lrp: bool = False, targets: str = "all") -> dict[int, torch.Tensor]:
     """Exact per-prompt J_n (reference reduction). If ``router`` is given, also
     adds per-position gradient rows into per-cluster sums ``cl_sum[l]``
     ``[E, d, d]`` (J++ expert Jacobians = cl_sum / cl_count). ``lrp`` records
@@ -125,7 +142,7 @@ def exact_prompt_jacobian(model: LensModel, input_ids: torch.Tensor, source_laye
 
     d = model.d_model
     with lrp_rules(model, lrp):
-        g = PromptGraph(model, input_ids, source_layers, target_layer, dim_batch, skip_first)
+        g = PromptGraph(model, input_ids, source_layers, target_layer, dim_batch, skip_first, targets)
     J = {l: torch.zeros(d, d) for l in source_layers}
     onehot = {}
     if router is not None:
@@ -138,7 +155,7 @@ def exact_prompt_jacobian(model: LensModel, input_ids: torch.Tensor, source_laye
         for i, s in enumerate(starts):
             k = min(dim_batch, d - s)
             cot = torch.zeros_like(g.target)
-            cot[torch.arange(k)[:, None], g.pos[None, :], (s + torch.arange(k))[:, None]] = 1.0
+            cot[torch.arange(k)[:, None], g.tpos[None, :], (s + torch.arange(k))[:, None]] = 1.0
             grads = torch.autograd.grad(g.target, g.sources, grad_outputs=cot, retain_graph=i < len(starts) - 1)
             for l, gr in zip(source_layers, grads):
                 rows_kPd = gr[:k, g.pos, :].float()
@@ -192,7 +209,7 @@ def fit(model: LensModel, prompts_ids: Sequence[torch.Tensor], *, source_layers:
         W: torch.Tensor | None = None, Winv: torch.Tensor | None = None, J_pilot: dict | None = None,
         dim_batch: int = 16, seed: int = 0, snapshots: Sequence[int] = (), snapshot_dir: str | None = None,
         save_per_prompt_layers: Sequence[int] = (), per_prompt_path: str | None = None,
-        tag: str = "", verbose: bool = True, router=None, lrp: bool = False) -> FitState:
+        tag: str = "", verbose: bool = True, router=None, lrp: bool = False, targets: str = "all") -> FitState:
     L, d = model.n_layers, model.d_model
     target_layer = L - 1 if target_layer is None else target_layer
     source_layers = list(range(target_layer)) if source_layers is None else sorted(source_layers)
@@ -213,7 +230,8 @@ def fit(model: LensModel, prompts_ids: Sequence[torch.Tensor], *, source_layers:
         T = ids.shape[1]
         if method == "exact":
             Jn = exact_prompt_jacobian(model, ids, source_layers, target_layer, dim_batch=dim_batch,
-                                       router=router, cl_sum=st.cl_sum, cl_count=st.cl_count, lrp=lrp)
+                                       router=router, cl_sum=st.cl_sum, cl_count=st.cl_count, lrp=lrp,
+                                       targets=targets)
             rows = d
         elif method == "sketch":
             Q = haar_frame(d, K, gen)

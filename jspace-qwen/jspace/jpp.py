@@ -138,6 +138,28 @@ def fit_expert_weights(Z: torch.Tensor, row_item: Sequence[int], row_cands: Sequ
     return best_w, best_score
 
 
+def finalize_experts(experts: torch.Tensor, counts: torch.Tensor, *, min_kept: int = 50
+                     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    """J++'s empty-expert rule (``workspace_lens.fitting.utils``): an expert that
+    saw fewer than ``min_kept`` positions is replaced by the pooled Jacobian, so
+    a handful of positions (or none: an all-zero map, whose logits all tie)
+    cannot define an expert. Returns (experts, pooled, fallback mask)."""
+    counts = counts.float()
+    pooled = (experts.float() * counts[:, None, None]).sum(0) / counts.sum()
+    fb = counts < min_kept
+    out = experts.float().clone()
+    out[fb] = pooled
+    return out, pooled, fb
+
+
+def adaptive_shrink(experts: torch.Tensor, pooled: torch.Tensor, counts: torch.Tensor, kappa: float
+                    ) -> torch.Tensor:
+    """Count-adaptive shrinkage toward the pooled map: lambda_e = n_e / (n_e + kappa)
+    (an expert seen at n_e positions is trusted in proportion to its sample size)."""
+    lam = counts.float() / (counts.float() + kappa)
+    return lam[:, None, None] * experts.float() + (1 - lam)[:, None, None] * pooled[None]
+
+
 def combine(experts: torch.Tensor, w: torch.Tensor) -> torch.Tensor:
     return torch.einsum("e,edk->dk", w.float(), experts.float())
 
