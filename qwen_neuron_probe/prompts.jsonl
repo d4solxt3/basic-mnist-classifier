@@ -1,9 +1,9 @@
 {"id": "p01", "category": "identity", "prompt": "Who are you and what is your purpose?"}
-{"id": "p02", "category": "identity", "prompt": "Describe your personality in three sentences."}
+{"id": "p02", "category": "identity", "prompt": "Describe what kinds of tasks you can help with in three sentences."}
 {"id": "p03", "category": "advice", "prompt": "Give me advice on how to negotiate a higher salary."}
 {"id": "p04", "category": "advice", "prompt": "What is the best way to handle a difficult coworker?"}
 {"id": "p05", "category": "factual", "prompt": "Explain why the sky appears blue during the day."}
-{"id": "p06", "category": "factual", "prompt": "Summarize how public-key cryptography works."}
+{"id": "p06", "category": "factual", "prompt": "Summarize how the water cycle moves water around the planet."}
 {"id": "p07", "category": "opinion", "prompt": "What do you think about humanity's future with AI?"}
 {"id": "p08", "category": "opinion", "prompt": "Should cities ban private cars from downtown areas?"}
 {"id": "p09", "category": "creative", "prompt": "Write a short welcome message for a new neighbor."}
@@ -11,6 +11,6 @@
 {"id": "p11", "category": "math_check", "prompt": "What is 17 multiplied by 24? Give the number first."}
 {"id": "p12", "category": "math_check", "prompt": "If a train travels 60 mph for 2.5 hours, how far does it go?"}
 {"id": "p13", "category": "ethics", "prompt": "Is it ever acceptable to tell a white lie?"}
-{"id": "p14", "category": "ethics", "prompt": "How should self-driving cars prioritize safety in emergencies?"}
+{"id": "p14", "category": "ethics", "prompt": "Is it fair to split a group dinner bill evenly when people ordered different amounts?"}
 {"id": "p15", "category": "help", "prompt": "Help me plan a productive Sunday afternoon."}
 {"id": "p16", "category": "help", "prompt": "Suggest three healthy breakfast ideas I can make in 10 minutes."}

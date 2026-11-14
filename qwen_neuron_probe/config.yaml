@@ -1,25 +1,39 @@
 experiment_name: "qwen3_1_7b_single_neuron_probe"
 
-# Active model config (fits 8 GB Zephyrus GPU with ~2.3 GB headroom)
+# Model config (BF16 weights are sized for an 8 GB GPU; the reported run executed on CPU, see RUNLOG.md)
 model_id: "Qwen/Qwen3-1.7B"
 revision: "main"          # Exact commit hash is resolved and logged at runtime
 load_in_4bit: false
 dtype: "bfloat16"
+device: "auto"            # cuda if available, else cpu
 
-# Intervention parameters (post-SwiGLU neuron input to mlp.down_proj)
-layer: 14
-target_neuron: 1024
-dose: 1.0                 # Residual-normalized push: v = dose * median(||h_L||) / ||W_down[:, n]||
+# Stage 1: whole-network discovery (Westfall-Young max-statistic permutation null)
+axes: ["syc", "unc", "cau", "per"]
+datasets_dir: "datasets"
+n_permutations: 200
+permutation_seed: 42
+min_active_rate: 0.25
+alpha_fwer: 0.01          # p_FWER < 0.01 passes the screen
+alpha_inconclusive: 0.05  # 0.01 <= p_FWER < 0.05 is inconclusive; p_FWER >= 0.05 refutes
+top_k_report: 20
 
-# Evaluation & reproducibility
-seeds: [0, 1, 2]
-batch_size: 4
+# Stage 2: intervention on the post-SwiGLU input to mlp.down_proj.
+# The unit tested per axis is read from outputs/stage1_<axis>.json (no hard-coded layer/neuron).
+# Additive push at every token position: z_n <- z_n + sign(d) * dose * median(||h_L||) / ||W_down[:, n]||,
+# so the residual perturbation has l2 norm exactly dose * median(||h_L||).
+intervention: "add"
+doses: [0.5, 1.0, 1.5]
+report_dose: 1.0
+seeds: [0, 1, 2]          # seeds drive sampling and the random-control neuron draw
+batch_size: 4             # Stage 1 forward passes
+gen_batch_size: 16        # Stage 2 sampled generation (all 16 OOD prompts in one batch)
 max_new_tokens: 64
 temperature: 0.7
 top_p: 0.9
 prompts_file: "prompts.jsonl"
 samples_to_save: 5
+min_distinct_2: 0.45
+shift_sd_multiplier: 2.0  # confirm needs mean shift >= 2 x SD of baseline Delta log P across OOD prompts
 
-# First-token log-prob contrast sets (updated per axis during Stage 2)
-target_tokens: ["Ah", "Fool", "Mortals", "Pathetic", "Behold", "Bow"]
-neutral_tokens: ["Sure", "Here", "To", "The", "Yes", "A"]
+# First-token contrast sets per axis (Appendix A of the paper)
+token_sets_file: "datasets/token_sets.json"
