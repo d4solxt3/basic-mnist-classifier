@@ -1,0 +1,12 @@
+{
+ "d": 1024,
+ "rho_ideal": 0.7641306811989476,
+ "rho_implemented": 0.7668465549225558,
+ "check_identity_factor": 1.0,
+ "singular_values": {
+  "max": 705.8961705030524,
+  "median": 38.38259979960448,
+  "min": 0.7770510580309239,
+  "effective_rank": 782.4698175477223
+ }
+}

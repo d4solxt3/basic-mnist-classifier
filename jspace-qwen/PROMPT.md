@@ -74,5 +74,48 @@ The original asks for something reasonable but leaves the important decisions un
 
 ## How the execution departs from this spec
 
-Recorded at the end of the project so the reader can compare plan and outcome: see
-[`paper/paper.md`](paper/paper.md), §Limitations.
+Each departure from the improved prompt above, and the reason for it. The results are in
+[`paper/paper.md`](paper/paper.md) and the arXiv-format version in [`paper/arxiv/`](paper/arxiv/).
+
+**Done as specified**
+- Exact J-lens estimator, checked against brute-force autograd (relative error ~1e-7).
+- Recall@1 and recall@10 on the released readout sets, with the correctness filter and
+  item-bootstrap intervals, against the logit lens.
+- A workspace band chosen by a rule fixed before any causal experiment (layers 20–24).
+- The three swap controls (logit-lens directions, random target, answer-swap ceiling).
+- The sketch estimator with the exact identity path and an online control variate.
+- Per-token readout calibration, compared with raw ranking and Readout Filtering.
+
+**Departures**
+- **No second model size.** The spec asked for Qwen3-1.7B "if budget remains". The budget went
+  instead to the J++ comparison, which proved more informative. An exact 1.7B lens would cost
+  about 3× the 0.6B fits.
+- **Order-ops is reported separately.** It is not in the macro, which follows J++'s five-evaluation
+  protocol so that J++ numbers compare directly. Only 18 of 55 order-ops items survive the
+  correctness filter.
+- **The random control is a random target, not a matched-norm random concept.** Every lens uses
+  unit-normalised directions at the same scales. The edit norm is reported for every condition, so
+  edits of matched size can be compared directly.
+- **Probe-swap is uninformative.** The model answers only 8 of 83 two-hop prompts correctly, so
+  flexible generalisation (60 scored trials) carries the causal results.
+- **The ignition baseline changed.** "Sharper than the input mix" was first operationalised as a
+  fixed reference width (0.8). That is invalid, because the rank-share statistic is non-linear. It
+  was replaced by a linear-interpolation control at each layer, run on the same trials.
+- **Calibration hurt rather than helped.** This is reported as a negative result, alongside two
+  other readout ideas that did not work.
+- **Fitting budget.** The lenses average 32 prompts (8 for the broadcast lens), against 1,000 for
+  the released lenses. Recall is flat from 8 to 32 prompts, but J++'s experts are the most
+  budget-sensitive component.
+
+**Added beyond the spec**
+- A full J++ reimplementation and head-to-head, with two implementation pitfalls documented.
+- The broadcast lens.
+- Label-free and routed variants.
+- Two pre-registered multi-split tests of improvements over J++ (rounds 2 and 3).
+- A weights-only predictor ρ(A) of the benefit of readout-aware probe shaping. For Qwen3-0.6B
+  ρ(A) = 0.764 (`results/rho.json`).
+
+**Not available to us.** The J-space paper's text could not be fetched from the compute
+environment. The implementation follows the released code (`anthropics/jacobian-lens`,
+`safety-research/jpp_lens`) line by line where possible, and states the choices that code does
+not pin down.
