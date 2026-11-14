@@ -54,4 +54,8 @@ A is") along lens directions:
 The leverage is concentrated in one category (countries). It is not confined to the
 readout-selected band.
 
-[IGNITION RESULT]
+**Ignition.** As one input word is morphed into another, the network sharpens the switch between
+competing concepts beyond what a straight-line mix of the endpoint activations predicts. For country
+pairs the switch is 0.12–0.16 narrower through layers 12–24, against about 0.05 for unrelated nouns.
+The sharpening grows steadily to the output and appears equally in logit-lens readouts. It is not
+confined to a J-space band.

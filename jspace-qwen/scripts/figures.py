@@ -202,20 +202,37 @@ if sw:
     save(fig, "fig_swaps")
 
 # ---------------------------------------------------------------- ignition
-ig = load("ignition_main.json")
-if ig:
-    fig, ax = plt.subplots(figsize=(6, 3))
-    grid(ax)
-    for key, lab_, ls in (("jlens|country", "J-lens", "-"), ("logit|country", "logit", "-"),
-                          ("jlens|scrambled", "J-lens", ":")):
-        if key in ig["summary"]:
-            ax.plot(ig["layers"], ig["summary"][key]["median_width"], color=COLOR[lab_], ls=ls, marker="o", ms=3,
-                    label=key.replace("|", ", "))
-    ax.axhline(0.8, color=INK2, lw=1, ls="--")
-    ax.text(ig["layers"][0], 0.81, "linear mixing", fontsize=7.5, color=INK2, va="bottom")
-    ax.set_xlabel("layer")
-    ax.set_ylabel("median 10→90% width (α)")
-    ax.legend(frameon=False, fontsize=7.5)
-    ax.set_title("Ignition: sharpness of the concept switch", loc="left", fontsize=10, color=INK)
+ist = load("ignition_main_stats.json")
+if ist and "linear_jlens|country" in ist["per_layer"]:
+    Ls = ist["layers"]
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.6, 3.4))
+    for ax in (a1, a2):
+        grid(ax)
+        ax.axvspan(19.5, 24.5, color=GRID, alpha=0.6, lw=0)
+        ax.text(22, 0.98, "band", transform=ax.get_xaxis_transform(), ha="center", va="top", color=INK2, fontsize=7.5)
+    for key, lab_, c, ls in (("jlens|country", "J-lens, actual", COLOR["J-lens"], "-"),
+                             ("linear_jlens|country", "J-lens, linear control", COLOR["J-lens"], ":"),
+                             ("logit|country", "logit lens, actual", COLOR["logit"], "-"),
+                             ("linear_logit|country", "logit lens, linear control", COLOR["logit"], ":")):
+        ys = [r[0] for r in ist["per_layer"][key]]
+        a1.plot(Ls, ys, color=c, ls=ls, marker="o" if ls == "-" else None, ms=3, label=lab_)
+    a1.set_xlabel("layer")
+    a1.set_ylabel("median 10→90% width in α")
+    a1.set_title("Country pairs: actual vs linear-interpolation control", loc="left", fontsize=9.5, color=INK)
+    a1.legend(frameon=False, fontsize=7, loc="lower left")
+    a1.set_ylim(0, 0.8)
+    for kind, lab_, c in (("country", "countries (660 trials)", SLOT[0]), ("scrambled", "unrelated nouns (60)", SLOT[6]),
+                          ("idiom", "associated nouns (60)", SLOT[3])):
+        r = ist["contrasts"][f"jlens: actual-linear|{kind}"]
+        m = [x[0] for x in r]
+        lo = [x[1] for x in r]
+        hi = [x[2] for x in r]
+        a2.fill_between(Ls, lo, hi, color=c, alpha=0.15, lw=0)
+        a2.plot(Ls, m, color=c, marker="o", ms=3, label=lab_)
+    a2.axhline(0, color=INK2, lw=1)
+    a2.set_xlabel("layer")
+    a2.set_ylabel("actual − linear width (J-lens)")
+    a2.set_title("Sharpening done by the network (negative = sharper)", loc="left", fontsize=9.5, color=INK)
+    a2.legend(frameon=False, fontsize=7, loc="lower left")
     save(fig, "fig_ignition")
 print("done")
