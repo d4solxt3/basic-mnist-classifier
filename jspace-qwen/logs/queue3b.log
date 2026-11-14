@@ -95,3 +95,54 @@ trial 100/654
 trial 125/654
 trial 150/654
 trial 175/654
+trial 225/654
+trial 250/654
+trial 275/654
+trial 300/654
+trial 325/654
+trial 350/654
+trial 375/654
+trial 400/654
+trial 425/654
+trial 450/654
+trial 500/654
+trial 525/654
+trial 575/654
+trial 600/654
+trial 625/654
+trial 650/654
+probe-swap|main|jlens|1.0                n=  8 success=0.000 [0.000,0.000] lost=0.500 edit=0.06
+probe-swap|main|jlens|2.0                n=  8 success=0.125 [0.000,0.375] lost=0.625 edit=0.16
+probe-swap|main|jlens|4.0                n=  8 success=0.000 [0.000,0.000] lost=0.875 edit=0.40
+probe-swap|main|logit|1.0                n=  8 success=0.000 [0.000,0.000] lost=0.375 edit=0.06
+probe-swap|main|logit|2.0                n=  8 success=0.125 [0.000,0.375] lost=0.375 edit=0.12
+probe-swap|main|logit|4.0                n=  8 success=0.000 [0.000,0.000] lost=0.375 edit=0.24
+probe-swap|answer_swap|jlens|1.0         n=  8 success=0.250 [0.000,0.500] lost=0.625 edit=0.14
+probe-swap|answer_swap|jlens|2.0         n=  8 success=0.500 [0.125,0.875] lost=0.625 edit=0.25
+probe-swap|answer_swap|jlens|4.0         n=  8 success=0.625 [0.250,0.875] lost=0.625 edit=0.52
+probe-swap|answer_swap|logit|1.0         n=  8 success=0.125 [0.000,0.375] lost=0.625 edit=0.07
+probe-swap|answer_swap|logit|2.0         n=  8 success=0.375 [0.125,0.750] lost=0.750 edit=0.12
+probe-swap|answer_swap|logit|4.0         n=  8 success=0.625 [0.250,0.875] lost=0.750 edit=0.25
+probe-swap|random_null|jlens|1.0         n=  8 success=0.000 [0.000,0.000] lost=0.750 edit=0.17
+probe-swap|random_null|jlens|2.0         n=  8 success=0.000 [0.000,0.000] lost=0.750 edit=0.28
+probe-swap|random_null|jlens|4.0         n=  8 success=0.125 [0.000,0.375] lost=0.875 edit=0.50
+probe-swap|random_null|logit|1.0         n=  8 success=0.000 [0.000,0.000] lost=0.500 edit=0.08
+probe-swap|random_null|logit|2.0         n=  8 success=0.000 [0.000,0.000] lost=0.500 edit=0.17
+probe-swap|random_null|logit|4.0         n=  8 success=0.125 [0.000,0.375] lost=0.875 edit=0.39
+flexgen|main|jlens|1.0                   n= 60 success=0.483 [0.350,0.600] lost=0.750 edit=0.13
+flexgen|main|jlens|2.0                   n= 60 success=0.417 [0.300,0.533] lost=0.817 edit=0.25
+flexgen|main|jlens|4.0                   n= 60 success=0.017 [0.000,0.050] lost=1.000 edit=0.54
+flexgen|main|logit|1.0                   n= 60 success=0.083 [0.017,0.167] lost=0.200 edit=0.08
+flexgen|main|logit|2.0                   n= 60 success=0.200 [0.100,0.300] lost=0.300 edit=0.14
+flexgen|main|logit|4.0                   n= 60 success=0.217 [0.117,0.317] lost=0.683 edit=0.28
+flexgen|random_null|jlens|1.0            n= 60 success=0.017 [0.000,0.050] lost=0.683 edit=0.24
+flexgen|random_null|jlens|2.0            n= 60 success=0.000 [0.000,0.000] lost=0.767 edit=0.37
+flexgen|random_null|jlens|4.0            n= 60 success=0.000 [0.000,0.000] lost=0.983 edit=0.65
+flexgen|random_null|logit|1.0            n= 60 success=0.017 [0.000,0.050] lost=0.267 edit=0.13
+flexgen|random_null|logit|2.0            n= 60 success=0.033 [0.000,0.083] lost=0.533 edit=0.21
+flexgen|random_null|logit|4.0            n= 60 success=0.017 [0.000,0.050] lost=0.817 edit=0.41
+=== 20:17:41 END rc=0
+=== 20:17:41 START IG
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3750.79it/s]
+pair 1/90 France/Germany
+pair 2/90 France/Spain
