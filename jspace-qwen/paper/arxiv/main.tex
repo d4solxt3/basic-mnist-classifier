@@ -66,7 +66,8 @@ test on five fresh splits, two of four candidate improvements meet the stated wi
 margins: bagging J++'s expert weights ($+1.0$ points, 4/5 split wins) and a two-weight mix of the LRP
 lens with a new \emph{broadcast lens} that keeps only influence on strictly later positions ($+0.6$
 points, 4/5 wins and one tie). Both work by giving J++'s 47 labelled fitting items less room to
-overfit. We also document two implementation pitfalls in J++-style evaluations, and derive unbiased
+overfit. The network sharpens the switch between competing concepts beyond a linear mix, but
+progressively through depth and equally in logit-lens readouts, not in a J-space band. We also document two implementation pitfalls in J++-style evaluations, and derive unbiased
 sketch estimators of the J-lens with a weights-only predictor of the benefit of readout-aware
 probes. Code, results, logs and pre-registrations are public.
 \end{abstract}
@@ -613,31 +614,65 @@ monotone-smoothed curve. A workspace-like ignition predicts narrow transitions i
 country pairs in 10 carriers (660 trials), and 12 associated noun pairs (e.g.\ bread/butter) and 12
 unrelated noun pairs (e.g.\ bread/chips) in 5 carriers each.
 
+\paragraph{Control.} A narrow width alone does not show that the network sharpens anything, because
+the reciprocal-rank share is itself non-linear in the logits; a reference width of 0.8 for a linear mix,
+which we first used, is not a valid baseline. The control runs only $\alpha=0$ and $\alpha=1$,
+interpolates the two residuals in a straight line at each layer, and reads them with the same lens. It
+keeps the readout's non-linearity and none of the network's. The actual run and the control agree at
+the endpoints (mean absolute share difference 0.0004). \emph{Network sharpening} is the actual width
+minus the control width per trial; intervals are cluster bootstraps over concept pairs.
+
 \begin{table}[t]
 \centering
-\caption{Ignition, first pass: median transition width (smaller is more abrupt).}
+\caption{Ignition. Top: median transition width for country pairs, actual and under the linear
+control. Bottom: network sharpening for the J-lens (actual $-$ control; negative is sharper), median of
+per-trial differences with 95\% intervals clustered by pair.}
 \label{tab:ignition}
 \small
-\begin{tabular}{llccccc}
+\setlength{\tabcolsep}{2.6pt}
+\begin{tabular}{lcccccccc}
 \toprule
-Pairs (trials) & Lens & layer 0 & layer 8 & layer 16 & layer 22 & layer 24 \\
+Layer & 0 & 8 & 12 & 16 & 20 & 22 & 24 & 27 \\
 \midrule
-countries (660) & J-lens & 0.33 & 0.32 & 0.25 & 0.12 & 0.11 \\
-countries (660) & logit lens & 0.53 & 0.52 & 0.56 & 0.18 & 0.18 \\
-associated nouns (60) & J-lens & 0.45 & 0.38 & 0.31 & 0.33 & 0.47 \\
-unrelated nouns (60) & J-lens & 0.29 & 0.19 & 0.19 & 0.15 & 0.13 \\
+J-lens, actual & 0.33 & 0.32 & 0.27 & 0.25 & 0.17 & 0.12 & 0.11 & 0.19 \\
+J-lens, control & 0.32 & 0.40 & 0.41 & 0.39 & 0.34 & 0.26 & 0.27 & 0.52 \\
+logit lens, actual & 0.53 & 0.52 & 0.49 & 0.56 & 0.28 & 0.18 & 0.18 & 0.19 \\
+logit lens, control & 0.47 & 0.59 & 0.65 & 0.70 & 0.53 & 0.45 & 0.45 & 0.52 \\
+\midrule
+countries (660) & $-0.00$ & $-0.07$ & $-0.13$ & $-0.12$ & $-0.15$ & $-0.14$ & $-0.16$ & $-0.31$ \\
+ & & {\scriptsize[$-.08$,$-.07$]} & {\scriptsize[$-.14$,$-.12$]} & {\scriptsize[$-.14$,$-.11$]} & {\scriptsize[$-.16$,$-.14$]} & {\scriptsize[$-.15$,$-.13$]} & {\scriptsize[$-.16$,$-.15$]} & {\scriptsize[$-.32$,$-.29$]} \\
+unrelated nouns (60) & $-0.01$ & $-0.05$ & $-0.04$ & $-0.05$ & $-0.07$ & $-0.08$ & $-0.09$ & $-0.19$ \\
+ & & {\scriptsize[$-.09$,$-.02$]} & {\scriptsize[$-.06$,$-.03$]} & {\scriptsize[$-.07$,$-.02$]} & {\scriptsize[$-.08$,$-.06$]} & {\scriptsize[$-.10$,$-.05$]} & {\scriptsize[$-.12$,$-.08$]} & {\scriptsize[$-.22$,$-.16$]} \\
+associated nouns (60) & $-0.00$ & $-0.02$ & $-0.02$ & $-0.02$ & $-0.04$ & $-0.09$ & $-0.10$ & $-0.23$ \\
+ & & {\scriptsize[$-.04$,$-.01$]} & {\scriptsize[$-.04$,$+.00$]} & {\scriptsize[$-.03$,$-.00$]} & {\scriptsize[$-.06$,$-.01$]} & {\scriptsize[$-.14$,$-.02$]} & {\scriptsize[$-.15$,$-.02$]} & {\scriptsize[$-.32$,$+.14$]} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{First pass.} J-lens transitions are narrower than logit-lens transitions at every layer
-below 20, and for countries they are narrowest in layers 22--24 (\cref{tab:ignition}). This is not yet
-evidence of ignition. Unrelated noun pairs are already sharp from layer 2 onward, so narrow widths may
-come from the rank-share statistic rather than the network. The reference line of 0.8 assumed for a
-linear mix is not a valid baseline, because the statistic is non-linear in the logits. We therefore
-added a control that interpolates the two endpoint residuals linearly at each layer and reads them with
-the same lens; network sharpening is the actual width minus the control width, with intervals
-clustered by concept pair. \pending{Control results.}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_ignition.pdf}
+\caption{Ignition. Left: transition widths for country pairs, actual (solid) and under the
+linear-interpolation control (dotted). Right: network sharpening (actual $-$ control) for the J-lens by
+pair type, with 95\% intervals clustered by pair. The shaded region is the workspace band.}
+\label{fig:ignition}
+\end{figure}
+
+\paragraph{The network sharpens the switch, most for countries.} From layer 8 onward the transition
+between two countries is narrower than a straight-line mix of the endpoint residuals predicts: by 0.07
+at layer 8 and by 0.12--0.16 through layers 12--24 (\cref{tab:ignition,fig:ignition}). Unrelated nouns
+sharpen by only about 0.05, and associated pairs such as bread/butter by about 0.02 before layer 20.
+Associated concepts evidently co-activate rather than compete, while two countries compete for the
+same slot.
+
+\paragraph{But not in a band, and not only through the J-lens.} The sharpening grows steadily to the
+output, reaching 0.31 at the final layer, with no peak in layers 20--24. Read through the logit lens,
+the network sharpens the country switch as much or more (0.22--0.25 at layers 20--24). The J-lens's
+narrower widths are mostly a property of the readout: under the control they are already 0.19--0.31
+below the logit lens's in layers 8--16. At 0.6B, the model turns a gradual input mix into an
+increasingly categorical choice between competing concepts, the behaviour ignition describes, but it
+does so progressively through depth in the residual stream itself rather than as an abrupt event
+confined to a J-space band.
 
 \subsection{Sketch estimators}
 \label{sec:sketch}
@@ -681,8 +716,8 @@ disposition changes the answer.
 \paragraph{What does not, or not yet.} The large-model picture places workspace content in a
 contiguous late band. At 0.6B the readout-selected band (20--24) is where readouts peak, but causal
 leverage is larger across layers 7--20, where readouts are weak. Implicit concepts (association,
-poetry plans) are not recoverable by any linear readout. The ignition signal we see is confounded by
-the readout statistic until the control lands. We read these as weak evidence against a narrow late
+poetry plans) are not recoverable by any linear readout. Ignition-like sharpening is real but grows
+steadily to the output and is as visible through the logit lens, so it does not single out a band. We read these as weak evidence against a narrow late
 workspace in a 0.6B model, not as evidence against the J-space hypothesis at scale.
 
 \paragraph{What J++ adds at small scale.} Nearly all of J++'s advantage over the J-lens comes from the
@@ -713,8 +748,9 @@ On a 0.6B model, the Jacobian lens reproduces as a better reader and a better ca
 logit lens, but the clean late-band workspace of large models does not: causal leverage is strongest
 through mid-depth. J++'s gain shrinks to a few points and comes almost entirely from its LRP backward
 pass; its labelled weights overfit, and the two changes that beat it in a pre-registered test do so by
-curbing that overfitting. Label-free routing matches J++ without labels. \pending{Round 3, the ignition
-control and the sketch estimator results will be added when they complete.}
+curbing that overfitting. Label-free routing matches J++ without labels. The network sharpens competing concepts into a categorical choice, but
+progressively through depth rather than in a band. \pending{Round 3 and the sketch estimator results
+will be added when they complete.}
 
 \section*{Reproducibility}
 Code, results, logs, pre-registrations and the exact commands are in the project repository
