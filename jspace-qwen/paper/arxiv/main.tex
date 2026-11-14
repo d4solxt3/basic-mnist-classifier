@@ -117,7 +117,62 @@ reducing overfitting of the labelled weight search.
 exactly known identity path, an online control variate, and readout-aware probe shaping with a
 closed-form, weights-only predictor $\rho(A)$ of its benefit.
 \end{itemize}
-We report every comparison we ran, including those our methods lose.
+We report every comparison we ran, including those our methods lose. \Cref{tab:scorecard} summarises
+which claims carry over to 0.6B parameters, and \cref{fig:schematic} shows the lenses we compare.
+
+\begin{table}[t]
+\centering
+\caption{Claims scorecard: what carries over to Qwen3-0.6B. ``Claim'' paraphrases the large-model
+result we test; the right-hand columns give our evidence and verdict.}
+\label{tab:scorecard}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{0.30\linewidth}p{0.47\linewidth}p{0.14\linewidth}}
+\toprule
+Claim (large models) & Qwen3-0.6B (this work) & Verdict \\
+\midrule
+The J-lens reads latent intermediates better than the logit lens &
+36.7\% vs 31.9\% recall@10; the advantage lies in layers 4--19 and on typo correction (\cref{sec:readout}) &
+holds \\
+Readable content occupies a contiguous band of layers &
+readouts peak in layers 20--24 (71--86\% of depth), chosen by a pre-declared rule &
+holds \\
+J-lens directions are used causally downstream &
+argument swaps succeed on 28--48\% of trials vs 7--8\% for logit-lens directions and $\le$2\% for an
+unrelated target; carried by one category (\cref{sec:swaps}) &
+holds, narrowly \\
+Causal content is confined to that band &
+swaps succeed more often across mid-depth layers than in the readout band (\cref{sec:swaps}) &
+not at 0.6B \\
+Ignition-like, abrupt switching between concepts &
+the network sharpens competing concepts beyond a linear mix, but progressively with depth and as much
+through the logit lens (\cref{sec:ignition}) &
+partly \\
+Implicit concepts (associations, rhyme plans) are readable &
+$\le$1\% recall for every lens; the right concept's median rank is 1,000--2,000 &
+not at 0.6B \\
+J++ makes readouts markedly more faithful (35.7\% $\to$ 55.2\% at 27B) &
+$+5.5$ points over the J-lens on average, nearly all from the LRP backward pass (\cref{sec:jpp,sec:round2}) &
+much smaller \\
+J++'s learned expert weights add substantially &
+$+0.6$ points over the plain LRP lens; they overfit 47 labelled items; bagging or two-weight mixes do
+slightly better &
+not at 0.6B \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/schematic.pdf}
+\caption{The lenses compared. (a) The J-lens averages a residual's influence on the final layer at the
+same and all later positions; the broadcast lens keeps only later positions, removing the identity path
+and the position's own next-token computation; the R-lens computes the J-lens average through an LRP
+backward graph. (b) Expert-based lenses route a residual to one of eight cluster-specific Jacobians. J++
+combines them with signed weights fitted on labelled items; Bagged-J++ averages those weights over
+bootstrap refits; the routed lens decodes each residual with its own expert and needs no labels.}
+\label{fig:schematic}
+\end{figure}
 
 % =====================================================================
 \section{Background and related work}
@@ -379,7 +434,7 @@ J-lens + RF & 0.750 & 0.400 & 0.802 & 0.010 & 0.000 & \textbf{0.392} [0.340, 0.4
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.72\linewidth]{figures/fig_layers.pdf}
+\includegraphics[width=\linewidth]{figures/fig_layers.pdf}
 \caption{Single-layer recall@10 by layer. The shaded region is the workspace band selected by the
 pre-declared rule (layers 20--24).}
 \label{fig:layers}
@@ -490,10 +545,13 @@ Routed-J++$^\ast$ & yes & 0.380 & $-0.013$ [$-0.034$, $-0.003$] & 0/5 & 0.348 \\
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.66\linewidth]{figures/fig_round2.pdf}
-\caption{Round 2: held-out recall@10 minus J++'s on the same split for each confirmatory split (dots)
-and the mean (bar). Brackets give split wins against J++. Blue rows are the pre-registered
-candidates.}
+\includegraphics[width=\linewidth]{figures/fig_round2.pdf}
+\caption{Round 2. (a) Held-out recall@10 minus J++'s on the same split, for each of the five
+confirmatory splits (dots), with the mean (bar) and split wins (right; bold where the pre-registered
+criterion is met). Shaded rows are the pre-registered candidates. (b) Where the gain over the J-lens
+comes from, as means over the five splits: the LRP backward pass (J-lens $\to$ R-lens), learned expert
+weights (R-lens $\to$ J++) and bagging (J++ $\to$ Bagged-J++); brackets give the range of each step
+over splits.}
 \label{fig:round2}
 \end{figure}
 

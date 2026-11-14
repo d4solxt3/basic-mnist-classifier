@@ -1,33 +1,52 @@
-"""Paper figures (static). Each figure is drawn only if its results file exists.
+"""Paper figures in one publication style. Each figure is drawn only if its results exist.
 
-Design: fixed categorical order (validated palette, see dataviz skill), one
-colour per lens across all figures, thin 2px lines, recessive grid, direct
-labels (contrast relief), one y-axis per panel.
+Style (shared by every figure):
+* Computer Modern text and maths, so figure text matches the LaTeX paper; 8 pt type.
+* Figures are drawn at their printed size (full width = 6.5 in, the arXiv text width), so
+  type and line weights are the same in every figure. PDF (vector) for LaTeX, 300-dpi PNG
+  for Markdown and the doc.
+* One colour per lens across all figures, from a fixed categorical order that passes the
+  colour-vision-deficiency checks (dataviz reference palette); prior work in neutral grey.
+* Thin 1.3 pt lines, recessive grid and axes, panel letters, direct labels where they fit.
+
+python scripts/figures.py
 """
 
 import json
 import os
-import sys
 
 import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
+from matplotlib.lines import Line2D  # noqa: E402
 
 ROOT = __file__.rsplit("/scripts/", 1)[0]
 R = os.path.join(ROOT, "results")
 F = os.path.join(ROOT, "paper", "figures")
 os.makedirs(F, exist_ok=True)
 
-INK, INK2, GRID, SURF = "#0b0b0b", "#52514e", "#e6e5e1", "#fcfcfb"
+FULL = 6.5                              # printed width (in) = arXiv text width
+INK, INK2, MUTED, GRID = "#1a1a19", "#52514e", "#9a998f", "#e4e3de"
+GREY = "#8d8c87"                         # prior work / baselines
 SLOT = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"]
-COLOR = {"J-lens": SLOT[0], "logit": SLOT[1], "regress": SLOT[2], "J++": SLOT[3], "sketch": SLOT[4],
-         "shaped": SLOT[5], "identity-cv": SLOT[6], "no-cv": SLOT[7]}
-plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 9, "axes.edgecolor": INK2,
-                     "axes.labelcolor": INK, "xtick.color": INK2, "ytick.color": INK2,
-                     "axes.spines.top": False, "axes.spines.right": False, "figure.facecolor": SURF,
-                     "axes.facecolor": SURF, "savefig.facecolor": SURF, "lines.linewidth": 2})
+LENS = {"J-lens": SLOT[0], "logit": SLOT[1], "regress": SLOT[2], "J++": INK,
+        "sketch": SLOT[0], "shaped": SLOT[6], "identity-cv": SLOT[2], "no-cv": SLOT[1], "exact": INK}
+plt.rcParams.update({
+    "font.family": "serif", "font.serif": ["cmr10"], "mathtext.fontset": "cm",
+    "axes.formatter.use_mathtext": True, "axes.unicode_minus": True,
+    "font.size": 8, "axes.titlesize": 8.5, "axes.labelsize": 8, "xtick.labelsize": 7.5,
+    "ytick.labelsize": 7.5, "legend.fontsize": 7.2,
+    "axes.edgecolor": INK2, "axes.labelcolor": INK, "xtick.color": INK2, "ytick.color": INK2,
+    "axes.linewidth": 0.6, "xtick.major.width": 0.6, "ytick.major.width": 0.6,
+    "xtick.major.size": 2.5, "ytick.major.size": 2.5,
+    "axes.spines.top": False, "axes.spines.right": False,
+    "lines.linewidth": 1.3, "lines.markersize": 3.2, "patch.linewidth": 0.6,
+    "figure.facecolor": "white", "axes.facecolor": "white", "savefig.facecolor": "white",
+    "legend.frameon": False, "legend.handlelength": 1.6, "legend.borderaxespad": 0.2,
+})
+DASH = r"$-$"
 
 
 def load(name):
@@ -36,203 +55,309 @@ def load(name):
 
 
 def save(fig, name):
-    for ext in ("png", "pdf"):
-        fig.savefig(os.path.join(F, f"{name}.{ext}"), dpi=200, bbox_inches="tight")
+    fig.savefig(os.path.join(F, f"{name}.pdf"), bbox_inches="tight", pad_inches=0.02)
+    fig.savefig(os.path.join(F, f"{name}.png"), dpi=300, bbox_inches="tight", pad_inches=0.02)
     plt.close(fig)
     print("wrote", name)
 
 
-def grid(ax):
-    ax.grid(axis="y", color=GRID, linewidth=0.8)
+def grid(ax, axis="y"):
+    ax.grid(axis=axis, color=GRID, linewidth=0.5)
     ax.set_axisbelow(True)
 
 
-# ---------------------------------------------------------------- per-layer
+def panel(ax, letter, title):
+    ax.set_title(rf"$\mathbf{{({letter})}}$  {title}", loc="left", color=INK, pad=4)
+
+
+def band_shade(ax, lo=20, hi=24, label=True):
+    ax.axvspan(lo - 0.5, hi + 0.5, color="#f1f0ec", lw=0, zorder=0)
+    if label:
+        ax.text((lo + hi) / 2, 0.985, "band", transform=ax.get_xaxis_transform(), ha="center", va="top",
+                color=INK2, fontsize=6.8)
+
+
+# ================================================================ Figure: readout by layer
 main, band = load("readout_main.json"), load("band.json")
 if main:
-    fig, ax = plt.subplots(figsize=(6.2, 3.2))
+    fig, ax = plt.subplots(figsize=(FULL, 2.25))
     grid(ax)
     if band:
-        lo, hi = band["band"]
-        ax.axvspan(lo - 0.5, hi + 0.5, color=GRID, alpha=0.6, lw=0)
-        ax.text((lo + hi) / 2, 0.98, "band", transform=ax.get_xaxis_transform(), ha="center", va="top",
-                color=INK2, fontsize=8)
-    for key, lab in (("J-lens|raw", "J-lens"), ("logit|raw", "logit"), ("regress|raw", "regress")):
+        band_shade(ax, *band["band"])
+    for key, col, lab in (("J-lens|raw", "J-lens", "J-lens"), ("logit|raw", "logit", "logit lens"),
+                          ("regress|raw", "regress", "regression lens")):
         if key not in main["results"]:
             continue
         c = main["results"][key]["per_layer@10"]
         xs = sorted(int(k) for k in c)
-        ys = [c[str(x)] for x in xs]
-        ax.plot(xs, ys, color=COLOR[lab], marker="o", ms=3)
-        ax.text(xs[-1] + 0.4, ys[-1], {"J-lens": "J-lens", "logit": "logit lens", "regress": "regression lens"}[lab],
-                color=INK, va="center", fontsize=8)
-    ax.set_xlabel("layer (block output)")
-    ax.set_ylabel("recall@10 (single layer)")
-    ax.set_title("Latent-intermediate recall by layer, Qwen3-0.6B", loc="left", fontsize=10, color=INK)
-    ax.set_xlim(-0.5, 30)
+        ys = [100 * c[str(x)] for x in xs]
+        ax.plot(xs, ys, color=LENS[col], marker="o", ms=2.6, zorder=3)
+        nudge = {"logit": 0.9, "regress": -0.9}.get(col, 0.0)
+        ax.text(xs[-1] + 0.5, ys[-1] + nudge, lab, color=LENS[col], va="center", fontsize=7.5)
+    ax.set_xlim(-0.6, 30.5)
+    ax.set_xticks(range(0, 27, 2))
+    ax.set_xlabel(r"layer $\ell$ (block output)")
+    ax.set_ylabel("recall@10 (%, single layer)")
     save(fig, "fig_layers")
 
-# ---------------------------------------------------------------- J++ bars
-panels = [(t, load(f"jpp_compare_{t}.json")) for t in ("main", "main_all")]
-panels = [(t, d) for t, d in panels if d]
+# ================================================================ Figure: round 1 dot-and-whisker
+FAM = ["J++", "Routed-LRP", "JB-mix", "R-lens", "Semi-J++", "J-filt", "J-lens", "SS-J++", "Routed", "logit",
+       "B-lens", "regress"]
+NICE = {"logit": "logit lens", "regress": "regression lens", "J-lens": "J-lens", "R-lens": "R-lens (LRP)",
+        "J-filt": "J-filt (plain experts)", "J++": "J++", "SS-J++": "SS-J++ (future tokens)",
+        "Semi-J++": "Semi-J++", "Routed": "routed, plain experts", "Routed-LRP": "routed LRP experts",
+        "B-lens": "broadcast lens", "JB-mix": "JB-mix"}
 OURS = ("SS-", "Semi-", "Routed", "B-lens", "JB-mix")
-if panels:
-    fig, axes = plt.subplots(1, len(panels), figsize=(4.4 * len(panels), 4.6), sharey=True, squeeze=False)
-    order = ["logit", "regress", "J-lens", "R-lens", "J-filt", "J++", "SS-J++", "Semi-J++", "Routed",
-             "Routed-LRP", "B-lens", "JB-mix"]
-    for ax, (t, d) in zip(axes[0], panels):
-        names = [n for n in order if n in d.get("selected", {})]
-        keys = [d["selected"][n] for n in names]
-        labels = [k.split("|")[0] for k in keys]
-        means = [d["results"][k]["item@10"]["macro"]["mean"] for k in keys]
-        lo = [d["results"][k]["item@10"]["macro"]["lo"] for k in keys]
-        hi = [d["results"][k]["item@10"]["macro"]["hi"] for k in keys]
-        y = np.arange(len(names))[::-1]
-        cols = [COLOR["J++"] if n == "J++" else (SLOT[0] if n.startswith(OURS) else "#b9b8b2") for n in names]
-        ax.barh(y, means, height=0.62, color=cols, edgecolor=SURF, linewidth=2)
-        ax.errorbar(means, y, xerr=[np.array(means) - lo, np.array(hi) - means], fmt="none", ecolor=INK2,
-                    elinewidth=1, capsize=2)
-        for yi, m in zip(y, means):
-            ax.text(m + 0.012, yi, f"{m:.3f}", va="center", fontsize=7.5, color=INK)
-        ax.set_yticks(y, labels)
-        ax.grid(axis="x", color=GRID, linewidth=0.8)
-        ax.set_axisbelow(True)
-        ax.set_xlabel("held-out recall@10 (macro over items)")
-        ax.set_title({"main": "correctness-filtered items", "main_all": "all items"}[t] +
-                     f"  (n={d['n_held']})", loc="left", fontsize=9.5, color=INK)
-    handles = [plt.Rectangle((0, 0), 1, 1, color=c) for c in ("#b9b8b2", COLOR["J++"], SLOT[0])]
-    axes[0][-1].legend(handles, ["baseline / prior work", "J++", "ours"], frameon=False, fontsize=7.5,
-                       loc="lower right")
-    fig.suptitle("Round 1: head-to-head under the J++ protocol (Readout Filtering, best of 7 layers, split seed 0)",
-                 x=0.01, ha="left", fontsize=10, color=INK)
+r1 = [(t, load(f"jpp_compare_{t}.json")) for t in ("main", "main_all")]
+r1 = [(t, d) for t, d in r1 if d]
+if r1:
+    d0 = r1[0][1]
+    fams = [f for f in FAM if f in d0["selected"]]
+    fams.sort(key=lambda f: -d0["results"][d0["selected"][f]]["item@10"]["macro"]["mean"])
+    fig, axes = plt.subplots(1, len(r1), figsize=(FULL, 2.9), sharey=True, squeeze=False)
+    y = np.arange(len(fams))[::-1]
+    for k, (ax, (t, d)) in enumerate(zip(axes[0], r1)):
+        grid(ax, "x")
+        jm = d["results"][d["selected"]["J++"]]["item@10"]["macro"]["mean"]
+        ax.axvline(100 * jm, color=INK, lw=0.7, ls=(0, (3, 2)), zorder=1)
+        for yi, f in zip(y, fams):
+            if f not in d["selected"]:
+                continue
+            m = d["results"][d["selected"][f]]["item@10"]["macro"]
+            c = INK if f == "J++" else (SLOT[0] if f.startswith(OURS) else GREY)
+            ax.plot([100 * m["lo"], 100 * m["hi"]], [yi, yi], color=c, lw=1.1, solid_capstyle="butt", zorder=2)
+            ax.plot(100 * m["mean"], yi, marker="D" if f == "J++" else "o", ms=4 if f == "J++" else 3.6, color=c,
+                    mec="white", mew=0.5, zorder=3)
+        ax.set_yticks(y, [NICE[f] for f in fams])
+        ax.set_xlabel("held-out recall@10 (%)")
+        n = d["n_held"]
+        panel(ax, "ab"[k], {"main": f"correctness-filtered items (n = {n})",
+                            "main_all": f"all items (n = {n})"}[t])
+    handles = [Line2D([], [], color=GREY, marker="o", lw=1.1, ms=3.6, label="baseline / prior work"),
+               Line2D([], [], color=INK, marker="D", lw=1.1, ms=4, label="J++ (dashed: its score)"),
+               Line2D([], [], color=SLOT[0], marker="o", lw=1.1, ms=3.6, label="ours")]
+    fig.legend(handles=handles, loc="lower center", ncol=3, bbox_to_anchor=(0.58, -0.05))
+    fig.subplots_adjust(bottom=0.2, wspace=0.08)
     save(fig, "fig_jpp")
 
-# ---------------------------------------------------------------- round 2 (multi-split)
+# ================================================================ Figure: round 2 forest plot + bridge
 r2 = load("jpp_splits_round2.json")
 if r2 and "confirmatory" in r2:
     conf = r2["confirmatory"]
-    seeds = [s_ for s_ in r2["seeds"] if s_ != 0]
-    order = ["JppB", "RB-mix", "Routed-J++-a200", "Bagged-J++", "JB-mix", "Routed-LRP-a200", "Routed-LRP-s0.5",
-             "R-lens", "J-lens", "logit"]
-    names = [n for n in order if n in conf]
-    fig, ax = plt.subplots(figsize=(6.4, 0.42 * len(names) + 1.0))
-    ax.axvline(0, color=INK2, lw=1)
-    for yi, n in zip(np.arange(len(names))[::-1], names):
-        ds = [r2["per_seed"][str(s_)]["results"][n]["diff_vs_jpp"]["diff"] for s_ in seeds]
-        c = SLOT[0] if n in ("JppB", "RB-mix", "Routed-J++-a200", "Bagged-J++") else "#8d8c87"
-        ax.scatter(ds, [yi] * len(ds), s=22, color=c, alpha=0.55, edgecolor=SURF, linewidth=1, zorder=3)
-        ax.scatter([conf[n]["mean_diff"]], [yi], s=70, marker="|", color=INK, linewidth=2, zorder=4)
-    def lab(n):
-        ties = sum(r2["per_seed"][str(s_)]["results"][n]["diff_vs_jpp"]["diff"] == 0 for s_ in seeds)
-        return f"{n}  ({conf[n]['wins']}/{conf[n]['n']}" + (f", {ties} tie)" if ties else ")")
-    ax.set_yticks(np.arange(len(names))[::-1], [lab(n) for n in names])
-    ax.grid(axis="x", color=GRID, linewidth=0.8)
-    ax.set_axisbelow(True)
-    ax.set_xlabel("held-out recall@10 minus J++ (paired, same split)")
-    ax.set_title("Round 2: five fresh splits (dots), mean (bar); wins vs J++ in brackets", loc="left",
-                 fontsize=9.5, color=INK)
-    hs = [plt.Line2D([], [], ls="", marker="o", ms=5, color=SLOT[0], alpha=0.55),
-          plt.Line2D([], [], ls="", marker="o", ms=5, color="#8d8c87", alpha=0.55),
-          plt.Line2D([], [], ls="", marker="|", ms=9, mew=2, color=INK)]
-    ax.legend(hs, ["pre-registered candidate (one split)", "re-evaluated lens (one split)", "mean over splits"],
-              frameon=False, fontsize=7.5, loc="upper left")
+    seeds = [s for s in r2["seeds"] if s != 0]
+    cands = ["Bagged-J++", "RB-mix", "JppB", "Routed-J++-a200"]
+    others = ["Routed-LRP-a200", "Routed-LRP-s0.5", "R-lens", "JB-mix", "J-lens", "logit"]
+    lab2 = {"Bagged-J++": "Bagged-J++", "RB-mix": "RB-mix", "JppB": "JppB", "Routed-J++-a200": "Routed-J++",
+            "Routed-LRP-a200": r"routed LRP ($\kappa$=200)", "Routed-LRP-s0.5": r"routed LRP ($\lambda$=0.5)",
+            "R-lens": "R-lens", "JB-mix": "JB-mix", "J-lens": "J-lens", "logit": "logit lens"}
+
+    def diffs(n):
+        return [100 * r2["per_seed"][str(s)]["results"][n]["diff_vs_jpp"]["diff"] for s in seeds]
+
+    fig = plt.figure(figsize=(FULL, 2.85))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.55, 1], wspace=0.45)
+    ax = fig.add_subplot(gs[0])
+    rows = cands + [None] + others
+    y = np.arange(len(rows))[::-1].astype(float)
+    ax.axvline(0, color=INK, lw=0.7, zorder=1)
+    ax.axhspan(y[len(cands) - 1] - 0.5, y[0] + 0.5, color="#eef4fc", lw=0, zorder=0)
+    ticks, labels = [], []
+    for yi, n in zip(y, rows):
+        if n is None:
+            continue
+        ds = diffs(n)
+        c = SLOT[0] if n in cands else GREY
+        ax.plot([min(ds), max(ds)], [yi, yi], color=c, lw=0.9, alpha=0.7, zorder=2)
+        ax.scatter(ds, [yi] * len(ds), s=9, color=c, alpha=0.55, edgecolor="none", zorder=3)
+        ax.plot(conf[n]["mean_diff"] * 100, yi, marker="|", ms=9, mew=1.8, color=INK if n in cands else INK2,
+                zorder=4)
+        ties = sum(x == 0 for x in ds)
+        w = f"{conf[n]['wins']}/{conf[n]['n']}" + (f" +{ties} tie" if ties else "")
+        meets = n in cands and conf[n]["mean_diff"] > 0 and conf[n]["wins"] >= 4
+        ax.text(1.02, yi, w, transform=ax.get_yaxis_transform(), va="center", fontsize=7,
+                color=INK if meets else INK2, family="cmb10" if meets else "cmr10")
+        ticks.append(yi)
+        labels.append(lab2[n])
+    ax.text(1.02, y[0] + 0.95, "wins", transform=ax.get_yaxis_transform(), fontsize=7, color=INK2)
+    ax.set_yticks(ticks, labels)
+    ax.set_ylim(y[-1] - 0.7, y[0] + 1.25)
+    grid(ax, "x")
+    ax.set_xlabel(r"held-out recall@10 minus J++ (points, same split)")
+    ax.text(0.01, y[0] + 0.95, "pre-registered candidates", color=SLOT[0], fontsize=6.8,
+            transform=ax.get_yaxis_transform())
+    panel(ax, "a", "difference from J++ on five fresh splits")
+    leg = [Line2D([], [], ls="", marker="o", ms=3, color=INK2, alpha=0.6, label="one split"),
+           Line2D([], [], ls="", marker="|", ms=8, mew=1.8, color=INK, label="mean")]
+    ax.legend(handles=leg, loc="lower right", ncol=1, handletextpad=0.3)
+
+    # bridge: where the gain over the J-lens comes from (means over seeds 1-5)
+    bx = fig.add_subplot(gs[1])
+    grid(bx)
+    names_b = ("J-lens", "R-lens", "J++", "Bagged-J++")
+    per = {n: np.array([100 * r2["per_seed"][str(s)]["results"][n]["held@10"] for s in seeds]) for n in names_b}
+    held = {n: float(per[n].mean()) for n in names_b}
+    steps = [("J-lens", "R-lens", "+LRP"), ("R-lens", "J++", "+weights"),
+             ("J++", "Bagged-J++", "+bagging")]
+    bx.plot(0, held["J-lens"], marker="o", ms=5, color=SLOT[0], zorder=4)
+    bx.text(0, held["J-lens"] - 0.5, f"{held['J-lens']:.1f}", ha="center", va="top", fontsize=7)
+    prev_right = 0.0
+    for i, (a, b, lab_) in enumerate(steps, start=1):
+        lo, hi = held[a], held[b]
+        dlt = per[b] - per[a]
+        bx.bar(i, hi - lo, bottom=lo, width=0.55, color=SLOT[0], alpha=0.85, edgecolor="white", lw=0.6, zorder=3)
+        bx.plot([prev_right, i - 0.275], [lo, lo], color=MUTED, lw=0.6, ls=":", zorder=2)
+        prev_right = i + 0.275
+        bx.text(i, hi + 0.25, f"+{hi - lo:.1f}", ha="center", va="bottom", fontsize=7, color=INK)
+        bx.text(i, hi + 1.05, f"[{dlt.min():+.1f}, {dlt.max():+.1f}]".replace("-", DASH), ha="center",
+                va="bottom", fontsize=5.8, color=INK2)
+    last = len(steps) + 1
+    bx.plot([prev_right, last], [held["Bagged-J++"]] * 2, color=MUTED, lw=0.6, ls=":")
+    bx.plot(last, held["Bagged-J++"], marker="o", ms=5, color=INK, zorder=4)
+    bx.text(last, held["Bagged-J++"] + 0.35, f"{held['Bagged-J++']:.1f}", ha="center", va="bottom", fontsize=7)
+    bx.set_xticks(np.arange(last + 1), ["J-lens", *[s[2] for s in steps], "Bagged\nJ++"], fontsize=6.6)
+    bx.set_ylim(32.5, 43)
+    bx.set_ylabel("mean held-out recall@10 (%)")
+    panel(bx, "b", "where the gain comes from")
+    bx.text(0.0, -0.3, "axis starts at 32.5%; brackets: range over splits", transform=bx.transAxes,
+            fontsize=6, color=INK2)
     save(fig, "fig_round2")
 
-# ---------------------------------------------------------------- learning curves
-cur = load("curves.json")
+# ================================================================ Figure: causal swaps
+sw, swm = load("swaps_main.json"), load("swaps_midband.json")
+wins_ = [(lo, hi, load(f"swaps_win{lo}_{hi}.json")) for lo, hi in ((3, 7), (7, 11), (11, 15), (15, 19))]
+wins_ = [(lo, hi, d) for lo, hi, d in wins_ if d]
+if sw:
+    pans = [(sw, f"band 20{DASH}24 (5 layers)")] + ([(swm, f"layers 7{DASH}20 (14 layers)")] if swm else [])
+    ncol = len(pans) + (1 if wins_ else 0)
+    fig, axes = plt.subplots(1, ncol, figsize=(FULL, 2.35), squeeze=False)
+    axes = axes[0]
+    for k, (ax, (d, title)) in enumerate(zip(axes, pans)):
+        grid(ax)
+        for lens, col, lab_ in (("jlens", "J-lens", "J-lens"), ("logit", "logit", "logit lens"),
+                                ("regress", "regress", "regression lens")):
+            pts = [(d["results"][f"flexgen|main|{lens}|{sc}"]["median_edit_norm"],
+                    100 * d["results"][f"flexgen|main|{lens}|{sc}"]["success"][0], sc)
+                   for sc in d["scales"] if f"flexgen|main|{lens}|{sc}" in d["results"]]
+            if not pts:
+                continue
+            xs_, ys_, _ = zip(*pts)
+            ax.plot(xs_, ys_, color=LENS[col], marker="o", label=lab_, zorder=3)
+            if lens == "jlens":
+                for x_, y_, sc in pts:
+                    ax.annotate(rf"$\times${sc:g}", (x_, y_), xytext=(2, 3), textcoords="offset points",
+                                fontsize=6, color=INK2)
+            nul = [(d["results"][f"flexgen|random_null|{lens}|{sc}"]["median_edit_norm"],
+                    100 * d["results"][f"flexgen|random_null|{lens}|{sc}"]["success"][0])
+                   for sc in d["scales"] if f"flexgen|random_null|{lens}|{sc}" in d["results"]]
+            if nul:
+                ax.plot(*zip(*nul), color=LENS[col], ls=(0, (1, 1.5)), lw=0.9, alpha=0.8)
+        ax.set_xscale("log", base=2)
+        ax.set_ylim(-2, 55)
+        ax.set_xlabel("median edit norm")
+        if k == 0:
+            ax.set_ylabel(r"swap success (%, $f(B)$ at rank 1)")
+        panel(ax, "abc"[k], title)
+    hs = [Line2D([], [], color=LENS["J-lens"], marker="o", label="J-lens"),
+          Line2D([], [], color=LENS["logit"], marker="o", label="logit lens"),
+          Line2D([], [], color=LENS["regress"], marker="o", label="regression lens"),
+          Line2D([], [], color=INK2, ls=(0, (1, 1.5)), lw=0.9, label="unrelated-target null")]
+    if wins_:
+        hs += [Line2D([], [], color=INK2, marker="o", ms=3, label=r"(c) scale $\times$1"),
+               Line2D([], [], color=INK2, ls=(0, (3, 1.5)), marker="s", ms=3, label=r"(c) scale $\times$2")]
+    fig.legend(handles=hs, loc="lower center", ncol=len(hs), bbox_to_anchor=(0.5, -0.07), fontsize=6.6,
+               columnspacing=1.2, handlelength=1.8)
+    if wins_:
+        ax = axes[-1]
+        grid(ax)
+        allw = wins_ + [(20, 24, sw)]
+        for lens, col, lab_ in (("jlens", "J-lens", "J-lens"), ("logit", "logit", "logit lens")):
+            for sc, ls, mk in ((1.0, "-", "o"), (2.0, (0, (3, 1.5)), "s")):
+                xs_, ys_, lo_, hi_ = [], [], [], []
+                for lo, hi, d in allw:
+                    key = f"flexgen|main|{lens}|{sc}"
+                    if key in d["results"]:
+                        m, l_, h_ = d["results"][key]["success"]
+                        xs_.append((lo + hi) / 2)
+                        ys_.append(100 * m)
+                        lo_.append(100 * l_)
+                        hi_.append(100 * h_)
+                if xs_:
+                    ax.plot(xs_, ys_, color=LENS[col], ls=ls, marker=mk, ms=3)
+                    if sc == 1.0:
+                        ax.fill_between(xs_, lo_, hi_, color=LENS[col], alpha=0.12, lw=0)
+        ax.set_xticks([(lo + hi) / 2 for lo, hi, _ in allw], [f"{lo}{DASH}{hi}" for lo, hi, _ in allw],
+                      fontsize=6.5)
+        ax.set_ylim(-2, 55)
+        ax.set_xlabel("5-layer window")
+        panel(ax, "abc"[len(pans)], "equal-width windows")
+    fig.subplots_adjust(wspace=0.3, bottom=0.22)
+    save(fig, "fig_swaps")
+
+# ================================================================ Figure: ignition
+ist = load("ignition_main_stats.json")
+if ist and "linear_jlens|country" in ist["per_layer"]:
+    Ls = ist["layers"]
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(FULL, 2.4))
+    for ax in (a1, a2):
+        grid(ax)
+        band_shade(ax)
+    for key, col, lab_, ls in (("jlens|country", "J-lens", "J-lens", "-"),
+                               ("linear_jlens|country", "J-lens", "J-lens, linear control", (0, (1.2, 1.2))),
+                               ("logit|country", "logit", "logit lens", "-"),
+                               ("linear_logit|country", "logit", "logit lens, linear control", (0, (1.2, 1.2)))):
+        ys = [r[0] for r in ist["per_layer"][key]]
+        a1.plot(Ls, ys, color=LENS[col], ls=ls, marker="o" if ls == "-" else None, ms=2.6, label=lab_)
+    a1.set_ylim(0, 0.8)
+    a1.set_xlabel(r"layer $\ell$")
+    a1.set_ylabel(r"median 10$\to$90% width in $\alpha$")
+    panel(a1, "a", "country pairs: actual vs linear control")
+    a1.legend(loc="lower left", fontsize=6.5)
+    for kind, lab_, c in (("country", "countries (660 trials)", SLOT[0]),
+                          ("scrambled", "unrelated nouns (60)", SLOT[6]),
+                          ("idiom", "associated nouns (60)", SLOT[3])):
+        r = ist["contrasts"][f"jlens: actual-linear|{kind}"]
+        a2.fill_between(Ls, [x[1] for x in r], [x[2] for x in r], color=c, alpha=0.15, lw=0)
+        a2.plot(Ls, [x[0] for x in r], color=c, marker="o", ms=2.6, label=lab_)
+    a2.axhline(0, color=INK, lw=0.6)
+    a2.set_ylim(-0.36, 0.16)
+    a2.set_xlabel(r"layer $\ell$")
+    a2.set_ylabel(r"actual $-$ control width (J-lens)")
+    panel(a2, "b", "sharpening done by the network")
+    a2.legend(loc="lower left", fontsize=6.5)
+    fig.subplots_adjust(wspace=0.32)
+    save(fig, "fig_ignition")
+
+# ================================================================ Figure: sketch estimators
+cur, rho = load("curves.json"), load("rho.json")
 if cur:
-    lab = {"exact": "J-lens", "sk16": "sketch", "sk16w": "shaped", "sk16id": "identity-cv", "sk16none": "no-cv"}
-    nice = {"J-lens": "exact", "sketch": "sketch + online CV", "shaped": "shaped sketch + online CV",
+    lab = {"exact": "exact", "sk16": "sketch", "sk16w": "shaped", "sk16id": "identity-cv", "sk16none": "no-cv"}
+    nice = {"exact": "exact estimator", "sketch": "sketch + online CV", "shaped": "shaped sketch + online CV",
             "identity-cv": "sketch + identity CV", "no-cv": "sketch, no CV"}
-    fig, axes = plt.subplots(1, 2, figsize=(9, 3.2))
+    fig, axes = plt.subplots(1, 2, figsize=(FULL, 2.4))
     for tag, name in lab.items():
-        rows = sorted([v for v in cur.values() if v["tag"] == tag], key=lambda v: v["vjp_rows"])
+        rows = sorted([v for v in cur.values() if isinstance(v, dict) and v.get("tag") == tag],
+                      key=lambda v: v["vjp_rows"])
         if not rows:
             continue
+        ls = (0, (3, 1.5)) if name == "exact" else "-"
         x = [v["vjp_rows"] for v in rows]
-        axes[0].plot(x, [v["recall10_all"]["mean"] for v in rows], color=COLOR[name], marker="o", ms=3,
-                     label=nice[name])
+        axes[0].plot(x, [100 * v["recall10_all"]["mean"] for v in rows], color=LENS[name], marker="o", ms=2.6,
+                     ls=ls, label=nice[name])
         er = [(v["vjp_rows"], np.mean(list(v["dict_err"].values()))) for v in rows if "dict_err" in v]
         if er:
-            axes[1].plot(*zip(*er), color=COLOR[name], marker="o", ms=3, label=nice[name])
-    for ax, yl in zip(axes, ("recall@10 (all items, best of 7 layers)", "rel. error of A·J vs held-out reference")):
+            axes[1].plot(*zip(*er), color=LENS[name], marker="o", ms=2.6, ls=ls, label=nice[name])
+    for k, (ax, yl, t) in enumerate(zip(axes, ("recall@10 (%, all items)", r"relative error of $AJ$"),
+                                        ("lens quality vs compute", "dictionary error vs compute"))):
         ax.set_xscale("log")
         ax.set_xlabel("backward VJP rows (compute)")
         ax.set_ylabel(yl)
         grid(ax)
+        panel(ax, "ab"[k], t)
     axes[1].set_yscale("log")
-    axes[0].legend(frameon=False, fontsize=7.5)
-    fig.suptitle("Estimator efficiency: lens quality vs compute", x=0.01, ha="left", fontsize=10, color=INK)
+    axes[0].legend(loc="lower right", fontsize=6.5)
+    if rho:
+        axes[1].text(0.98, 0.95, rf"predicted shaping factor $\rho(A)$ = {rho['rho_ideal']:.3f}",
+                     transform=axes[1].transAxes, ha="right", va="top", fontsize=6.5, color=INK2)
+    fig.subplots_adjust(wspace=0.3)
     save(fig, "fig_curves")
-
-# ---------------------------------------------------------------- swaps
-sw = load("swaps_main.json")
-swm = load("swaps_midband.json")
-if sw:
-    panels_sw = [(sw, f"workspace band (layers {sw['band'][0]}–{sw['band'][-1]})")]
-    if swm:
-        panels_sw.append((swm, f"mid-depth band (layers {swm['band'][0]}–{swm['band'][-1]})"))
-    fig, axes = plt.subplots(1, len(panels_sw), figsize=(4.3 * len(panels_sw), 3.2), sharey=True, squeeze=False)
-    for ax, (d, title) in zip(axes[0], panels_sw):
-        grid(ax)
-        for lens, lab_ in (("jlens", "J-lens"), ("logit", "logit"), ("regress", "regress")):
-            for var in ("main", "random_null"):
-                ks = [f"flexgen|{var}|{lens}|{sc}" for sc in d["scales"]]
-                pts = [(d["results"][k]["median_edit_norm"], d["results"][k]["success"][0], sc)
-                       for k, sc in zip(ks, d["scales"]) if k in d["results"]]
-                if not pts:
-                    continue
-                xs, ys, scs = zip(*pts)
-                if var == "main":
-                    ax.plot(xs, ys, color=COLOR[lab_], marker="o", ms=4, label=f"{lab_} swap")
-                    for x_, y_, sc in pts:
-                        ax.annotate(f"×{sc:g}", (x_, y_), xytext=(3, 3), textcoords="offset points", fontsize=6.5,
-                                    color=INK2)
-                else:
-                    ax.plot(xs, ys, color=COLOR[lab_], ls=":", lw=1.5, alpha=0.8,
-                            label=f"{lab_} random-target null")
-        ax.set_xscale("log", base=2)
-        ax.set_xlabel("median edit norm")
-        ax.set_title(title, loc="left", fontsize=9.5, color=INK)
-    axes[0][0].set_ylabel("swap success (f(B) at rank 1)")
-    axes[0][0].set_ylim(-0.02, 0.62)
-    axes[0][0].legend(frameon=False, fontsize=6.8, loc="upper left", ncol=2)
-    fig.suptitle("Flexible generalisation: swapping a function's argument along lens directions (60 scored trials)",
-                 x=0.01, y=1.03, ha="left", fontsize=10, color=INK)
-    save(fig, "fig_swaps")
-
-# ---------------------------------------------------------------- ignition
-ist = load("ignition_main_stats.json")
-if ist and "linear_jlens|country" in ist["per_layer"]:
-    Ls = ist["layers"]
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.6, 3.4))
-    for ax in (a1, a2):
-        grid(ax)
-        ax.axvspan(19.5, 24.5, color=GRID, alpha=0.6, lw=0)
-        ax.text(22, 0.98, "band", transform=ax.get_xaxis_transform(), ha="center", va="top", color=INK2, fontsize=7.5)
-    for key, lab_, c, ls in (("jlens|country", "J-lens, actual", COLOR["J-lens"], "-"),
-                             ("linear_jlens|country", "J-lens, linear control", COLOR["J-lens"], ":"),
-                             ("logit|country", "logit lens, actual", COLOR["logit"], "-"),
-                             ("linear_logit|country", "logit lens, linear control", COLOR["logit"], ":")):
-        ys = [r[0] for r in ist["per_layer"][key]]
-        a1.plot(Ls, ys, color=c, ls=ls, marker="o" if ls == "-" else None, ms=3, label=lab_)
-    a1.set_xlabel("layer")
-    a1.set_ylabel("median 10→90% width in α")
-    a1.set_title("Country pairs: actual vs linear-interpolation control", loc="left", fontsize=9.5, color=INK)
-    a1.legend(frameon=False, fontsize=7, loc="lower left")
-    a1.set_ylim(0, 0.8)
-    for kind, lab_, c in (("country", "countries (660 trials)", SLOT[0]), ("scrambled", "unrelated nouns (60)", SLOT[6]),
-                          ("idiom", "associated nouns (60)", SLOT[3])):
-        r = ist["contrasts"][f"jlens: actual-linear|{kind}"]
-        m = [x[0] for x in r]
-        lo = [x[1] for x in r]
-        hi = [x[2] for x in r]
-        a2.fill_between(Ls, lo, hi, color=c, alpha=0.15, lw=0)
-        a2.plot(Ls, m, color=c, marker="o", ms=3, label=lab_)
-    a2.axhline(0, color=INK2, lw=1)
-    a2.set_xlabel("layer")
-    a2.set_ylabel("actual − linear width (J-lens)")
-    a2.set_title("Sharpening done by the network (negative = sharper)", loc="left", fontsize=9.5, color=INK)
-    a2.legend(frameon=False, fontsize=7, loc="lower left")
-    save(fig, "fig_ignition")
 print("done")

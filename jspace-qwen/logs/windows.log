@@ -1,0 +1,53 @@
+=== 22:35:39 START window 3-7
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 49760.76it/s]
+trial 0/384
+trial 25/384
+trial 50/384
+trial 75/384
+trial 100/384
+trial 125/384
+trial 150/384
+trial 175/384
+trial 200/384
+trial 225/384
+trial 300/384
+trial 325/384
+trial 350/384
+trial 375/384
+flexgen|main|jlens|1.0                   n= 60 success=0.483 [0.367,0.600] lost=0.650 edit=0.08
+flexgen|main|jlens|2.0                   n= 60 success=0.533 [0.400,0.650] lost=0.767 edit=0.14
+flexgen|main|logit|1.0                   n= 60 success=0.000 [0.000,0.000] lost=0.083 edit=0.09
+flexgen|main|logit|2.0                   n= 60 success=0.000 [0.000,0.000] lost=0.117 edit=0.16
+flexgen|random_null|jlens|1.0            n= 60 success=0.050 [0.000,0.100] lost=0.717 edit=0.13
+flexgen|random_null|jlens|2.0            n= 60 success=0.067 [0.017,0.133] lost=0.767 edit=0.20
+flexgen|random_null|logit|1.0            n= 60 success=0.000 [0.000,0.000] lost=0.100 edit=0.07
+flexgen|random_null|logit|2.0            n= 60 success=0.017 [0.000,0.067] lost=0.217 edit=0.14
+=== 22:39:56 END rc=0
+=== 22:39:56 START window 7-11
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 12218.33it/s]
+trial 0/384
+trial 25/384
+trial 50/384
+trial 75/384
+trial 100/384
+trial 125/384
+trial 150/384
+trial 175/384
+trial 200/384
+trial 225/384
+trial 300/384
+trial 325/384
+trial 350/384
+trial 375/384
+flexgen|main|jlens|1.0                   n= 60 success=0.433 [0.317,0.550] lost=0.650 edit=0.10
+flexgen|main|jlens|2.0                   n= 60 success=0.417 [0.300,0.533] lost=0.733 edit=0.19
+flexgen|main|logit|1.0                   n= 60 success=0.017 [0.000,0.050] lost=0.083 edit=0.06
+flexgen|main|logit|2.0                   n= 60 success=0.017 [0.000,0.050] lost=0.117 edit=0.11
+flexgen|random_null|jlens|1.0            n= 60 success=0.067 [0.017,0.133] lost=0.683 edit=0.17
+flexgen|random_null|jlens|2.0            n= 60 success=0.017 [0.000,0.050] lost=0.733 edit=0.26
+flexgen|random_null|logit|1.0            n= 60 success=0.000 [0.000,0.000] lost=0.100 edit=0.11
+flexgen|random_null|logit|2.0            n= 60 success=0.017 [0.000,0.050] lost=0.233 edit=0.19
+=== 22:44:08 END rc=0
+=== 22:44:08 START window 11-15
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 50584.73it/s]
+trial 0/384
