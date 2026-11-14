@@ -3,3 +3,10 @@
 32 prompts, mean len 128.0
 [lrp] prompt 1/32 T=128 rows=1024 147.3s total=2.5min
 [lrp] prompt 2/32 T=128 rows=1024 791.1s total=15.6min
+[lrp] prompt 3/32 T=128 rows=1024 153.9s total=18.2min
+[lrp] prompt 10/32 T=128 rows=1024 145.0s total=35.2min
+[lrp] prompt 20/32 T=128 rows=1024 143.8s total=58.8min
+[lrp] prompt 30/32 T=128 rows=1024 151.4s total=84.5min
+done: 32 prompts, 32768 VJP rows, 89.5 min
+=== 16:25:45 END rc=0
+=== 16:25:45 START JC
