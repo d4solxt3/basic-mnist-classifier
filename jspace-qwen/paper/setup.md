@@ -1,6 +1,6 @@
 <!-- Draft fragment; merged into paper.md. -->
 
-## 3 Experimental setup
+## 4 Experimental setup
 
 **Model and hardware.** Qwen3-0.6B (post-trained checkpoint `Qwen/Qwen3-0.6B`; 28 decoder blocks,
 d_model = 1024, vocabulary 151,936, tied embeddings), in bf16, on one 4-core Intel Xeon CPU with
@@ -30,8 +30,14 @@ clusters give all-zero maps whose logits all tie, and under the strict rank rule
 scores a spurious recall of 1.0. We hit this bug in a first run and now flag any lens whose
 fitting-split recall is 1.0.
 *Routed* (ours): each residual is decoded through the expert of its own cluster.
-*B-lens* (ours): the broadcast lens of §3.x, fitted on the same first 8 corpus prompts as the
-J-lens's n = 8 snapshot (the J-lens's recall is flat from n = 8 to n = 32; Table X).
+*Weight-search fidelity.* Our round-1 port of J++'s weight search deviated from the reference
+search (`workspace_lens.fitting.condense_experts`) in three small ways. It masked excluded tokens
+to −10⁴ in each expert before combining, rather than to −∞ after. It took the surrogate's spread
+over non-excluded tokens rather than the full vocabulary. It broke ties between iterates by order
+rather than by surrogate value. Round 2 (§5.3) uses a faithful port for J++ and for every
+candidate, and round 2's seed-0 run gives faithful-port numbers on the round-1 split.
+*B-lens* (ours): the broadcast lens of §3.1, fitted on the same first 8 corpus prompts as the
+J-lens's n = 8 snapshot (the J-lens's recall is flat from n = 8 to n = 32; §5.1).
 
 **Readout evaluation.** The six released lens-eval prompt sets (multihop, multilingual, poetry,
 association, typo, order-ops). Readout positions, single-token surface forms (with/without a leading

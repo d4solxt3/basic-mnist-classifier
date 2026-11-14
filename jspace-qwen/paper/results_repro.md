@@ -1,8 +1,8 @@
 <!-- Draft fragment; merged into paper.md. Numbers from results/readout_main.json, readout_peek_n8.json, band.json. -->
 
-## 4 Results
+## 5 Results
 
-### 4.1 The J-lens on a 0.6B model
+### 5.1 The J-lens on a 0.6B model
 
 **Readout recall.** Table 1 reports recall@10 of latent intermediates, using the best rank over all
 27 block outputs and correctness-filtered items. The J-lens recovers 36.7% of intermediates

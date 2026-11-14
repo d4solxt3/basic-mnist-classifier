@@ -1,6 +1,6 @@
 <!-- Draft fragment; merged into paper.md. Results are filled in from results/jpp_compare_main.json only. -->
 
-### The broadcast lens: reading what a position sends forward
+### 3.1 The broadcast lens: reading what a position sends forward
 
 The reference J-lens averages, over source positions p, the summed sensitivity of the final
 residual at every target position p′ ≥ p:

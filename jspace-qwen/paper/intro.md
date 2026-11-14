@@ -25,13 +25,27 @@ budget: one 4-core CPU, no GPU. Our contributions:
 1. **A small-model reproduction with controls.** We reproduce the J-lens, the R-Lens and the J++
    Lens on Qwen3-0.6B with the authors' released prompt sets and scoring conventions. We add a
    ridge-tuned regression-lens baseline, matched-norm random and logit-lens controls for every
-   causal swap, and item-level bootstrap intervals throughout.
-2. **Unbiased sketch estimators** of the average Jacobian (Haar-random probes, an exactly known
-   identity path and an online control variate, and *readout-aware* probe shaping). We prove they
+   causal swap, and item-level bootstrap intervals throughout. The J-lens's advantage over the
+   logit lens is real but concentrated in mid-depth layers and on one evaluation (typos).
+2. **J++ at small scale, and two pitfalls.** J++ remains the strongest lens, but its gain over the
+   J-lens shrinks from about 20 points at 27B to about 4, and most of that comes from the LRP
+   backward pass rather than from learned expert weights. We document two implementation
+   pitfalls that silently distort J++-style evaluations. With a small fitting corpus, empty expert
+   clusters give all-zero maps, which score a spurious perfect recall under the strict rank
+   rule. Masking tokens before combining experts penalises negative weight sums.
+3. **Label-free alternatives that match J++.** Routing each residual through its own LRP expert,
+   with count-adaptive shrinkage toward the pooled map, needs no labelled data and matches J++'s
+   held-out recall to within a point.
+4. **The broadcast lens.** We define a lens that keeps only influence on strictly *later*
+   positions, the attention-carried traffic that a global-workspace reading identifies with
+   availability. It is weak on its own but ranks some intermediates no other lens finds, and it
+   improves the J-lens in a two-map mix.
+5. **A pre-registered, multi-split test of improvements over J++.** Because the released
+   evaluations are small, we pre-register four candidate improvements and test them on five
+   fresh fitting/held-out splits with a stated win criterion.
+6. **Unbiased sketch estimators** of the average Jacobian: Haar-random probes, an exactly known
+   identity path, an online control variate, and *readout-aware* probe shaping. We prove they
    are unbiased, derive their variance, and give a closed-form, weights-only predictor ρ(A) of the
    gain from shaping.
-3. **Unsupervised readout improvements**, evaluated head-to-head against J++ under its own
-   protocol: per-token *calibrated* readouts, and a *routed* expert lens that uses J++'s
-   clusters at inference without any labelled data.
 
 We report every comparison, including those our methods lose.

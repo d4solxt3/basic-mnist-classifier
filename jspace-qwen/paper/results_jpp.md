@@ -1,6 +1,6 @@
 <!-- Draft fragment; merged into paper.md. Round 1: results/jpp_compare_main.json. Round 2: results/jpp_splits_round2.json. -->
 
-### 4.2 Head-to-head with J++ (round 1)
+### 5.2 Head-to-head with J++ (round 1)
 
 Table 2 gives held-out recall@10 under the J++ protocol: correctness-filtered items, 47 fitting
 and 203 held-out items, best rank over seven layers, and Readout Filtering. For every lens the

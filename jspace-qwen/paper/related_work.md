@@ -2,7 +2,7 @@
      through secondary sources during drafting and must be checked against the
      primary source before submission. -->
 
-## Related work
+## 2 Related work
 
 **Lenses on the residual stream.** The *logit lens* (nostalgebraist, 2020) decodes an
 intermediate residual with the model's own unembedding; it is uninformative in early and middle

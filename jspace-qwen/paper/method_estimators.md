@@ -1,6 +1,6 @@
 <!-- Draft fragment; merged into paper.md. -->
 
-### Sketch estimators of the Jacobian lens
+### 3.4 Sketch estimators of the Jacobian lens
 
 **Setup.** For a prompt n with valid positions P (positions ≥ 16, excluding the last), the
 reference estimator computes the target-summed, source-averaged Jacobian

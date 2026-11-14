@@ -1,6 +1,6 @@
 <!-- Draft fragment; merged into paper.md. -->
 
-## Limitations
+## 6 Limitations
 
 **Scale.** All results are for one 0.6B model. Small models answer few of the released evaluation
 items correctly (8–15 items each on multihop, multilingual and poetry under the correctness
