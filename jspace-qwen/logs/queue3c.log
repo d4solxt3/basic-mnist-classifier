@@ -240,3 +240,5 @@ done: 8 prompts, 8192 VJP rows, 68.4 min
 [ 4075.8s] seed 17 layer 4: J++ train 0.215; RB-mix w=[0.91, 0.42]; RLB-mix w=[1.0, 0.0]
 [ 4112.9s] seed 17 layer 7: J++ train 0.251; RB-mix w=[0.94, -0.33]; RLB-mix w=[0.93, -0.36]
 [ 4153.1s] seed 17 layer 11: J++ train 0.220; RB-mix w=[0.98, 0.18]; RLB-mix w=[0.92, 0.39]
+[ 4191.9s] seed 17 layer 14: J++ train 0.336; RB-mix w=[0.97, 0.25]; RLB-mix w=[0.97, 0.26]
+[ 4230.4s] seed 17 layer 18: J++ train 0.221; RB-mix w=[0.74, 0.67]; RLB-mix w=[0.71, 0.71]
