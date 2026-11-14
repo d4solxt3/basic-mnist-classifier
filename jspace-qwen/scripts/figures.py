@@ -285,6 +285,14 @@ if sw:
                     ax.plot(xs_, ys_, color=LENS[col], ls=ls, marker=mk, ms=3)
                     if sc == 1.0:
                         ax.fill_between(xs_, lo_, hi_, color=LENS[col], alpha=0.12, lw=0)
+        nx, ny = [], []
+        for lo, hi, d in allw:
+            key = "flexgen|random_null|jlens|1.0"
+            if key in d["results"]:
+                nx.append((lo + hi) / 2)
+                ny.append(100 * d["results"][key]["success"][0])
+        if nx:
+            ax.plot(nx, ny, color=LENS["J-lens"], ls=(0, (1, 1.5)), lw=0.9, alpha=0.8)
         ax.set_xticks([(lo + hi) / 2 for lo, hi, _ in allw], [f"{lo}{DASH}{hi}" for lo, hi, _ in allw],
                       fontsize=6.5)
         ax.set_ylim(-2, 55)

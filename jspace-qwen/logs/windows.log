@@ -61,3 +61,41 @@ trial 175/384
 trial 200/384
 trial 225/384
 trial 300/384
+trial 325/384
+trial 350/384
+trial 375/384
+flexgen|main|jlens|1.0                   n= 60 success=0.433 [0.317,0.550] lost=0.667 edit=0.08
+flexgen|main|jlens|2.0                   n= 60 success=0.433 [0.317,0.550] lost=0.750 edit=0.18
+flexgen|main|logit|1.0                   n= 60 success=0.017 [0.000,0.050] lost=0.067 edit=0.05
+flexgen|main|logit|2.0                   n= 60 success=0.033 [0.000,0.083] lost=0.100 edit=0.09
+flexgen|random_null|jlens|1.0            n= 60 success=0.083 [0.017,0.150] lost=0.583 edit=0.17
+flexgen|random_null|jlens|2.0            n= 60 success=0.033 [0.000,0.083] lost=0.767 edit=0.26
+flexgen|random_null|logit|1.0            n= 60 success=0.000 [0.000,0.000] lost=0.100 edit=0.08
+flexgen|random_null|logit|2.0            n= 60 success=0.017 [0.000,0.050] lost=0.217 edit=0.14
+=== 22:48:28 END rc=0
+=== 22:48:28 START window 15-19
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 14276.18it/s]
+trial 0/384
+trial 25/384
+trial 50/384
+trial 75/384
+trial 100/384
+trial 125/384
+trial 150/384
+trial 175/384
+trial 200/384
+trial 225/384
+trial 300/384
+trial 325/384
+trial 350/384
+trial 375/384
+flexgen|main|jlens|1.0                   n= 60 success=0.450 [0.333,0.583] lost=0.700 edit=0.06
+flexgen|main|jlens|2.0                   n= 60 success=0.433 [0.317,0.550] lost=0.783 edit=0.17
+flexgen|main|logit|1.0                   n= 60 success=0.017 [0.000,0.050] lost=0.050 edit=0.07
+flexgen|main|logit|2.0                   n= 60 success=0.033 [0.000,0.083] lost=0.117 edit=0.11
+flexgen|random_null|jlens|1.0            n= 60 success=0.050 [0.000,0.100] lost=0.583 edit=0.14
+flexgen|random_null|jlens|2.0            n= 60 success=0.033 [0.000,0.083] lost=0.800 edit=0.23
+flexgen|random_null|logit|1.0            n= 60 success=0.000 [0.000,0.000] lost=0.167 edit=0.09
+flexgen|random_null|logit|2.0            n= 60 success=0.000 [0.000,0.000] lost=0.250 edit=0.15
+=== 22:52:44 END rc=0
+=== WINDOWS DONE

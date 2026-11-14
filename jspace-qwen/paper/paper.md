@@ -50,8 +50,10 @@ A is") along lens directions:
 | J-lens | 48% | mid-depth layers 7–20 |
 | logit lens | 7–8% | either band |
 | random-target null | ≤2% | — |
+| J-lens | 43–48% | any 5-layer window in layers 3–19 (exploratory) |
 
-The leverage is concentrated in one category (countries). It is not confined to the
+The leverage is concentrated in one category (countries). Equal-width windows show that depth,
+not the number of edited layers, sets it: every window from layer 3 to 19 beats the
 readout-selected band.
 
 **Ignition.** As one input word is morphed into another, the network sharpens the switch between
@@ -120,7 +122,7 @@ compare.
 | The J-lens reads latent intermediates better than the logit lens | 36.7% vs 31.9% recall@10; the advantage lies in layers 4–19 and on typo correction | holds |
 | Readable content occupies a contiguous band of layers | readouts peak in layers 20–24 (71–86% of depth), chosen by a pre-declared rule | holds |
 | J-lens directions are used causally downstream | argument swaps succeed on 28–48% of trials vs 7–8% for logit-lens directions and ≤2% for an unrelated target; carried by one category | holds, narrowly |
-| Causal content is confined to that band | swaps succeed more often across mid-depth layers than in the readout band | not at 0.6B |
+| Causal content is confined to that band | swaps succeed on 43–48% in every 5-layer window from layer 3 to 19, against 28% in the readout band (exploratory) | not at 0.6B |
 | Ignition-like, abrupt switching between concepts | the network sharpens competing concepts beyond a linear mix, but progressively with depth and as much through the logit lens | partly |
 | Implicit concepts (associations, rhyme plans) are readable | ≤1% recall for every lens; the right concept's median rank is 1,000–2,000 | not at 0.6B |
 | J++ makes readouts markedly more faithful (35.7% → 55.2% at 27B) | +5.5 points over the J-lens on average, nearly all from the LRP backward pass | much smaller |
@@ -739,9 +741,14 @@ The random-target null succeeds on at most 1 of 56 trials at any scale and for a
 
 ![Swap success against edit norm](figures/fig_swaps.png)
 
-**Figure 5.** Flexible-generalisation swap success against the median edit norm (relative change
-of the final-position residual), for each lens and scale (labels), in the two bands. Dotted lines
-are the random-target nulls.
+**Figure 5.**
+
+- (a, b) Flexible-generalisation swap success against the median edit norm (relative change of the
+  final-position residual), for each lens and scale (labels), in the two pre-planned bands.
+- (c) Swap success in equal-width 5-layer windows (exploratory). The shaded areas are 95%
+  intervals at scale 1.
+
+Dotted lines are the unrelated-target nulls.
 
 **J-lens directions are the most efficient handle on the swapped argument.** At scale 1, a swap
 along J-lens directions installs f(B) on 28% of trials. Logit-lens directions do so on 7% and
@@ -803,11 +810,38 @@ this scale it is not confined to the band our pre-declared readout rule selected
 - In those layers the logit lens reads out almost nothing (§5.1), yet J-lens directions there
   are the most effective handles we found.
 
-Because the bands differ in width, we cannot say whether depth or the number of edited layers
-is responsible. A per-layer sweep at matched total edit norm would separate the two. We read
-the result as consistent with J-lens directions being the model's working representation of the
-argument through mid-depth, and as weak evidence against a narrow late workspace in a 0.6B
-model.
+**Depth, not the number of edited layers (exploratory).** The two bands differ in width, so we
+added four equal-width 5-layer windows after seeing them (`scripts/run_windows.sh`). Same 60
+flexible-generalisation trials, scale 1:
+
+| Window | J-lens | logit lens | J − logit [95% CI] (discordant) | unrelated-target null, J-lens | J-lens edit norm |
+|---|---|---|---|---|---|
+| layers 3–7 | **0.483** | 0.000 | +0.483 [+0.350, +0.600] (29/0) | 0.064 | 0.08 |
+| layers 7–11 | 0.433 | 0.017 | +0.417 [+0.300, +0.533] (25/0) | 0.042 | 0.10 |
+| layers 11–15 | 0.433 | 0.017 | +0.417 [+0.300, +0.533] (25/0) | 0.088 | 0.08 |
+| layers 15–19 | 0.450 | 0.017 | +0.433 [+0.316, +0.550] (26/0) | 0.036 | 0.06 |
+| layers 20–24 (readout band) | 0.283 | 0.067 | +0.217 [+0.117, +0.317] (13/0) | 0.018 | 0.19 |
+
+- **Every 5-layer window from layer 3 to 19 does better than the readout band.** J-lens swaps
+  succeed on 43–48% of trials in those windows, against 28% in layers 20–24, with edits half the
+  size or less.
+- **The drop is significant on paired trials.** Layers 15–19 beat layers 20–24 by +0.167
+  [+0.050, +0.283] (12 trials only in the window, 2 only in the band).
+- **The logit lens moves almost nothing before layer 20** (0–2%).
+- **The control rises but stays small.** The unrelated-target null is higher in the early windows
+  (4–9%), so the specific effect there is about 35–45 points.
+- **Countries again carry the effect** (24–27 of 36 per window).
+
+It is depth, then, not the number of edited layers. The J-lens direction of the argument is an
+effective causal handle from layer 3 to layer 19. It becomes less effective exactly where readouts
+peak and where the logit lens starts to read out the answer. That fits the function having
+largely been applied by layers 20–24, so that swapping its argument there comes too late.
+
+**What this says about the workspace band.** At 0.6B, the layers where the J-lens reads out most
+are not the layers where its directions matter most causally. J-lens directions behave like the
+model's working representation of the argument through early and mid depth. This is evidence
+against a narrow late workspace in a 0.6B model; these windows were added after seeing the
+pre-planned bands, so the result is exploratory.
 
 ### 5.5 Ignition
 

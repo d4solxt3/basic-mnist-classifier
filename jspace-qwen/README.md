@@ -20,7 +20,7 @@ budget (4 cores, 15 GB RAM, no GPU).
 | The J-lens reads latent intermediates better than the logit lens | 36.7% vs 31.9% recall@10; advantage in layers 4–19 and on typos | holds |
 | Readable content occupies a contiguous band of layers | readouts peak in layers 20–24, chosen by a pre-declared rule | holds |
 | J-lens directions are used causally | argument swaps 28–48% vs 7–8% for logit-lens directions, ≤2% for an unrelated target | holds, narrowly |
-| Causal content is confined to that band | swaps work better across mid-depth layers | not at 0.6B |
+| Causal content is confined to that band | every 5-layer window from layer 3 to 19 beats the readout band (43–48% vs 28%; exploratory) | not at 0.6B |
 | Ignition-like switching | the network sharpens competing concepts, but progressively with depth and as much through the logit lens | partly |
 | Implicit concepts are readable | ≤1% recall on association and rhyme plans | not at 0.6B |
 | J++ makes readouts far more faithful | +5.5 points over the J-lens, nearly all from the LRP backward pass | much smaller |

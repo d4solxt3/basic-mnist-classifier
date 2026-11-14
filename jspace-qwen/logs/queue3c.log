@@ -220,3 +220,23 @@ done: 8 prompts, 8192 VJP rows, 68.4 min
 [ 3073.3s] seed 16 layer 4: J++ train 0.251; RB-mix w=[0.98, 0.21]; RLB-mix w=[0.57, 0.82]
 [ 3268.5s] seed 16 layer 7: J++ train 0.269; RB-mix w=[0.99, -0.11]; RLB-mix w=[0.98, -0.19]
 [ 3465.2s] seed 16 layer 11: J++ train 0.255; RB-mix w=[0.97, -0.24]; RLB-mix w=[0.93, -0.37]
+[ 3664.9s] seed 16 layer 14: J++ train 0.270; RB-mix w=[0.98, 0.2]; RLB-mix w=[0.95, 0.31]
+[ 3860.1s] seed 16 layer 18: J++ train 0.303; RB-mix w=[0.99, 0.13]; RLB-mix w=[1.0, 0.02]
+[ 3980.0s] seed 16 layer 21: J++ train 0.281; RB-mix w=[0.92, 0.38]; RLB-mix w=[0.97, 0.25]
+[ 4019.6s] seed 16 layer 24: J++ train 0.369; RB-mix w=[0.79, 0.62]; RLB-mix w=[0.8, 0.6]
+[ 4035.1s] seed 16: ranks done
+[ 4035.1s] seed 16 logit            held 0.270 fit 0.281 diff -0.137 [-0.168,-0.103]  | oop 0.153 diff -0.089
+[ 4035.1s] seed 16 J-lens           held 0.342 fit 0.291 diff -0.065 [-0.091,-0.037]  | oop 0.202 diff -0.039
+[ 4035.1s] seed 16 R-lens           held 0.366 fit 0.446 diff -0.041 [-0.084,-0.007]  | oop 0.238 diff -0.004
+[ 4035.1s] seed 16 B-lens           held 0.196 fit 0.234 diff -0.211 [-0.288,-0.128]  | oop 0.060 diff -0.181
+[ 4035.2s] seed 16 Routed-LRP-a200  held 0.370 fit 0.462 diff -0.037 [-0.080,-0.004]  | oop 0.201 diff -0.041
+[ 4035.2s] seed 16 Routed-LRP-s0.5  held 0.366 fit 0.462 diff -0.041 [-0.087,-0.006]  | oop 0.201 diff -0.041
+[ 4035.2s] seed 16 LRP-B-lens       held 0.258 fit 0.304 diff -0.149 [-0.225,-0.066]  | oop 0.117 diff -0.124
+[ 4035.2s] seed 16 J++              held 0.407 fit 0.523 diff +0.000 [+0.000,+0.000]  | oop 0.241 diff +0.000
+[ 4035.2s] seed 16 RB-mix           held 0.396 fit 0.496 diff -0.011 [-0.064,+0.043]  | oop 0.219 diff -0.022
+[ 4035.2s] seed 16 RLB-mix          held 0.396 fit 0.496 diff -0.011 [-0.061,+0.039]  | oop 0.229 diff -0.013
+[ 4035.3s] seed 16 Bagged-J++       held 0.400 fit 0.523 diff -0.007 [-0.061,+0.046]  | oop 0.224 diff -0.017
+[ 4035.3s] seed 17: 47 fitting, 203 held-out items
+[ 4075.8s] seed 17 layer 4: J++ train 0.215; RB-mix w=[0.91, 0.42]; RLB-mix w=[1.0, 0.0]
+[ 4112.9s] seed 17 layer 7: J++ train 0.251; RB-mix w=[0.94, -0.33]; RLB-mix w=[0.93, -0.36]
+[ 4153.1s] seed 17 layer 11: J++ train 0.220; RB-mix w=[0.98, 0.18]; RLB-mix w=[0.92, 0.39]

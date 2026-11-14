@@ -58,7 +58,8 @@ intermediates at recall@10 against 31.9\% for the logit lens, with its advantage
 layers 4--19 and on typo correction. Swapping a function's argument along J-lens directions installs
 the new answer on 28\% of trials in the readout-selected band and 48\% across layers 7--20, against
 7--8\% for logit-lens directions and at most 2\% for an unrelated-target control; the causal leverage
-is real, but it is not confined to the late band that the readouts select. J++ improves on the J-lens
+is real, and equal-width windows show it is strongest in early and mid depth (43--48\% in every
+5-layer window from layer 3 to 19), not in the late band that the readouts select. J++ improves on the J-lens
 by 5.5 points on average over five fresh splits, against about 20 points at 27B, and nearly all of
 that gain comes from its LRP backward pass: J++ leads the plain LRP lens by only 0.6 points. A
 label-free variant that routes each residual to its own LRP expert ties J++. In a pre-registered
@@ -142,7 +143,8 @@ argument swaps succeed on 28--48\% of trials vs 7--8\% for logit-lens directions
 unrelated target; carried by one category (\cref{sec:swaps}) &
 holds, narrowly \\
 Causal content is confined to that band &
-swaps succeed more often across mid-depth layers than in the readout band (\cref{sec:swaps}) &
+swaps succeed on 43--48\% in every 5-layer window from layer 3 to 19, against 28\% in the readout
+band (exploratory; \cref{sec:swaps}) &
 not at 0.6B \\
 Ignition-like, abrupt switching between concepts &
 the network sharpens competing concepts beyond a linear mix, but progressively with depth and as much
@@ -636,8 +638,10 @@ Band & scale & J-lens & logit lens & regression & J $-$ logit [95\% CI] & disc. 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig_swaps.pdf}
-\caption{Flexible-generalisation swap success against the median edit norm for each lens and scale
-(labels) in the two bands. Dotted lines are the unrelated-target nulls.}
+\caption{Causal swaps (flexible generalisation, 60 scored trials). (a, b) Success against the median
+edit norm for each lens and scale (labels) in the two pre-planned bands. (c) Success in equal-width
+5-layer windows (exploratory); shaded areas are 95\% intervals at scale 1. Dotted lines are the
+unrelated-target nulls.}
 \label{fig:swaps}
 \end{figure}
 
@@ -651,10 +655,40 @@ null succeeds on at most one trial in 56--57 at any scale, for any lens.
 \paragraph{The leverage is not confined to the readout band.} Across layers 7--20, J-lens swaps succeed
 on 48\% of trials against 8\% for the logit lens, with a smaller edit norm than in the late band. In
 those layers the logit lens reads out almost nothing (\cref{sec:readout}), yet J-lens directions there
-are the most effective handles we found. Because the bands differ in width (14 layers against 5), we
-cannot say whether depth or the number of edited layers is responsible; a per-layer sweep at matched
-total edit norm would separate the two. Larger edits break the computation: at scale 4 the J-lens edit
+are the most effective handles we found. Larger edits break the computation: at scale 4 the J-lens edit
 across 14 layers succeeds on 1 of 60 trials.
+
+\paragraph{Depth, not the number of edited layers (exploratory).} The two pre-planned bands differ in
+width, so after seeing them we added four equal-width 5-layer windows on the same 60 trials
+(\cref{tab:windows}, \cref{fig:swaps}c). Every window from layer 3 to 19 beats the readout band: J-lens
+swaps succeed on 43--48\% of trials there against 28\% in layers 20--24, with edits half the size or
+less. On paired trials, layers 15--19 beat layers 20--24 by $+0.167$ [$+0.050$, $+0.283$] (12 trials
+only in the window, 2 only in the band). The logit lens moves almost nothing before layer 20 (0--2\%).
+The unrelated-target null is higher in the early windows (4--9\%), so the specific effect there is
+about 35--45 points, and countries again carry it (24--27 of 36 per window). The J-lens direction of a
+function's argument is thus an effective causal handle from layer 3 to layer 19, and becomes less
+effective exactly where readouts peak and the logit lens starts to read out the answer. This fits the
+function having largely been applied by layers 20--24, so that swapping its argument there comes too
+late.
+
+\begin{table}[t]
+\centering
+\caption{Equal-width windows (exploratory): flexible-generalisation swap success at scale 1 on the same
+60 trials. Discordant: trials only the J-lens / only the logit lens gets right.}
+\label{tab:windows}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Window & J-lens & logit lens & J $-$ logit [95\% CI] (disc.) & null (J-lens) & J edit norm \\
+\midrule
+layers 3--7 & \textbf{0.483} & 0.000 & $+0.483$ [$+0.350$, $+0.600$] (29/0) & 0.064 & 0.08 \\
+layers 7--11 & 0.433 & 0.017 & $+0.417$ [$+0.300$, $+0.533$] (25/0) & 0.042 & 0.10 \\
+layers 11--15 & 0.433 & 0.017 & $+0.417$ [$+0.300$, $+0.533$] (25/0) & 0.088 & 0.08 \\
+layers 15--19 & 0.450 & 0.017 & $+0.433$ [$+0.316$, $+0.550$] (26/0) & 0.036 & 0.06 \\
+layers 20--24 (band) & 0.283 & 0.067 & $+0.217$ [$+0.117$, $+0.317$] (13/0) & 0.018 & 0.19 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \paragraph{One category carries the effect.} At scale 1, countries succeed on 16/36 trials (layers
 20--24) and 27/36 (layers 7--20) with J-lens directions. Number words (0/15) are not moved by any lens,
@@ -773,7 +807,8 @@ disposition changes the answer.
 
 \paragraph{What does not, or not yet.} The large-model picture places workspace content in a
 contiguous late band. At 0.6B the readout-selected band (20--24) is where readouts peak, but causal
-leverage is larger across layers 7--20, where readouts are weak. Implicit concepts (association,
+leverage is larger in every 5-layer window from layer 3 to 19, where readouts are weak, and drops in
+the band itself. Implicit concepts (association,
 poetry plans) are not recoverable by any linear readout. Ignition-like sharpening is real but grows
 steadily to the output and is as visible through the logit lens, so it does not single out a band. We read these as weak evidence against a narrow late
 workspace in a 0.6B model, not as evidence against the J-space hypothesis at scale.

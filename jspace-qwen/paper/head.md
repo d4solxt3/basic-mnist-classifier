@@ -50,8 +50,10 @@ A is") along lens directions:
 | J-lens | 48% | mid-depth layers 7–20 |
 | logit lens | 7–8% | either band |
 | random-target null | ≤2% | — |
+| J-lens | 43–48% | any 5-layer window in layers 3–19 (exploratory) |
 
-The leverage is concentrated in one category (countries). It is not confined to the
+The leverage is concentrated in one category (countries). Equal-width windows show that depth,
+not the number of edited layers, sets it: every window from layer 3 to 19 beats the
 readout-selected band.
 
 **Ignition.** As one input word is morphed into another, the network sharpens the switch between

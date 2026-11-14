@@ -812,5 +812,301 @@
     "other_only": 0
    }
   }
+ },
+ "win3_7": {
+  "flexgen|main|1.0": {
+   "n": 60,
+   "success": {
+    "jlens": 0.48333333333333334,
+    "logit": 0.0
+   },
+   "median_edit_norm": {
+    "jlens": 0.07615645602345467,
+    "logit": 0.09201287105679512
+   },
+   "jlens_minus_logit": {
+    "diff": 0.48333333333333334,
+    "lo": 0.35,
+    "hi": 0.6004166666666606,
+    "j_only": 29,
+    "other_only": 0
+   }
+  },
+  "flexgen|main|2.0": {
+   "n": 60,
+   "success": {
+    "jlens": 0.5333333333333333,
+    "logit": 0.0
+   },
+   "median_edit_norm": {
+    "jlens": 0.1445058509707451,
+    "logit": 0.1554107964038849
+   },
+   "jlens_minus_logit": {
+    "diff": 0.5333333333333333,
+    "lo": 0.4,
+    "hi": 0.65,
+    "j_only": 32,
+    "other_only": 0
+   }
+  },
+  "flexgen|random_null|1.0": {
+   "n": 47,
+   "success": {
+    "jlens": 0.06382978723404255,
+    "logit": 0.0
+   },
+   "median_edit_norm": {
+    "jlens": 0.13195736706256866,
+    "logit": 0.08306892961263657
+   },
+   "jlens_minus_logit": {
+    "diff": 0.06382978723404255,
+    "lo": 0.0,
+    "hi": 0.14893617021276595,
+    "j_only": 3,
+    "other_only": 0
+   }
+  },
+  "flexgen|random_null|2.0": {
+   "n": 47,
+   "success": {
+    "jlens": 0.06382978723404255,
+    "logit": 0.02127659574468085
+   },
+   "median_edit_norm": {
+    "jlens": 0.195111945271492,
+    "logit": 0.14363570511341095
+   },
+   "jlens_minus_logit": {
+    "diff": 0.0425531914893617,
+    "lo": -0.0425531914893617,
+    "hi": 0.1276595744680851,
+    "j_only": 3,
+    "other_only": 1
+   }
+  }
+ },
+ "win7_11": {
+  "flexgen|main|1.0": {
+   "n": 60,
+   "success": {
+    "jlens": 0.43333333333333335,
+    "logit": 0.016666666666666666
+   },
+   "median_edit_norm": {
+    "jlens": 0.09871533513069153,
+    "logit": 0.06196187995374203
+   },
+   "jlens_minus_logit": {
+    "diff": 0.4166666666666667,
+    "lo": 0.3,
+    "hi": 0.5333333333333333,
+    "j_only": 25,
+    "other_only": 0
+   }
+  },
+  "flexgen|main|2.0": {
+   "n": 60,
+   "success": {
+    "jlens": 0.4166666666666667,
+    "logit": 0.016666666666666666
+   },
+   "median_edit_norm": {
+    "jlens": 0.1854182779788971,
+    "logit": 0.11059889942407608
+   },
+   "jlens_minus_logit": {
+    "diff": 0.4,
+    "lo": 0.2833333333333333,
+    "hi": 0.5166666666666667,
+    "j_only": 24,
+    "other_only": 0
+   }
+  },
+  "flexgen|random_null|1.0": {
+   "n": 48,
+   "success": {
+    "jlens": 0.041666666666666664,
+    "logit": 0.0
+   },
+   "median_edit_norm": {
+    "jlens": 0.16568130999803543,
+    "logit": 0.1137244924902916
+   },
+   "jlens_minus_logit": {
+    "diff": 0.041666666666666664,
+    "lo": 0.0,
+    "hi": 0.10416666666666667,
+    "j_only": 2,
+    "other_only": 0
+   }
+  },
+  "flexgen|random_null|2.0": {
+   "n": 48,
+   "success": {
+    "jlens": 0.0,
+    "logit": 0.020833333333333332
+   },
+   "median_edit_norm": {
+    "jlens": 0.25463706254959106,
+    "logit": 0.1953756883740425
+   },
+   "jlens_minus_logit": {
+    "diff": -0.020833333333333332,
+    "lo": -0.0625,
+    "hi": 0.0,
+    "j_only": 0,
+    "other_only": 1
+   }
+  }
+ },
+ "win11_15": {
+  "flexgen|main|1.0": {
+   "n": 60,
+   "success": {
+    "jlens": 0.43333333333333335,
+    "logit": 0.016666666666666666
+   },
+   "median_edit_norm": {
+    "jlens": 0.07510985806584358,
+    "logit": 0.05043650045990944
+   },
+   "jlens_minus_logit": {
+    "diff": 0.4166666666666667,
+    "lo": 0.3,
+    "hi": 0.5333333333333333,
+    "j_only": 25,
+    "other_only": 0
+   }
+  },
+  "flexgen|main|2.0": {
+   "n": 60,
+   "success": {
+    "jlens": 0.43333333333333335,
+    "logit": 0.03333333333333333
+   },
+   "median_edit_norm": {
+    "jlens": 0.18398982286453247,
+    "logit": 0.08760856464505196
+   },
+   "jlens_minus_logit": {
+    "diff": 0.4,
+    "lo": 0.2833333333333333,
+    "hi": 0.5166666666666667,
+    "j_only": 24,
+    "other_only": 0
+   }
+  },
+  "flexgen|random_null|1.0": {
+   "n": 57,
+   "success": {
+    "jlens": 0.08771929824561403,
+    "logit": 0.0
+   },
+   "median_edit_norm": {
+    "jlens": 0.17100004851818085,
+    "logit": 0.08500725030899048
+   },
+   "jlens_minus_logit": {
+    "diff": 0.08771929824561403,
+    "lo": 0.017543859649122806,
+    "hi": 0.15789473684210525,
+    "j_only": 5,
+    "other_only": 0
+   }
+  },
+  "flexgen|random_null|2.0": {
+   "n": 57,
+   "success": {
+    "jlens": 0.03508771929824561,
+    "logit": 0.017543859649122806
+   },
+   "median_edit_norm": {
+    "jlens": 0.25812187790870667,
+    "logit": 0.14006537199020386
+   },
+   "jlens_minus_logit": {
+    "diff": 0.017543859649122806,
+    "lo": 0.0,
+    "hi": 0.05263157894736842,
+    "j_only": 1,
+    "other_only": 0
+   }
+  }
+ },
+ "win15_19": {
+  "flexgen|main|1.0": {
+   "n": 60,
+   "success": {
+    "jlens": 0.45,
+    "logit": 0.016666666666666666
+   },
+   "median_edit_norm": {
+    "jlens": 0.0605334248393774,
+    "logit": 0.06639882177114487
+   },
+   "jlens_minus_logit": {
+    "diff": 0.43333333333333335,
+    "lo": 0.31625000000000014,
+    "hi": 0.55,
+    "j_only": 26,
+    "other_only": 0
+   }
+  },
+  "flexgen|main|2.0": {
+   "n": 60,
+   "success": {
+    "jlens": 0.43333333333333335,
+    "logit": 0.03333333333333333
+   },
+   "median_edit_norm": {
+    "jlens": 0.1663239300251007,
+    "logit": 0.108902208507061
+   },
+   "jlens_minus_logit": {
+    "diff": 0.4,
+    "lo": 0.2833333333333333,
+    "hi": 0.5166666666666667,
+    "j_only": 24,
+    "other_only": 0
+   }
+  },
+  "flexgen|random_null|1.0": {
+   "n": 56,
+   "success": {
+    "jlens": 0.03571428571428571,
+    "logit": 0.0
+   },
+   "median_edit_norm": {
+    "jlens": 0.14046142250299454,
+    "logit": 0.08967795222997665
+   },
+   "jlens_minus_logit": {
+    "diff": 0.03571428571428571,
+    "lo": 0.0,
+    "hi": 0.08928571428571429,
+    "j_only": 2,
+    "other_only": 0
+   }
+  },
+  "flexgen|random_null|2.0": {
+   "n": 56,
+   "success": {
+    "jlens": 0.017857142857142856,
+    "logit": 0.0
+   },
+   "median_edit_norm": {
+    "jlens": 0.23215661197900772,
+    "logit": 0.1482088416814804
+   },
+   "jlens_minus_logit": {
+    "diff": 0.017857142857142856,
+    "lo": 0.0,
+    "hi": 0.05357142857142857,
+    "j_only": 1,
+    "other_only": 0
+   }
+  }
  }
 }
