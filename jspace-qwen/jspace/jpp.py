@@ -138,6 +138,142 @@ def fit_expert_weights(Z: torch.Tensor, row_item: Sequence[int], row_cands: Sequ
     return best_w, best_score
 
 
+def fit_expert_weights_v2(Z: torch.Tensor, row_item: Sequence[int], row_cands: Sequence[Sequence[int]],
+                          row_eval: Sequence[str], *, k: int = 10, steps: int = 200, lr: float = 0.05,
+                          temperature: float = 0.1, exclude: torch.Tensor | None = None, top_n: int = 3,
+                          exact_every: int = 5, active: int = 2048, check: bool = False
+                          ) -> tuple[torch.Tensor, float] | tuple[torch.Tensor, float, dict]:
+    """Faithful port of J++'s weight search (``workspace_lens.fitting.condense_experts``):
+
+    * excluded ids are masked to -inf *after* the experts are combined (candidates
+      are never excluded);
+    * the surrogate's spread is the (unbiased) std of the *unmasked* combined
+      logits of the item, detached;
+    * the returned iterate is the best by (exact macro pass@k, surrogate value).
+
+    It differs from ``fit_expert_weights`` (round 1), which masked each expert
+    to -1e4 before combining (so a negative weight sum inflated excluded ids),
+    took the spread over non-excluded ids only, and broke ties by order.
+
+    Speed (same algorithm): (i) the spread is exact from per-item expert
+    moments (the variance is a quadratic form in w); (ii) every exact
+    evaluation (every ``exact_every`` steps, which decides the returned iterate)
+    uses the full vocabulary; between them, the k-th largest logit used for the
+    surrogate gradient is searched within each item's top-``active`` ids from
+    the last exact evaluation. ``check=True`` also computes the full-vocabulary
+    k-th largest at every step and returns how often the two differ."""
+    n, E, V = Z.shape
+    Z = Z.float()
+    item = torch.as_tensor(list(row_item), dtype=torch.long)
+    Q = len(row_cands)
+    maxc = max(len(c) for c in row_cands)
+    cidx = torch.zeros(Q, maxc, dtype=torch.long)
+    cmask = torch.zeros(Q, maxc, dtype=torch.bool)
+    for r, c in enumerate(row_cands):
+        cidx[r, :len(c)] = torch.tensor(list(c))
+        cmask[r, :len(c)] = True
+    if exclude is not None:
+        ex = exclude.clone()
+        for c in row_cands:
+            ex[list(c)] = False
+        keep_ids = (~ex).nonzero()[:, 0]
+    else:
+        keep_ids = torch.arange(V)
+    Zk = Z[:, :, keep_ids].permute(1, 0, 2).contiguous()          # [E, n, Vk] masked vocab
+    Vk = Zk.shape[2]
+    Zt = Z.permute(1, 0, 2)                                        # [E, n, V] view
+    Zc = Zt[:, item[:, None], cidx]                                # [E, Q, C] candidate logits
+    Z64 = Z.double()
+    m = Z64.mean(2)                                                # [n, E]
+    G = torch.bmm(Z64, Z64.transpose(1, 2))                        # [n, E, E]
+    del Z64
+    ev_names = sorted(set(row_eval))
+    ev_idx = torch.tensor([ev_names.index(e) for e in row_eval])
+    groups = [ev_idx == j for j in range(len(ev_names))]
+    neg = torch.tensor(-float("inf"))
+
+    def macro(x):
+        return torch.stack([x[g].mean() for g in groups]).mean()
+
+    def spread(w):
+        wd = w.detach().double()
+        mu = m @ wd
+        ss = torch.einsum("e,nef,f->n", wd, G, wd)
+        return ((ss - V * mu ** 2) / (V - 1)).clamp_min(0).sqrt().float()   # [n]
+
+    def best_cand(w):
+        z = torch.einsum("e,eqc->qc", w, Zc)
+        return torch.where(cmask, z, neg).max(1).values                    # [Q]
+
+    def full(w):
+        with torch.no_grad():
+            L = (w.detach() @ Zk.view(E, -1)).view(n, Vk)
+            top = L.topk(max(k, active), dim=1)
+        return top.indices                                                 # [n, max(k, active)]
+
+    def kth_from(idx_local, w, Za, idx_glob):
+        with torch.no_grad():
+            La = torch.einsum("e,enm->nm", w.detach(), Za)
+            loc = La.topk(k, dim=1).indices[:, -1]
+            col = idx_glob.gather(1, loc[:, None])[:, 0]                   # [n] global (masked-vocab) col
+        return col
+
+    def margin_at(w, kth_col):
+        kth = torch.einsum("e,eq->q", w, Zk[:, item, kth_col[item]])
+        return best_cand(w) - kth
+
+    def exact_and_refresh(w):
+        idx = full(w)
+        kth_col = idx[:, k - 1]
+        with torch.no_grad():
+            mg = margin_at(w.detach(), kth_col)
+        return float(macro((mg >= 0).float())), idx, kth_col
+
+    single = []
+    for e in range(E):
+        w = torch.zeros(E)
+        w[e] = 1.0
+        single.append(exact_and_refresh(w)[0])
+    order = sorted(range(E), key=lambda e: (-single[e], e))
+    starts = {"uniform": torch.ones(E), "select_best": torch.eye(E)[order[0]],
+              "mean_top": torch.zeros(E).index_fill_(0, torch.tensor(order[:top_n]), 1.0)}
+    best = None
+    stats = {"steps": 0, "mismatch": 0}
+    for name, w0 in starts.items():
+        theta = (w0 / w0.norm()).clone().requires_grad_(True)
+        opt = torch.optim.Adam([theta], lr=lr)
+        idx = Za = None
+        for step in range(steps + 1):
+            w = theta / theta.norm()
+            is_exact = step % exact_every == 0 or step == steps
+            if is_exact or idx is None:
+                sc, idx, kth_col = exact_and_refresh(w)
+                Za = Zk.gather(2, idx[None].expand(E, n, idx.shape[1]))
+            else:
+                kth_col = kth_from(None, w, Za, idx)
+                if check:
+                    ref_col = full(w)[:, k - 1]
+                    with torch.no_grad():
+                        a_ = torch.einsum("e,en->n", w.detach(), Zk[:, torch.arange(n), kth_col])
+                        b_ = torch.einsum("e,en->n", w.detach(), Zk[:, torch.arange(n), ref_col])
+                    stats["steps"] += 1
+                    stats["mismatch"] += int((a_ != b_).any())
+            sp = spread(w)[item]
+            surr = macro(torch.sigmoid(margin_at(w, kth_col) / (temperature * sp)))
+            if is_exact:
+                cand = (sc, float(surr.detach()))
+                if best is None or cand > best[0]:
+                    best = (cand, w.detach().clone())
+            if step == steps:
+                break
+            opt.zero_grad()
+            (-surr).backward()
+            opt.step()
+    if check:
+        return best[1], best[0][0], stats
+    return best[1], best[0][0]
+
+
 def finalize_experts(experts: torch.Tensor, counts: torch.Tensor, *, min_kept: int = 50
                      ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     """J++'s empty-expert rule (``workspace_lens.fitting.utils``): an expert that

@@ -54,3 +54,32 @@ Routed-LRP-s0.5, B-lens.
   - Held-out sets of different splits overlap (each is 80% of the same 250 items), so the five
     differences are not independent. We do not pool them into a single p-value.
   - All candidates are reported, whatever the outcome.
+
+## Amendment 1 (before any round-2 number was computed)
+
+**What changed.** A line-by-line comparison with the reference J++ search
+(`workspace_lens.fitting.condense_experts`) found three deviations in our round-1 port. All three
+are in the expert-weight search only:
+
+1. We masked excluded ids to −1e4 in every expert *before* combining. With a negative weight
+   sum, this inflated the excluded ids. The reference masks to −∞ *after* combining.
+2. We took the surrogate's spread over non-excluded ids only. The reference uses the unbiased std
+   of the full, unmasked combined logits.
+3. We broke ties between iterates with equal exact scores by order. The reference breaks them by
+   the higher surrogate value.
+
+**The new port.** Round 2 uses `fit_expert_weights_v2`, which follows the reference on all three
+points, for J++ and for every candidate. It is also about ten times faster.
+
+- The spread is computed exactly from per-item expert moments.
+- Every exact evaluation, which decides the returned iterate, uses the full vocabulary.
+- Between exact evaluations, the k-th largest logit for the surrogate gradient is searched within
+  each item's top 2,048 ids.
+
+On two layers with full-vocabulary checking at every step, it gave 0 mismatches in 960 steps.
+
+**Round 1 is unchanged.** Its numbers stay as reported, computed with the earlier port. Round 2's
+seed-0 run gives the faithful-port numbers on the round-1 split.
+
+**What we saw before this amendment.** The code was smoke-tested on layer 24 alone, with 5 Adam
+steps and 2 bags, on seeds 0 and 1. Those numbers are not results and are not used.

@@ -11,6 +11,10 @@ each split's fitting items and scoring on that split's held-out items.
 Unsupervised lenses (logit, J-lens, R-lens, B-lens, routed LRP experts) do not
 depend on the split; their ranks are computed once.
 
+All weight searches use ``fit_expert_weights_v2``, the faithful port of J++'s
+search (masking after combining, full-vocabulary spread, (exact, surrogate)
+tie-break); round 1 used an earlier port with three small deviations.
+
 Candidates (all with Readout Filtering, best rank over the seven J++ layers):
   JppB            two-stage: J++ map, then per-layer signed weights over
                   [J++, B-lens] (normalised), fitted like J++ on the same items
@@ -39,7 +43,7 @@ sys.path.insert(0, ROOT)
 from jspace import evals as E  # noqa: E402
 from jspace import paths as P  # noqa: E402
 from jspace.jpp import (RoutedLens, adaptive_shrink, combine, expert_logits, finalize_experts,  # noqa: E402
-                        fit_expert_weights, split_items)  # noqa: E402
+                        fit_expert_weights_v2, split_items)  # noqa: E402
 from jspace.lens import Lens  # noqa: E402
 from jspace.model import load_model  # noqa: E402
 from jspace.routing import Router  # noqa: E402
@@ -126,7 +130,7 @@ def fit_weights(maps_l, fr, items_fit, pos_of, l, sample=None):
         for t in fr:
             by_item.setdefault(t[1], []).append(t)
         use = [t for i in sample for t in by_item[i]]
-    w, sc = fit_expert_weights(Z, [pos_of[i] for _, i, _ in use], [prep.cands[i][wd] for _, i, wd in use],
+    w, sc = fit_expert_weights_v2(Z, [pos_of[i] for _, i, _ in use], [prep.cands[i][wd] for _, i, wd in use],
                                [prep.items[i].eval for _, i, _ in use], exclude=exclude, steps=a.steps)
     del Z
     return w, sc
