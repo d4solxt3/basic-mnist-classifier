@@ -23,3 +23,75 @@ trial 525/654
 trial 575/654
 trial 600/654
 trial 625/654
+trial 650/654
+probe-swap|main|jlens|0.5                n=  8 success=0.000 [0.000,0.000] lost=0.375 edit=0.14
+probe-swap|main|jlens|1.0                n=  8 success=0.000 [0.000,0.000] lost=0.375 edit=0.14
+probe-swap|main|jlens|2.0                n=  8 success=0.250 [0.000,0.625] lost=0.750 edit=0.27
+probe-swap|main|jlens|4.0                n=  8 success=0.000 [0.000,0.000] lost=0.875 edit=0.63
+probe-swap|main|logit|0.5                n=  8 success=0.000 [0.000,0.000] lost=0.375 edit=0.08
+probe-swap|main|logit|1.0                n=  8 success=0.125 [0.000,0.375] lost=0.500 edit=0.09
+probe-swap|main|logit|2.0                n=  8 success=0.125 [0.000,0.375] lost=0.625 edit=0.17
+probe-swap|main|logit|4.0                n=  8 success=0.250 [0.000,0.625] lost=0.750 edit=0.36
+probe-swap|main|regress|0.5              n=  8 success=0.000 [0.000,0.000] lost=0.375 edit=0.14
+probe-swap|main|regress|1.0              n=  8 success=0.000 [0.000,0.000] lost=0.500 edit=0.10
+probe-swap|main|regress|2.0              n=  8 success=0.250 [0.000,0.625] lost=0.750 edit=0.27
+probe-swap|main|regress|4.0              n=  8 success=0.125 [0.000,0.375] lost=1.000 edit=0.66
+probe-swap|answer_swap|jlens|0.5         n=  8 success=0.000 [0.000,0.000] lost=0.750 edit=0.16
+probe-swap|answer_swap|jlens|1.0         n=  8 success=0.750 [0.500,1.000] lost=0.875 edit=0.12
+probe-swap|answer_swap|jlens|2.0         n=  8 success=0.750 [0.375,1.000] lost=0.750 edit=0.34
+probe-swap|answer_swap|jlens|4.0         n=  8 success=0.750 [0.375,1.000] lost=0.750 edit=0.77
+probe-swap|answer_swap|logit|0.5         n=  8 success=0.000 [0.000,0.000] lost=0.750 edit=0.10
+probe-swap|answer_swap|logit|1.0         n=  8 success=0.625 [0.250,0.875] lost=0.875 edit=0.11
+probe-swap|answer_swap|logit|2.0         n=  8 success=0.875 [0.625,1.000] lost=0.875 edit=0.19
+probe-swap|answer_swap|logit|4.0         n=  8 success=0.875 [0.625,1.000] lost=0.875 edit=0.47
+probe-swap|answer_swap|regress|0.5       n=  8 success=0.000 [0.000,0.000] lost=0.750 edit=0.16
+probe-swap|answer_swap|regress|1.0       n=  8 success=0.375 [0.125,0.750] lost=0.625 edit=0.10
+probe-swap|answer_swap|regress|2.0       n=  8 success=0.750 [0.375,1.000] lost=0.625 edit=0.32
+probe-swap|answer_swap|regress|4.0       n=  8 success=0.875 [0.625,1.000] lost=0.750 edit=0.89
+probe-swap|random_null|jlens|0.5         n=  8 success=0.000 [0.000,0.000] lost=0.625 edit=0.23
+probe-swap|random_null|jlens|1.0         n=  8 success=0.000 [0.000,0.000] lost=0.750 edit=0.29
+probe-swap|random_null|jlens|2.0         n=  8 success=0.000 [0.000,0.000] lost=0.750 edit=0.44
+probe-swap|random_null|jlens|4.0         n=  8 success=0.000 [0.000,0.000] lost=1.000 edit=0.75
+probe-swap|random_null|logit|0.5         n=  8 success=0.000 [0.000,0.000] lost=0.500 edit=0.15
+probe-swap|random_null|logit|1.0         n=  8 success=0.000 [0.000,0.000] lost=0.625 edit=0.20
+probe-swap|random_null|logit|2.0         n=  8 success=0.000 [0.000,0.000] lost=0.625 edit=0.30
+probe-swap|random_null|logit|4.0         n=  8 success=0.000 [0.000,0.000] lost=0.750 edit=0.50
+probe-swap|random_null|regress|0.5       n=  8 success=0.000 [0.000,0.000] lost=0.625 edit=0.18
+probe-swap|random_null|regress|1.0       n=  8 success=0.000 [0.000,0.000] lost=0.625 edit=0.22
+probe-swap|random_null|regress|2.0       n=  8 success=0.000 [0.000,0.000] lost=0.750 edit=0.34
+probe-swap|random_null|regress|4.0       n=  8 success=0.000 [0.000,0.000] lost=1.000 edit=0.69
+flexgen|main|jlens|0.5                   n= 60 success=0.117 [0.050,0.200] lost=0.450 edit=0.18
+flexgen|main|jlens|1.0                   n= 60 success=0.283 [0.167,0.400] lost=0.567 edit=0.19
+flexgen|main|jlens|2.0                   n= 60 success=0.283 [0.167,0.400] lost=0.900 edit=0.35
+flexgen|main|jlens|4.0                   n= 60 success=0.167 [0.083,0.267] lost=1.000 edit=0.79
+flexgen|main|logit|0.5                   n= 60 success=0.050 [0.000,0.117] lost=0.233 edit=0.12
+flexgen|main|logit|1.0                   n= 60 success=0.067 [0.017,0.133] lost=0.317 edit=0.14
+flexgen|main|logit|2.0                   n= 60 success=0.167 [0.067,0.267] lost=0.700 edit=0.25
+flexgen|main|logit|4.0                   n= 60 success=0.183 [0.083,0.283] lost=0.967 edit=0.49
+flexgen|main|regress|0.5                 n= 60 success=0.050 [0.000,0.117] lost=0.250 edit=0.16
+flexgen|main|regress|1.0                 n= 60 success=0.150 [0.067,0.250] lost=0.367 edit=0.17
+flexgen|main|regress|2.0                 n= 60 success=0.250 [0.150,0.350] lost=0.800 edit=0.31
+flexgen|main|regress|4.0                 n= 60 success=0.150 [0.067,0.250] lost=1.000 edit=0.69
+flexgen|random_null|jlens|0.5            n= 60 success=0.017 [0.000,0.050] lost=0.533 edit=0.23
+flexgen|random_null|jlens|1.0            n= 60 success=0.017 [0.000,0.050] lost=0.633 edit=0.26
+flexgen|random_null|jlens|2.0            n= 60 success=0.000 [0.000,0.000] lost=0.917 edit=0.42
+flexgen|random_null|jlens|4.0            n= 60 success=0.000 [0.000,0.000] lost=1.000 edit=0.79
+flexgen|random_null|logit|0.5            n= 60 success=0.017 [0.000,0.050] lost=0.317 edit=0.18
+flexgen|random_null|logit|1.0            n= 60 success=0.017 [0.000,0.050] lost=0.467 edit=0.24
+flexgen|random_null|logit|2.0            n= 60 success=0.033 [0.000,0.083] lost=0.883 edit=0.36
+flexgen|random_null|logit|4.0            n= 60 success=0.017 [0.000,0.050] lost=0.950 edit=0.60
+flexgen|random_null|regress|0.5          n= 60 success=0.017 [0.000,0.050] lost=0.300 edit=0.19
+flexgen|random_null|regress|1.0          n= 60 success=0.017 [0.000,0.050] lost=0.400 edit=0.20
+flexgen|random_null|regress|2.0          n= 60 success=0.000 [0.000,0.000] lost=0.800 edit=0.34
+flexgen|random_null|regress|4.0          n= 60 success=0.000 [0.000,0.000] lost=0.967 edit=0.67
+=== 20:12:51 END rc=0
+=== 20:12:51 START SWM
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3344.89it/s]
+trial 0/654
+trial 25/654
+trial 50/654
+trial 75/654
+trial 100/654
+trial 125/654
+trial 150/654
+trial 175/654
