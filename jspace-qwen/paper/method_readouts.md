@@ -27,9 +27,10 @@ cluster, unembed(J_{l,c(h)} h). It needs no labelled data. Because each expert i
 only about 1/E of the positions, we also consider shrinkage toward the pooled Jacobian,
 J_{l,e}(λ) = λ J_{l,e} + (1 − λ) J̄_l, with λ ∈ {0.5, 1} selected on the fitting split.
 
-### Two ideas that did not work
+### Ideas that did not work
 
-We report two readout modifications that we expected to help and that, on the fitting split, hurt.
+We report three readout modifications that we expected to help. On the fitting split, two hurt
+and one made no difference.
 
 *Per-token calibration.* We ranked tokens by the z-score (or centred value) of their lens logit
 relative to corpus statistics, to remove the context-independent prior. For the n = 8 J-lens,
@@ -43,3 +44,14 @@ this lowered recall@10 from 0.343 to 0.280 (correctness-filtered items) and from
 (all items). Dropping the offset entirely ("centred") was also worse. ‖μ_L‖ = 459, against
 ‖J μ_l‖ = 119 at layer 14, with cosine 0.83. Replacing the transported mean by the true
 final-layer mean over-weights the generic output direction.
+
+*Surface-form collapsing.* Top-10 lists often spend several slots on one word ("December",
+" December", " december"). The evaluation credits a candidate through its best surface form but
+makes it compete against every variant of every competitor. We therefore collapsed each class of
+tokens that agree after dropping one leading space and lowercasing (37,912 tokens in multi-member
+classes) into one canonical entry carrying the class maximum. The canonical member is fixed by the
+vocabulary as the first of " "+lower, lower, " "+Capitalised, Capitalised that exists, which is
+always one of a candidate's credited forms. We checked this for all 3,930 candidate ids, with no
+exception. Fitting-split recall@10 was unchanged (J-lens 0.364 → 0.364; logit lens 0.311 →
+0.311). The duplicated variants are almost always variants of the *correct* concept, which
+already outranks the candidate's competitors.

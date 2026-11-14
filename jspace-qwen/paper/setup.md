@@ -23,8 +23,15 @@ residual RMSNorms, identity rule on SiLU, half rule on the gate×up product).
 *J-filt / J++*: per-layer router (unit-normalise, PCA to 64 dimensions, k-means with E = 8), expert
 Jacobians as position-weighted per-cluster means from the same backward passes, and signed
 unit-norm expert weights fitted per layer by J++'s smooth-surrogate objective on the fitting split.
-J-filt uses plain gradients and J++ uses LRP gradients.
+J-filt uses plain gradients and J++ uses LRP gradients. As in the reference implementation, an
+expert that saw fewer than 50 positions is replaced by the pooled Jacobian. With 32 fitting
+prompts this happens for one cluster at each of layers 20–26. Without the fallback, the empty
+clusters give all-zero maps whose logits all tie, and under the strict rank rule an all-zero map
+scores a spurious recall of 1.0. We hit this bug in a first run and now flag any lens whose
+fitting-split recall is 1.0.
 *Routed* (ours): each residual is decoded through the expert of its own cluster.
+*B-lens* (ours): the broadcast lens of §3.x, fitted on the same first 8 corpus prompts as the
+J-lens's n = 8 snapshot (the J-lens's recall is flat from n = 8 to n = 32; Table X).
 
 **Readout evaluation.** The six released lens-eval prompt sets (multihop, multilingual, poetry,
 association, typo, order-ops). Readout positions, single-token surface forms (with/without a leading
