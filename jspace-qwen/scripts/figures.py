@@ -122,12 +122,20 @@ if r2 and "confirmatory" in r2:
         c = SLOT[0] if n in ("JppB", "RB-mix", "Routed-J++-a200", "Bagged-J++") else "#8d8c87"
         ax.scatter(ds, [yi] * len(ds), s=22, color=c, alpha=0.55, edgecolor=SURF, linewidth=1, zorder=3)
         ax.scatter([conf[n]["mean_diff"]], [yi], s=70, marker="|", color=INK, linewidth=2, zorder=4)
-    ax.set_yticks(np.arange(len(names))[::-1], [f"{n}  ({conf[n]['wins']}/{conf[n]['n']})" for n in names])
+    def lab(n):
+        ties = sum(r2["per_seed"][str(s_)]["results"][n]["diff_vs_jpp"]["diff"] == 0 for s_ in seeds)
+        return f"{n}  ({conf[n]['wins']}/{conf[n]['n']}" + (f", {ties} tie)" if ties else ")")
+    ax.set_yticks(np.arange(len(names))[::-1], [lab(n) for n in names])
     ax.grid(axis="x", color=GRID, linewidth=0.8)
     ax.set_axisbelow(True)
     ax.set_xlabel("held-out recall@10 minus J++ (paired, same split)")
-    ax.set_title(f"Round 2: five fresh splits (dots), mean (bar); wins vs J++ in brackets", loc="left",
+    ax.set_title("Round 2: five fresh splits (dots), mean (bar); wins vs J++ in brackets", loc="left",
                  fontsize=9.5, color=INK)
+    hs = [plt.Line2D([], [], ls="", marker="o", ms=5, color=SLOT[0], alpha=0.55),
+          plt.Line2D([], [], ls="", marker="o", ms=5, color="#8d8c87", alpha=0.55),
+          plt.Line2D([], [], ls="", marker="|", ms=9, mew=2, color=INK)]
+    ax.legend(hs, ["pre-registered candidate (one split)", "re-evaluated lens (one split)", "mean over splits"],
+              frameon=False, fontsize=7.5, loc="upper left")
     save(fig, "fig_round2")
 
 # ---------------------------------------------------------------- learning curves

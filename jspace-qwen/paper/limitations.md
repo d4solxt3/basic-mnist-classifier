@@ -22,9 +22,13 @@ brute-force Jacobian. Choices not pinned down by released code are stated explic
 seven-layer subset for a 28-layer model, the workspace-band rule, the ignition summary statistic,
 and including the final-norm gain in J-lens directions.
 
-**Single seed and split.** The fitting/held-out split, the router's k-means and the probe draws
-use one seed each. Bootstrap intervals capture item sampling, but not variability over fitting
-prompts or router initialisations.
+**Splits, seeds and the item pool.** Round 2 varies the fitting/held-out split (six seeds), but
+the router's k-means, the fitting prompts and the probe draws use one seed each. Bootstrap
+intervals capture item sampling, but not variability over fitting prompts or router
+initialisations. All splits draw on the same 250 correctness-filtered items, so the round-2
+winners have not been tested on items outside that pool. Their margins (+0.6 and +1.0 points)
+are smaller than a single split's paired interval (about ±3–6 points). A replication on new
+items, or on a second model, is needed before calling either an improvement in general.
 
 **What "J-space" means here.** We test operational consequences (readout recall, causal swap
 success, switch sharpness) and make no claims about consciousness or access consciousness,

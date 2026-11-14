@@ -14,17 +14,26 @@ Qwen3-0.6B on a single CPU, with the released prompt sets and the J++ evaluation
 recall@10, against 27.1% for the logit lens. Its advantage sits in layers 4–19 and on typo
 correction. The workspace band chosen by a pre-declared rule is layers 20–24.
 
-**J++ at this scale.** J++ is still the strongest lens (37.4%), but its gain over the J-lens is
-about 4 points rather than about 20 at 27B. Most of that gain comes from the LRP backward pass.
+**J++ at this scale.** J++'s gain over the J-lens averages 5.5 points over five fresh splits
+(range 3.6–8.4), against about 20 at 27B. Nearly all of it comes from the LRP backward pass: J++
+beats the plain LRP R-lens by only 0.6 points on average. Without the correctness filter, the
+R-lens is ahead of J++.
 
 **Label-free and broadcast variants.**
-- A label-free lens, LRP experts routed with count-adaptive shrinkage, matches J++ to within a
-  point.
+- A label-free lens, LRP experts routed with count-adaptive shrinkage, ties J++: the mean
+  difference over five fresh splits is +0.000.
 - A new *broadcast lens* keeps only influence on strictly later positions, the attention-carried
   traffic a workspace reading identifies with availability. It is weak alone (21.7%) but
   complementary in mixes.
 
-**Pre-registered round 2.** On five fresh splits, [ROUND 2 RESULT].
+**Pre-registered round 2.** Four candidate improvements were fixed in advance and tested on five
+fresh splits. Two meet the win criterion (positive mean paired difference and at least 4/5 split
+wins), by small margins:
+- Bagged J++ weights: +1.0 points recall@10, 4/5 wins.
+- A two-weight mix of the R-lens and the broadcast lens: +0.6 points, 4 wins and 1 tie.
+
+Both reduce J++'s overfitting to its 47 labelled fitting items. Neither margin is large relative
+to per-split noise.
 
 **Pitfalls.** We document two implementation pitfalls in J++-style evaluations: empty expert
 clusters that score a spurious perfect recall, and masking before combining experts.
@@ -61,22 +70,24 @@ budget: one 4-core CPU, no GPU. Our contributions:
    ridge-tuned regression-lens baseline, matched-norm random and logit-lens controls for every
    causal swap, and item-level bootstrap intervals throughout. The J-lens's advantage over the
    logit lens is real but concentrated in mid-depth layers and on one evaluation (typos).
-2. **J++ at small scale, and two pitfalls.** J++ remains the strongest lens, but its gain over the
-   J-lens shrinks from about 20 points at 27B to about 4, and most of that comes from the LRP
-   backward pass rather than from learned expert weights. We document two implementation
+2. **J++ at small scale, and two pitfalls.** J++'s gain over the J-lens shrinks from about 20
+   points at 27B to about 5.5 (mean over five splits). Nearly all of that comes from the LRP
+   backward pass: J++ beats the plain LRP R-lens by only 0.6 points on average. We document two implementation
    pitfalls that silently distort J++-style evaluations. With a small fitting corpus, empty expert
    clusters give all-zero maps, which score a spurious perfect recall under the strict rank
    rule. Masking tokens before combining experts penalises negative weight sums.
 3. **Label-free alternatives that match J++.** Routing each residual through its own LRP expert,
-   with count-adaptive shrinkage toward the pooled map, needs no labelled data and matches J++'s
-   held-out recall to within a point.
+   with count-adaptive shrinkage toward the pooled map, needs no labelled data and ties J++'s
+   held-out recall over five fresh splits (mean difference +0.000).
 4. **The broadcast lens.** We define a lens that keeps only influence on strictly *later*
    positions, the attention-carried traffic that a global-workspace reading identifies with
-   availability. It is weak on its own but ranks some intermediates no other lens finds, and it
-   improves the J-lens in a two-map mix.
+   availability. It is weak on its own but ranks some intermediates no other lens finds. Mixed with the R-lens
+   (two weights per layer), it gains mainly on multihop bridge entities.
 5. **A pre-registered, multi-split test of improvements over J++.** Because the released
    evaluations are small, we pre-register four candidate improvements and test them on five
-   fresh fitting/held-out splits with a stated win criterion.
+   fresh fitting/held-out splits with a stated win criterion. Two meet it, by small margins:
+   bagging J++'s weights (+1.0 points, 4/5 wins) and the R-lens/broadcast mix (+0.6, 4/5 wins
+   and one tie). Both work by giving the 47 labelled items less room to overfit.
 6. **Unbiased sketch estimators** of the average Jacobian: Haar-random probes, an exactly known
    identity path, an online control variate, and *readout-aware* probe shaping. We prove they
    are unbiased, derive their variance, and give a closed-form, weights-only predictor ρ(A) of the
@@ -369,6 +380,11 @@ for the logit lens). In the last layers both lenses read out the imminent answer
 their best-of-layers scores converge on the multihop and multilingual sets, where the
 intermediate is often close to the output.
 
+![Per-layer recall@10](figures/fig_layers.png)
+
+**Figure 1.** Single-layer recall@10 for the logit, regression and J-lens. The shaded region is the
+workspace band selected by the pre-declared rule (layers 20–24).
+
 **The workspace band.** Our pre-declared rule takes the contiguous run of layers around the peak
 of the J-lens curve on which recall stays above half the peak, excluding the three
 output-adjacent layers. It selects layers 20–24, about 71–86% of depth. Restricted to this band,
@@ -393,6 +409,14 @@ Table 2 gives held-out recall@10 under the J++ protocol: correctness-filtered it
 and 203 held-out items, best rank over seven layers, and Readout Filtering. For every lens the
 fitting split selected the Readout-Filtered readout.
 
+Figure 2 shows the same comparison graphically, with the all-items panel described at the end
+of this section.
+
+![Round 1 head-to-head](figures/fig_jpp.png)
+
+**Figure 2.** Round 1 held-out recall@10 with 95% item-bootstrap intervals, for
+correctness-filtered items (left) and all items (right).
+
 **Table 2.** Round 1, split seed 0. Held-out macro item recall@10 with 95% item-bootstrap CI.
 The last column is the paired difference against J++ on the same items.
 
@@ -416,12 +440,13 @@ The last column is the paired difference against J++ on the same items.
 † The variant the fitting split selected within the Routed-LRP family (λ = 0.5 and κ = 200 tie
 on the fitting split; λ = 0.5 comes first).
 
-**J++ is the strongest lens, but by less than at scale.** J++ reaches 37.4% held-out recall@10,
+**J++ is the strongest lens on this split, but by less than at scale.** J++ reaches 37.4% held-out recall@10,
 against 33.2% for the J-lens. Ayonrinde & Lindsey report 35.7% → 55.2% on Qwen3.6-27B. Here the
 gain is +4.2 points and its CI includes zero. Most of it comes from the LRP backward pass (J-lens
 → R-lens, +3.3 points). Jacobian filtering with learned weights adds +1.0 point (R-lens → J++).
 The weights fit the 47 fitting items much better than they generalise: fitting-split recall is
-0.500, against 0.374 held out.
+0.500, against 0.374 held out. Over five fresh splits (§5.3), J++'s lead over the R-lens shrinks
+to 0.6 points.
 
 **Labels are not needed to match J++ at this scale.** Routing each residual through its own
 LRP expert, shrunk toward the pooled map, needs no labelled data. It matches J++ to within a
@@ -437,7 +462,7 @@ intermediates better than every other lens, for example "Earth" (rank 3, against
 language name "Dutch" (56, against 81–793). A labelled two-map mix of the J-lens and the B-lens (JB-mix) raises
 held-out recall from 0.332 to 0.368, close to J++ with only two weights per layer instead of
 eight. The fitting split does not show this gain (0.364 for both), so round 1 cannot tell
-whether it is real.
+whether it is real. Over five fresh splits it mostly is not (§5.3).
 
 **Where lenses differ.** Every lens scores 0 on association and poetry held-out items. All
 differences come from 12 multihop, 12 multilingual and 77 typo items:
@@ -446,9 +471,151 @@ differences come from 12 multihop, 12 multilingual and 77 typo items:
   (0.583).
 - JB-mix is the only lens that recovers an extra multihop intermediate (0.667).
 
+**All-items panel (secondary).** The correctness filter leaves only about a dozen held-out items
+each on multihop and multilingual. We therefore repeated round 1 without it, on all 539 scored
+items (105 fitting, 434 held-out, same split rule), as a pre-declared secondary analysis
+(`results/jpp_compare_main_all.json`).
+
+Every lens scores lower, since many items now involve answers the model gets wrong. The R-lens
+is the best lens here, *above* J++:
+
+| Lens | held-out recall@10 | Δ vs J++ [95% CI] |
+|---|---|---|
+| R-lens | 0.335 | +0.009 [−0.007, +0.026] |
+| J++ | 0.326 | — |
+| Semi-J++ | 0.322 | −0.005 [−0.015, +0.005] |
+| Routed-LRP (κ = 200) | 0.318 | −0.009 [−0.025, +0.008] |
+| JB-mix | 0.291 | −0.035 [−0.061, −0.010] |
+| J-lens | 0.283 | −0.043 [−0.066, −0.021] |
+| logit lens | 0.206 | −0.120 [−0.149, −0.090] |
+| B-lens | 0.153 | −0.174 [−0.208, −0.139] |
+
+Learning expert weights on the 105 fitting items does not beat the plain LRP map.
+
+Like the rest of round 1, this panel used the earlier port of the weight search (§4).
+
 ### 5.3 Round 2: pre-registered candidates on five fresh splits
 
-[PENDING: results/jpp_splits_round2.json. Protocol: paper/prereg_round2.md.]
+Round 1 used one split, and its held-out items had already been looked at when we designed
+improvements. Round 2 therefore tests four candidates fixed in advance (§4, `prereg_round2.md`):
+
+- JppB;
+- RB-mix;
+- Routed-J++-a200;
+- Bagged-J++.
+
+The test uses five fresh stratified splits (seeds 1–5). On each split every label-dependent
+weight is refitted on that split's 47 fitting items, and every lens is scored on its 203
+held-out items. All weight searches use the faithful port of J++'s search (Amendment 1).
+
+A candidate "beats J++" only if its mean paired difference over the five splits is positive *and*
+it wins on at least four of them.
+
+**Table 3.** Round 2. The first three numeric columns cover the confirmatory splits (seeds 1–5):
+
+- mean held-out macro item recall@10;
+- mean paired difference vs J++ on the same split, with the range over splits in brackets;
+- number of splits on which the lens beats J++.
+
+The last column is the faithful-port held-out score on the round-1 split (seed 0), which is
+excluded from the confirmatory summary. Rows marked * are the pre-registered candidates.
+
+| Lens | labels? | mean held-out | mean Δ vs J++ [range] | wins | seed 0 |
+|---|---|---|---|---|---|
+| logit lens | no | 0.285 | −0.107 [−0.127, −0.083] | 0/5 | 0.271 |
+| J-lens | no | 0.338 | −0.055 [−0.084, −0.036] | 0/5 | 0.332 |
+| R-lens | no | 0.386 | −0.006 [−0.023, +0.010] | 2/5 | 0.365 |
+| B-lens | no | 0.210 | −0.183 [−0.204, −0.173] | 0/5 | 0.217 |
+| Routed-LRP (λ = 0.5) | no | 0.390 | −0.002 [−0.019, +0.014] | 2/5 | 0.369 |
+| Routed-LRP (adaptive, κ = 200) | no | 0.393 | +0.000 [−0.015, +0.014] | 3/5 | 0.373 |
+| **J++** | yes | 0.392 | — | — | 0.367 |
+| JB-mix | yes | 0.347 | −0.045 [−0.076, −0.026] | 0/5 | 0.362 |
+| JppB* | yes | 0.396 | +0.004 [−0.017, +0.029] | 3/5 | 0.386 |
+| Routed-J++-a200* | yes | 0.380 | −0.013 [−0.034, −0.003] | 0/5 | 0.348 |
+| **RB-mix*** | yes | 0.398 | **+0.006** [+0.000, +0.023] | **4/5** (+1 tie) | 0.395 |
+| **Bagged-J++*** | yes | **0.403** | **+0.010** [−0.030, +0.058] | **4/5** | 0.384 |
+
+**Two candidates meet the criterion, by small margins.**
+
+- **Bagged-J++** refits J++'s weights on eight stratified bootstrap resamples of the fitting
+  items and averages them. It gains 1.0 point on average and wins on four of five splits.
+- **RB-mix** fits two signed weights per layer over the unit-normalised R-lens and B-lens maps.
+  It gains 0.6 points, wins on four splits, ties on the fifth, and is never behind J++.
+- **JppB** (+0.4, 3/5) and **Routed-J++-a200** (−1.3, 0/5) do not meet the criterion.
+
+By the rule we fixed in advance, Bagged-J++ and RB-mix beat J++ on this benchmark (Figure 3).
+
+![Round 2: per-split paired differences against J++](figures/fig_round2.png)
+
+**Figure 3.** Held-out recall@10 minus J++'s on the same split, for each of the five
+confirmatory splits (dots), with the mean (bar). Brackets give split wins against J++. Blue
+rows are the four pre-registered candidates.
+
+**The margins are small relative to the noise. We read them as "at least as good as J++", not
+as a clear improvement.** Three facts argue for caution:
+
+- **Per-split intervals.** RB-mix's paired 95% intervals include zero on every split.
+  Bagged-J++'s exclude zero on two splits, but in opposite directions: +0.058 [+0.004, +0.124] on
+  seed 4 and −0.030 [−0.069, −0.004] on seed 5.
+- **Near-cancelling wins.** Three of RB-mix's four wins are below +0.002 in macro recall. Each is
+  the net of gains and losses that nearly cancel. On seed 1, for example, RB-mix gains on
+  multihop (+0.083) and typo (+0.039) but loses on multilingual (−0.104).
+- **Overlapping splits.** Every split's held-out set is 80% of the same 250 items, so four wins
+  out of five is weaker evidence than four independent replications.
+
+**What bagging changes is J++'s overfitting.** J++'s per-layer search over eight signed weights,
+with 47 fitting items, fits the fitting items well and generalises less well.
+
+- Unfitted lenses score *lower* on the fitting items than on the held-out items: the R-lens gets
+  0.340 against 0.386, so the fitting items happen to be about 4.6 points harder.
+- Against that baseline, J++ is optimistic on its fitting items by about 14 points
+  (0.484 against 0.392 held out).
+- Bagged-J++ is optimistic by about 9 points (0.448 against 0.403).
+- RB-mix, with two weights per layer, is optimistic by about 6 points (0.416 against 0.398).
+
+The candidates that do well are those that give the 47 labelled items the least room to overfit.
+
+**Where RB-mix gains.** RB-mix's advantage is concentrated in multihop:
+
+- It improves on J++'s multihop recall on four of the five confirmatory splits (+0.04 to +0.17)
+  and ties on the fifth.
+- It scores below J++ on multilingual on three of them.
+
+The fitted B-lens weight is positive at every layer from 11 onward on average:
+
+| Layer | 11 | 14 | 18 | 21 | 24 |
+|---|---|---|---|---|---|
+| mean B-lens weight | 0.18 | 0.33 | 0.27 | 0.30 | 0.49 |
+
+The R-lens weight is about 0.8–1.0, and both maps are unit-normalised. This matches round 1's
+qualitative finding that the broadcast lens ranks some bridge entities that the other lenses
+miss.
+
+**What does not replicate.** Round 1's JB-mix gain over the J-lens (0.332 → 0.368 on seed 0) was
+mostly a property of that split.
+
+- Over seeds 1–5 JB-mix improves on the J-lens by only 0.010 on average (range −0.005 to +0.029),
+  and trails J++ by 4.5 points.
+- The B-lens adds to the R-lens (RB-mix) but barely to the J-lens.
+
+**The faithful port and the round-1 split.** On seed 0 the faithful port gives J++ 0.367,
+against 0.374 with the round-1 port. The difference is within noise, but it reorders the
+round-1 comparison: the label-free routed LRP lens (0.373) is now 0.6 points *above* J++ on
+that split. Over seeds 1–5 it ties J++ exactly on average (+0.000, 3/5 wins).
+
+**How much do learned weights add at this scale?** Across the five splits J++ improves on the
+J-lens by 5.5 points (range 3.6–8.4) and on the R-lens by only 0.6 (range −1.0 to +2.3; J++
+ahead on three splits). The secondary all-items panel (§5.2) even has the R-lens ahead of J++.
+At 0.6B parameters, essentially all of J++'s advantage over the J-lens comes from the LRP
+backward pass; the learned expert weights add little or nothing.
+
+The improvements that survive the multi-split test are those that make the weight search more
+stable:
+
+- averaging over resamples (Bagged-J++);
+- shrinking it to two weights over complementary maps (RB-mix).
+
+Making the search richer does not help: Routed-J++-a200 loses on every split.
 
 ### 5.4 Causal swaps
 
@@ -484,9 +651,13 @@ brute-force Jacobian. Choices not pinned down by released code are stated explic
 seven-layer subset for a 28-layer model, the workspace-band rule, the ignition summary statistic,
 and including the final-norm gain in J-lens directions.
 
-**Single seed and split.** The fitting/held-out split, the router's k-means and the probe draws
-use one seed each. Bootstrap intervals capture item sampling, but not variability over fitting
-prompts or router initialisations.
+**Splits, seeds and the item pool.** Round 2 varies the fitting/held-out split (six seeds), but
+the router's k-means, the fitting prompts and the probe draws use one seed each. Bootstrap
+intervals capture item sampling, but not variability over fitting prompts or router
+initialisations. All splits draw on the same 250 correctness-filtered items, so the round-2
+winners have not been tested on items outside that pool. Their margins (+0.6 and +1.0 points)
+are smaller than a single split's paired interval (about ±3–6 points). A replication on new
+items, or on a second model, is needed before calling either an improvement in general.
 
 **What "J-space" means here.** We test operational consequences (readout recall, causal swap
 success, switch sharpness) and make no claims about consciousness or access consciousness,

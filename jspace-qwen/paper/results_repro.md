@@ -32,6 +32,11 @@ for the logit lens). In the last layers both lenses read out the imminent answer
 their best-of-layers scores converge on the multihop and multilingual sets, where the
 intermediate is often close to the output.
 
+![Per-layer recall@10](figures/fig_layers.png)
+
+**Figure 1.** Single-layer recall@10 for the logit, regression and J-lens. The shaded region is the
+workspace band selected by the pre-declared rule (layers 20–24).
+
 **The workspace band.** Our pre-declared rule takes the contiguous run of layers around the peak
 of the J-lens curve on which recall stays above half the peak, excluding the three
 output-adjacent layers. It selects layers 20–24, about 71–86% of depth. Restricted to this band,

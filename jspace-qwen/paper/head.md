@@ -14,17 +14,26 @@ Qwen3-0.6B on a single CPU, with the released prompt sets and the J++ evaluation
 recall@10, against 27.1% for the logit lens. Its advantage sits in layers 4–19 and on typo
 correction. The workspace band chosen by a pre-declared rule is layers 20–24.
 
-**J++ at this scale.** J++ is still the strongest lens (37.4%), but its gain over the J-lens is
-about 4 points rather than about 20 at 27B. Most of that gain comes from the LRP backward pass.
+**J++ at this scale.** J++'s gain over the J-lens averages 5.5 points over five fresh splits
+(range 3.6–8.4), against about 20 at 27B. Nearly all of it comes from the LRP backward pass: J++
+beats the plain LRP R-lens by only 0.6 points on average. Without the correctness filter, the
+R-lens is ahead of J++.
 
 **Label-free and broadcast variants.**
-- A label-free lens, LRP experts routed with count-adaptive shrinkage, matches J++ to within a
-  point.
+- A label-free lens, LRP experts routed with count-adaptive shrinkage, ties J++: the mean
+  difference over five fresh splits is +0.000.
 - A new *broadcast lens* keeps only influence on strictly later positions, the attention-carried
   traffic a workspace reading identifies with availability. It is weak alone (21.7%) but
   complementary in mixes.
 
-**Pre-registered round 2.** On five fresh splits, [ROUND 2 RESULT].
+**Pre-registered round 2.** Four candidate improvements were fixed in advance and tested on five
+fresh splits. Two meet the win criterion (positive mean paired difference and at least 4/5 split
+wins), by small margins:
+- Bagged J++ weights: +1.0 points recall@10, 4/5 wins.
+- A two-weight mix of the R-lens and the broadcast lens: +0.6 points, 4 wins and 1 tie.
+
+Both reduce J++'s overfitting to its 47 labelled fitting items. Neither margin is large relative
+to per-split noise.
 
 **Pitfalls.** We document two implementation pitfalls in J++-style evaluations: empty expert
 clusters that score a spurious perfect recall, and masking before combining experts.
