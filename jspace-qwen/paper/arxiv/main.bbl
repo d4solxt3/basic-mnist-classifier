@@ -1,0 +1,110 @@
+\begin{thebibliography}{17}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ayonrinde and Lindsey(2026)]{ayonrinde2026jpp}
+K.~Ayonrinde and J.~Lindsey.
+\newblock The {J}++ lens.
+\newblock Code release, 2026.
+\newblock URL \url{https://github.com/safety-research/jpp_lens}.
+
+\bibitem[Baars(1988)]{baars1988}
+Bernard~J. Baars.
+\newblock \emph{A Cognitive Theory of Consciousness}.
+\newblock Cambridge University Press, 1988.
+
+\bibitem[Bach et~al.(2015)Bach, Binder, Montavon, Klauschen, M{\"u}ller, and
+  Samek]{bach2015lrp}
+Sebastian Bach, Alexander Binder, Gr{\'e}goire Montavon, Frederick Klauschen,
+  Klaus-Robert M{\"u}ller, and Wojciech Samek.
+\newblock On pixel-wise explanations for non-linear classifier decisions by
+  layer-wise relevance propagation.
+\newblock \emph{PLoS ONE}, 10\penalty0 (7), 2015.
+
+\bibitem[Belrose et~al.(2023)]{belrose2023tuned}
+N.~Belrose et~al.
+\newblock Eliciting latent predictions from transformers with the tuned lens.
+\newblock \emph{arXiv preprint arXiv:2303.08112}, 2023.
+
+\bibitem[Blank and Bhatia(2026)]{blank2026rlens}
+I.~Blank and K.~Bhatia.
+\newblock The {R}-lens, 2026.
+\newblock Citation details not verified; cited as described in the J++ release.
+
+\bibitem[Dehaene and Naccache(2001)]{dehaene2001}
+Stanislas Dehaene and Lionel Naccache.
+\newblock Towards a cognitive neuroscience of consciousness: basic evidence and
+  a workspace framework.
+\newblock \emph{Cognition}, 79\penalty0 (1--2):\penalty0 1--37, 2001.
+
+\bibitem[Drineas et~al.(2006)Drineas, Kannan, and Mahoney]{drineas2006}
+Petros Drineas, Ravi Kannan, and Michael~W. Mahoney.
+\newblock Fast {M}onte {C}arlo algorithms for matrices {I}: Approximating
+  matrix multiplication.
+\newblock \emph{SIAM Journal on Computing}, 36\penalty0 (1):\penalty0 132--157,
+  2006.
+
+\bibitem[Ghandeharioun et~al.(2024)]{ghandeharioun2024patchscopes}
+A.~Ghandeharioun et~al.
+\newblock Patchscopes: A unifying framework for inspecting hidden
+  representations of language models.
+\newblock In \emph{Proceedings of ICML}, 2024.
+
+\bibitem[Gurnee et~al.(2026)]{gurnee2026workspace}
+W.~Gurnee et~al.
+\newblock Verbalizable representations form a global workspace in language
+  models.
+\newblock Transformer Circuits Thread, 2026.
+\newblock URL \url{https://transformer-circuits.pub/2026/workspace/index.html}.
+\newblock Code and prompt sets:
+  \url{https://github.com/anthropics/jacobian-lens}.
+
+\bibitem[Halko et~al.(2011)Halko, Martinsson, and Tropp]{halko2011}
+Nathan Halko, Per-Gunnar Martinsson, and Joel~A. Tropp.
+\newblock Finding structure with randomness: Probabilistic algorithms for
+  constructing approximate matrix decompositions.
+\newblock \emph{SIAM Review}, 53\penalty0 (2):\penalty0 217--288, 2011.
+
+\bibitem[Hutchinson(1989)]{hutchinson1989}
+M.~F. Hutchinson.
+\newblock A stochastic estimator of the trace of the influence matrix for
+  {L}aplacian smoothing splines.
+\newblock \emph{Communications in Statistics -- Simulation and Computation},
+  18\penalty0 (3):\penalty0 1059--1076, 1989.
+
+\bibitem[Martinsson and Tropp(2020)]{martinsson2020}
+Per-Gunnar Martinsson and Joel~A. Tropp.
+\newblock Randomized numerical linear algebra: Foundations and algorithms.
+\newblock \emph{Acta Numerica}, 29:\penalty0 403--572, 2020.
+
+\bibitem[Merity et~al.(2016)Merity, Xiong, Bradbury, and
+  Socher]{merity2016wikitext}
+Stephen Merity, Caiming Xiong, James Bradbury, and Richard Socher.
+\newblock Pointer sentinel mixture models.
+\newblock \emph{arXiv preprint arXiv:1609.07843}, 2016.
+
+\bibitem[nostalgebraist(2020)]{nostalgebraist2020logitlens}
+nostalgebraist.
+\newblock Interpreting {GPT}: the logit lens.
+\newblock LessWrong, 2020.
+
+\bibitem[Owen(2013)]{owen2013}
+Art~B. Owen.
+\newblock \emph{Monte Carlo Theory, Methods and Examples}.
+\newblock Self-published online, 2013.
+
+\bibitem[Pal et~al.(2023)]{pal2023future}
+K.~Pal et~al.
+\newblock Future lens: Anticipating subsequent tokens from a single hidden
+  state.
+\newblock In \emph{Proceedings of CoNLL}, 2023.
+
+\bibitem[{Qwen Team}(2025)]{qwen3}
+{Qwen Team}.
+\newblock Qwen3 technical report.
+\newblock \emph{arXiv preprint arXiv:2505.09388}, 2025.
+
+\end{thebibliography}
