@@ -23,5 +23,18 @@
     }
   },
   "stage1_total_s": 55.17692756652832,
-  "stage1_peak_rss_gb": 4.11490304
+  "stage1_peak_rss_gb": 4.11490304,
+  "stage2_total_s": 1619.959909439087,
+  "stage2_peak_rss_gb": 5.852581888,
+  "stage2_timings": {
+    "baseline_generation_s": 53.046746492385864,
+    "axes": {
+      "syc": 344.57688570022583,
+      "unc": 411.051828622818,
+      "cau": 351.3589680194855,
+      "per": 456.4193127155304
+    }
+  },
+  "stage2_generation_runs": 75,
+  "stage2_prompts_per_run": 16
 }

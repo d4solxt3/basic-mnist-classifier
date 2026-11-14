@@ -40,7 +40,7 @@
 \maketitle
 
 \begin{abstract}
-Linear representation engineering has established that high-level behavioral traits in large language models---including refusal, sycophancy, and stylistic persona shifts---often align with low-rank directions in residual activation space. However, linear subspace identifiability leaves open a fundamental mechanistic question: do these behavioral features localize onto individual basis-aligned units within gated feed-forward layers, or are they distributed across polysemantic subspaces via superposition? Answering this question reliably is impeded by three methodological hazards: severe multiple-testing inflation across hundreds of thousands of neurons, surface-token leakage at the discovery position, and uncalibrated intervention norms. We introduce a confound-controlled four-axis contrast benchmark (80 matched prompt pairs; 160 prompts) and a two-stage pre-registered experimental protocol engineered for \texttt{Qwen/\allowbreak{}Qwen3-1.7B} within a strict 8~GB VRAM envelope. Stage~1 screens all $172{,}032$ post-SwiGLU units using output-norm-weighted Cohen's $d$ calibrated against a Westfall--Young max-statistic permutation null distribution ($p_{\mathrm{FWER}} < 0.01$). Stage~2 tests causal steering via residual-norm-calibrated activation clamping against unedited baselines and equal-norm random-neuron controls across multiple seeds, contrasting in-distribution trigger prompts against neutral out-of-distribution queries to separate input keyword detection from downstream policy control. We provide the complete mathematical formulation, steelmanned threat model, and 160-prompt benchmark suite for reproducible execution.
+Linear representation engineering has established that high-level behavioral traits in large language models---including refusal, sycophancy, and stylistic persona shifts---often align with low-rank directions in residual activation space. However, linear subspace identifiability leaves open a fundamental mechanistic question: do these behavioral features localize onto individual basis-aligned units within gated feed-forward layers, or are they distributed across polysemantic subspaces via superposition? Answering this question reliably is impeded by three methodological hazards: severe multiple-testing inflation across hundreds of thousands of neurons, surface-token leakage at the discovery position, and uncalibrated intervention norms. We introduce a confound-controlled four-axis contrast benchmark (80 matched prompt pairs; 160 prompts) and a two-stage pre-registered experimental protocol for \texttt{Qwen/\allowbreak{}Qwen3-1.7B}. The protocol is sized for an 8~GB GPU, and we execute it end to end on CPU. Stage~1 screens all $172{,}032$ post-SwiGLU units using output-norm-weighted Cohen's $d$ calibrated against a Westfall--Young max-statistic permutation null distribution ($p_{\mathrm{FWER}} < 0.01$). Stage~2 tests causal steering via residual-norm-calibrated additive activation pushes against unedited baselines and equal-norm random-neuron controls across three seeds and three doses. It contrasts in-distribution trigger prompts with neutral out-of-distribution queries to separate input keyword detection from downstream policy control. In the executed run, the Sycophancy, Uncertainty, and Persona axes each yield units that survive whole-network family-wise error control (permutation maxima exceeding the candidate's $|d|$: \SycExceed, \UncExceed, and \PerExceed), while the Caution axis is refuted at Stage~1. None of the surviving candidates passes the pre-registered causal test on neutral prompts. Their shifts in the first-token log-probability margin stay well below two baseline standard deviations, and the Persona unit moves the margin less than equal-norm random edits. Statistical localization at the discovery token therefore did not translate into single-neuron causal control. We release the benchmark, code, run log, and all generations.
 \end{abstract}
 
 \section{Introduction}
@@ -58,7 +58,8 @@ To resolve these issues while keeping full reproducibility accessible on a singl
 \begin{itemize}[leftmargin=1.5em]
     \item \textbf{Confound-Locked Four-Axis Contrast Benchmark:} Eighty matched prompt pairs spanning \emph{Sycophancy}, \emph{Epistemic Uncertainty}, \emph{Refusal / Caution Boundaries}, and \emph{Persona / Register Shifts}, strictly matched on topic domain, approximate token length, and trailing interrogative punctuation (\texttt{?}).
     \item \textbf{Westfall--Young Permutation Discovery:} A whole-network shuffled-label ranking procedure combining active-firing masks, output column-norm weighting, and correlation-preserving max-statistic $p_{\mathrm{FWER}}$ thresholds.
-    \item \textbf{Norm-Calibrated Causal Verification:} A multi-seed intervention protocol comparing target neuron clamping against equal-residual-norm random-neuron edits across both neutral out-of-distribution queries and in-distribution trigger prompts, bounded by bigram-diversity coherence guards.
+    \item \textbf{Norm-Calibrated Causal Verification:} A multi-seed intervention protocol comparing additive pushes on the target neuron against equal-residual-norm random-neuron edits across both neutral out-of-distribution queries and in-distribution trigger prompts, bounded by bigram-diversity coherence guards.
+    \item \textbf{Executed Results:} A complete run of both stages on \texttt{Qwen/\allowbreak{}Qwen3-1.7B} (Section~\ref{sec:results}). Three of four axes pass the Stage~1 screen, but no candidate passes the causal test, so every axis is refuted under the pre-registered rules.
     \item \textbf{Steelmanned Threat Model:} An explicit analysis of lexical-trigger overfitting, polysemantic collateral activation, clamping versus multiplicative scaling, and dual-use safety governance.
 \end{itemize}
 
@@ -103,7 +104,7 @@ Because the elementwise $\mathrm{SiLU}$ gate favors axis alignment for threshold
     \caption{Pre-registered mechanistic predictions across the four behavioral axes in \texttt{Qwen/\allowbreak{}Qwen3-1.7B}.}
     \label{tab:predictions}
     \small
-    \begin{tabularx}{\textwidth}{@{} l l c X @{}}
+    \begin{tabularx}{\textwidth}{@{} l l c >{\raggedright\arraybackslash}X @{}}
         \toprule
         \textbf{Behavioral Axis} & \textbf{Expected Depth} & \textbf{Predicted Localization} & \textbf{Primary Confound Risk} \\
         \midrule
@@ -174,16 +175,16 @@ We record two primary metrics. (i) The first-token log-probability margin $\Delt
 
 \subsection{Compute Envelope and Pre-Registered Decision Criteria}
 
-The protocol is sized for an 8~GB consumer GPU: the BF16 weights of \texttt{Qwen/\allowbreak{}Qwen3-1.7B} occupy \WeightGB~GB (\NParams{} parameters, measured), and both stages run at batch sizes of at most $16$ prompts. The run reported here, however, executed on a 4-core Intel Xeon CPU (AMX-BF16) with 15~GB of RAM and no GPU. Table~\ref{tab:vram} therefore reports measured wall times and peak process memory (resident set size) on that CPU. Peak GPU memory was not measured.
+The protocol is sized for an 8~GB consumer GPU: the BF16 weights of \texttt{Qwen/\allowbreak{}Qwen3-1.7B} occupy \WeightGB~GB (\NParams{} parameters, measured), and both stages run at batch sizes of at most $16$ prompts. The run reported here, however, executed on an Intel Xeon CPU with 4 logical cores and AMX-BF16 support, 15.7~GiB of RAM, and no GPU (hardware record in \texttt{RUNLOG.md}). Table~\ref{tab:vram} therefore reports measured wall times and peak process memory (resident set size) on that CPU. Peak GPU memory was not measured.
 
 \begin{table}[htbp]
     \centering
-    \caption{Measured resources of the executed run (\texttt{Qwen/\allowbreak{}Qwen3-1.7B}, BF16, CPU only, 4 threads). Peak RSS is the peak resident memory of the Python process. The Stage~2 figure includes a float32 copy of the vocabulary projection used for scoring.}
+    \caption{Measured resources of the executed run (\texttt{Qwen/\allowbreak{}Qwen3-1.7B}, BF16, CPU only, 4 threads). Peak RSS is the peak resident memory of the Python process. The Stage~2 figure includes a float32 copy of the vocabulary projection used for scoring. Each Stage~1 axis uses 40 prompts and 200 label permutations.}
     \label{tab:vram}
     \small
-    \begin{tabularx}{\textwidth}{@{} X l r r @{}}
+    \begin{tabularx}{\textwidth}{@{} X r r @{}}
         \toprule
-        \textbf{Pipeline Stage} & \textbf{Quantity} & \textbf{Memory} & \textbf{Wall Time} \\
+        \textbf{Pipeline Stage} & \textbf{Memory} & \textbf{Wall Time} \\
         \midrule
         \rowsfrom{generated/resources_rows.tex}
         \bottomrule
@@ -236,11 +237,77 @@ Table~\ref{tab:stage1} reports the Stage~1 screen. Three of four axes pass with 
     \end{tabular}
 \end{table}
 
-The pre-registered predictions (Table~\ref{tab:predictions}) fare unevenly. Persona and Uncertainty candidates lie at layer $19$, inside their predicted depth bands. The Sycophancy candidate lies at layer $13$, shallower than the predicted band $[18, 26]$. Caution was predicted to localize strongly but shows no significant unit at all. Sycophancy was predicted to localize weakly, yet it shows the largest effect and the largest number of passing units (\SycNPass{} of \SycNActive{} active units). We read this as a warning rather than as evidence of localization. Axis~1 pairs differ in sentence frame (first-person assertion plus tag question versus a neutral ``In \ldots{}, \ldots?'' query), and a screen at the last prompt token cannot separate that surface difference from the behavioral contrast. Thousands of units clearing a whole-network FWER threshold is more consistent with a broad representational difference than with a single dedicated unit. The same caveat applies, more weakly, to Persona (\PerNPass{} passing units), whose positive prompts contain explicit persona adjectives.
+The pre-registered predictions (Table~\ref{tab:predictions}) fare unevenly. The Persona and Uncertainty candidates lie at layers \PerLayer{} and \UncLayer, inside their predicted depth bands. The Sycophancy candidate lies at layer \SycLayer, shallower than the predicted band $[18, 26]$. Caution was predicted to localize strongly but shows no significant unit at all. Sycophancy was predicted to localize weakly, yet it shows the largest effect and the largest number of passing units (\SycNPass{} of \SycNActive{} active units). We read this as a warning rather than as evidence of localization. Axis~1 pairs differ in sentence frame (first-person assertion plus tag question versus a neutral ``In \ldots{}, \ldots?'' query), and a screen at the last prompt token cannot separate that surface difference from the behavioral contrast. Thousands of units clearing a whole-network FWER threshold is more consistent with a broad representational difference than with a single dedicated unit. The same caveat applies, more weakly, to Persona (\PerNPass{} passing units), whose positive prompts contain explicit persona adjectives.
 
-%STAGE2-BODY%
+\subsection{Stage 2: Causal Steering on Neutral Prompts}
+
+Table~\ref{tab:stage2} reports Stage~2 at the decision dose $\alpha = 1.0$. \textbf{No axis meets the confirmation rule.} All three axes that passed Stage~1 fail criterion~(a): their mean shifts in $\Delta \log P$ (\SycShift{} for Sycophancy, \UncShift{} for Uncertainty, \PerShift{} for Persona) fall far short of the $2\,\mathrm{SD}$ thresholds (\SycThreshold, \UncThreshold, and \PerThreshold). The Sycophancy unit moves the margin in the wrong direction. It does so less than its random controls (random shift \SycRandShift), so it formally meets criterion~(b) while failing~(a). The Persona unit fails~(b) as well: equal-norm random edits in layer \PerLayer{} move the persona margin further (\PerRandShift) than the discovered unit does. The Uncertainty unit is the only candidate whose effect points the predicted way and exceeds its random control at every dose (Table~\ref{tab:dose}: \UncShiftHalf, \UncShiftOne, \UncShiftOneHalf{} versus \UncRandShiftHalf, \UncRandShiftOne, \UncRandShiftOneHalf{} at $\alpha = 0.5, 1.0, 1.5$). However, it remains well below the pre-registered threshold because the baseline margin varies widely across the neutral prompts (SD \UncBaseSD). The exploratory Caution unit sits in layer \CauLayer, where the push destroys fluency ($\texttt{distinct\_2} = $ \CauDistTgt).
+
+\begin{table}[htbp]
+    \centering
+    \caption{Stage~2 results at $\alpha = 1.0$ on $\mathcal{P}_{\mathrm{OOD}}$. $\Delta \log P$ is mean $\pm$ SD across the $16$ prompts; the random-control row first averages each prompt over the three seed-specific random units. $\Delta_{\mathrm{base}}$ is the mean paired shift from the unedited baseline. $\Delta_{\mathrm{random}}$ is the mean $\Delta \log P$ of the condition minus that of the random control. $\texttt{distinct\_2}$ is mean $\pm$ SD across seeds. ``Causal effect'' requires criteria (a)--(c). $^{\dagger}$Exploratory: the axis did not pass Stage~1.}
+    \label{tab:stage2}
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{@{} l r r r r c @{}}
+        \toprule
+        \textbf{Axis / Condition} & \textbf{$\Delta \log P$} & \textbf{$\Delta_{\mathrm{base}}$} & \textbf{$\Delta_{\mathrm{random}}$} & \textbf{\texttt{distinct\_2}} & \textbf{Causal effect?} \\
+        \midrule
+        \rowsfrom{generated/stage2_rows.tex}
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\paragraph{Fluency and dose.} The unedited model's completions have $\texttt{distinct\_2} = $ \SycDistBase. At $\alpha = 1.0$, the target edit lowers this to \SycDistTgt{} (Sycophancy), \UncDistTgt{} (Uncertainty), and \PerDistTgt{} (Persona). At $\alpha = 1.5$, every target edit except Persona falls below the $0.45$ guard (Table~\ref{tab:dose}). Random edits of equal norm degrade fluency comparably; the Sycophancy random controls already fall to \SycDistRand{} at $\alpha = 1.0$. This shows that a perturbation of norm $\tilde{\rho}_\ell$ is a strong intervention in its own right. For scale, the decision-dose push adds \UncPushValue{} to unit \UncUnit, whose mean activation at the discovery token is \UncMeanPos{} on positive and \UncMeanNeg{} on negative prompts. The $0.45$ guard is also lenient. Sycophancy completions under the target edit pass it but fall into repeated phrases (seed~0, first prompt: \emph{``We are what we are. We are the ones we see. We are the ones we see.\ \ldots''}; all completions are in \texttt{outputs/stage2\_generations.jsonl}). At $\alpha = 0.5$ all target edits preserve fluency, but none comes close to its $2\,\mathrm{SD}$ threshold either.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Dose sweep on $\mathcal{P}_{\mathrm{OOD}}$: mean paired shift in $\Delta \log P$ for the target unit and the random control (averaged over the three seed-specific random units), and $\texttt{distinct\_2}$ (mean $\pm$ SD across seeds).}
+    \label{tab:dose}
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{@{} l c r r r r @{}}
+        \toprule
+        \textbf{Axis} & \textbf{$\alpha$} & \textbf{Target shift} & \textbf{Random shift} & \textbf{Target \texttt{distinct\_2}} & \textbf{Random \texttt{distinct\_2}} \\
+        \midrule
+        \rowsfrom{generated/dose_rows.tex}
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{In-Distribution Elicitation and Suppression}
+
+Table~\ref{tab:indist} reports the descriptive in-distribution analysis, which carries no pre-registered decision. Here the Sycophancy and Uncertainty units move the margin in the intended direction both ways, and on average by more than their random controls. Sycophancy shows elicitation of \SycElicit{} versus \SycElicitRand{} and suppression of \SycSuppress{} versus \SycSuppressRand. Uncertainty shows elicitation of \UncElicit{} versus \UncElicitRand{} and suppression of \UncSuppress{} versus \UncSuppressRand. The across-prompt SDs are large and the target and random distributions overlap. The Persona unit elicits in the wrong direction (\PerElicit; random \PerElicitRand). The exploratory Caution unit shows no effect beyond its random control in either direction. For Sycophancy, an effect that appears on the contrast prompts but reverses sign on neutral prompts is the pattern anticipated by objection~1 of Section~\ref{sec:threats}: the unit's influence depends on the input context rather than acting as a context-free behavioral control. The large shifts produced by random edits (e.g., \SycElicitRand{} for Sycophancy elicitation) also show that much of the in-distribution sensitivity is generic to perturbations of this size.
+
+\begin{table}[htbp]
+    \centering
+    \caption{In-distribution analysis at $\alpha = 1.0$: mean $\pm$ SD (across $20$ prompts) of the paired shift in $\Delta \log P$. Elicitation pushes towards the positive class on negative prompts (expected sign $+$). Suppression pushes away from it on positive prompts (expected sign $-$). The random control averages the three seed-specific random units.}
+    \label{tab:indist}
+    \small
+    \begin{tabular}{@{} l r r r r @{}}
+        \toprule
+        & \multicolumn{2}{c}{\textbf{Elicitation (negatives, $+c$)}} & \multicolumn{2}{c}{\textbf{Suppression (positives, $-c$)}} \\
+        \cmidrule(lr){2-3} \cmidrule(l){4-5}
+        \textbf{Axis} & \textbf{Target} & \textbf{Random} & \textbf{Target} & \textbf{Random} \\
+        \midrule
+        \rowsfrom{generated/indist_rows.tex}
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Summary and Limitations}
+
+Under the pre-registered rules, \textbf{no behavioral axis supports single-neuron causal control in \texttt{Qwen/\allowbreak{}Qwen3-1.7B}}. Caution is refuted at Stage~1, and Sycophancy, Uncertainty, and Persona are refuted at Stage~2. Passing a stringent whole-network FWER screen at the discovery token did not predict causal efficacy on neutral prompts. Hundreds to thousands of units cleared the screen on three axes, which suggests the contrasts are encoded broadly rather than in a privileged unit. These conclusions are limited in several ways:
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Scope:} one model, one discovery position (the final prompt token), $20$ prompts per class, and one candidate per axis.
+    \item \textbf{Metrics:} a first-token margin over hand-picked word sets and a weak fluency guard.
+    \item \textbf{Intervention:} a single intervention family, the additive push, whose decision dose is large relative to typical activations.
+    \item \textbf{Numerics:} BF16 inference on CPU. Changing batch composition perturbs individual word log-probabilities slightly, which the paired design mitigates but does not remove.
+\end{itemize}
+Clamping, multiplicative scaling, smaller doses, multi-unit edits, and other token positions remain untested.
 
 \section{Steelmanned Critique and Threat Model}
+\label{sec:threats}
 
 Before interpreting empirical runs, we formalize four skeptical objections that could invalidate naive single-neuron claims:
 
@@ -253,7 +320,7 @@ Before interpreting empirical runs, we formalize four skeptical objections that 
 
 \section{Conclusion}
 
-Single-neuron interpretability requires the same statistical rigor as multi-dimensional representation engineering: confound-matched contrast sets, correlation-preserving permutation null controls, norm-calibrated causal interventions, and out-of-distribution behavioral verification. By combining a 160-prompt four-axis benchmark with a pre-registered 8~GB experimental protocol for \texttt{Qwen/\allowbreak{}Qwen3-1.7B}, this work provides a reproducible framework for distinguishing genuine basis-aligned behavioral circuits from multiple-testing artifacts and diffuse superposition.
+Single-neuron interpretability requires the same statistical rigor as multi-dimensional representation engineering: confound-matched contrast sets, correlation-preserving permutation null controls, norm-calibrated causal interventions, and out-of-distribution behavioral verification. We combined a 160-prompt four-axis benchmark with a pre-registered two-stage protocol for \texttt{Qwen/\allowbreak{}Qwen3-1.7B} and executed it. The results illustrate why both stages are needed. Three axes produced units that survive whole-network family-wise error control, yet none of these units steered behavior on neutral prompts beyond the pre-registered threshold, and one did worse than random units of equal norm. In this model, at this discovery position, the tested behavioral contrasts are separable at the level of individual units but are not controlled by them. The benchmark, code, run log, and generations are released so that the null result can be checked and extended to other models, positions, and intervention families.
 
 \begin{thebibliography}{9}
 
@@ -311,7 +378,7 @@ Table~\ref{tab:tokens} specifies the target ($\mathcal{V}_{\mathrm{targ}}$) and 
     \caption{First-token contrast sets for Stage~2 causal verification across Axes~1--4.}
     \label{tab:tokens}
     \small
-    \begin{tabularx}{\textwidth}{@{} l X X @{}}
+    \begin{tabularx}{\textwidth}{@{} l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X @{}}
         \toprule
         \textbf{Axis} & \textbf{Target Tokens ($\mathcal{V}_{\mathrm{targ}}$)} & \textbf{Neutral Tokens ($\mathcal{V}_{\mathrm{neut}}$)} \\
         \midrule
@@ -330,7 +397,7 @@ Words are tokenized without a leading space, because the answer begins directly 
     \caption{Contrast words split into several sub-tokens by the \texttt{Qwen/\allowbreak{}Qwen3-1.7B} tokenizer.}
     \label{tab:token_pieces}
     \small
-    \begin{tabularx}{\textwidth}{@{} l X @{}}
+    \begin{tabularx}{\textwidth}{@{} l >{\raggedright\arraybackslash}X @{}}
         \toprule
         \textbf{Axis} & \textbf{Multi-token words (sub-token pieces)} \\
         \midrule

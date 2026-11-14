@@ -1,0 +1,898 @@
+{
+  "axis": "per",
+  "env": {
+    "utc": "2026-11-14T02:03:05+00:00",
+    "repo_commit": "237296845fa5cc50d90e1f6f36cbceeab14cfbab",
+    "model_commit": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "python": "3.13.18",
+    "torch": "2.15.0+cpu",
+    "transformers": "5.23.0",
+    "numpy": "2.5.4",
+    "device": "cpu",
+    "cpu": "x86_64",
+    "torch_threads": 4,
+    "cuda_available": false
+  },
+  "unit": {
+    "layer": 19,
+    "neuron": 3950,
+    "cohen_d": -6.064070575212435,
+    "push_sign": -1.0,
+    "col_norm": 1.7586807012557983,
+    "stage1_verdict": "pass"
+  },
+  "rho_layer": 633.6035766601562,
+  "doses": [
+    0.5,
+    1.0,
+    1.5
+  ],
+  "report_dose": 1.0,
+  "random_units": {
+    "0": 5837,
+    "1": 1696,
+    "2": 5715
+  },
+  "token_map": {
+    "target": {
+      "Ah": [
+        24765
+      ],
+      "Fool": [
+        37,
+        1749
+      ],
+      "Mortals": [
+        44,
+        371,
+        1127
+      ],
+      "Pathetic": [
+        1820,
+        5298
+      ],
+      "Behold": [
+        10021,
+        813
+      ],
+      "Bow": [
+        86692
+      ]
+    },
+    "neutral": {
+      "Sure": [
+        39814
+      ],
+      "Here": [
+        8420
+      ],
+      "To": [
+        1249
+      ],
+      "The": [
+        785
+      ],
+      "Yes": [
+        9454
+      ],
+      "A": [
+        32
+      ]
+    },
+    "target_pieces": {
+      "Ah": [
+        "Ah"
+      ],
+      "Fool": [
+        "F",
+        "ool"
+      ],
+      "Mortals": [
+        "M",
+        "ort",
+        "als"
+      ],
+      "Pathetic": [
+        "Path",
+        "etic"
+      ],
+      "Behold": [
+        "Beh",
+        "old"
+      ],
+      "Bow": [
+        "Bow"
+      ]
+    },
+    "neutral_pieces": {
+      "Sure": [
+        "Sure"
+      ],
+      "Here": [
+        "Here"
+      ],
+      "To": [
+        "To"
+      ],
+      "The": [
+        "The"
+      ],
+      "Yes": [
+        "Yes"
+      ],
+      "A": [
+        "A"
+      ]
+    }
+  },
+  "ood_delta_logp": {
+    "baseline": {
+      "per_prompt": [
+        -1.4707651559412405,
+        -19.455953868576422,
+        -9.829059030463174,
+        -9.118216049157581,
+        -28.254993251457215,
+        -32.733703931009764,
+        -19.75644276614164,
+        -21.872622741814503,
+        -6.842398837930457,
+        -7.090890992331467,
+        -15.902643725555217,
+        -34.815299815018136,
+        -17.5244955848515,
+        -16.674608464425614,
+        -13.981929366707222,
+        -21.01848660867989
+      ],
+      "mean": -17.271406886878815,
+      "sd": 9.3477778911148,
+      "n": 16
+    },
+    "target": {
+      "0.5": {
+        "push_value": -180.13604635785427,
+        "per_prompt": [
+          -2.462254924574932,
+          -16.753191065667558,
+          -10.438613142520188,
+          -8.706803789209802,
+          -30.75842377250422,
+          -33.052803186943734,
+          -23.6666519189655,
+          -22.098603730611384,
+          -6.524408040832949,
+          -8.792747772254202,
+          -17.110955016089978,
+          -31.97135668608803,
+          -17.93881574518619,
+          -18.741476890300326,
+          -12.724155750600296,
+          -18.86982270390595
+        ],
+        "mean": -17.53819275851595,
+        "sd": 9.175954783289823,
+        "n": 16,
+        "shift": {
+          "mean": -0.2667858716371372,
+          "sd": 1.8723890653274018,
+          "n": 16
+        }
+      },
+      "1.0": {
+        "push_value": -360.27209271570854,
+        "per_prompt": [
+          -3.8403126834311614,
+          -13.047265518576584,
+          -10.321468918568385,
+          -11.23276988880301,
+          -27.866757948970076,
+          -30.154989575504896,
+          -22.862736286970208,
+          -22.060532523395363,
+          -3.9168541265892447,
+          -8.387765679236873,
+          -16.672294195460747,
+          -24.762799119200405,
+          -17.437033841850052,
+          -18.710443260569466,
+          -11.16138941619484,
+          -18.03086460520382
+        ],
+        "mean": -16.27914234928282,
+        "sd": 7.972654393714906,
+        "n": 16,
+        "shift": {
+          "mean": 0.9922645375959944,
+          "sd": 3.51236596621645,
+          "n": 16
+        }
+      },
+      "1.5": {
+        "push_value": -540.4081390735628,
+        "per_prompt": [
+          -5.641452600927108,
+          -10.93444288457419,
+          -9.978169206802418,
+          -13.726801487381762,
+          -22.727621878566644,
+          -25.115645432886538,
+          -19.375996644058894,
+          -20.0103397753094,
+          -2.402253674074668,
+          -5.4534803570417925,
+          -15.000810435776824,
+          -16.583245288637404,
+          -17.491513243513406,
+          -16.71855829234117,
+          -8.98261692510055,
+          -14.692547320412976
+        ],
+        "mean": -14.05221846546286,
+        "sd": 6.432646124888331,
+        "n": 16,
+        "shift": {
+          "mean": 3.2191884214159563,
+          "sd": 5.5274560054507145,
+          "n": 16
+        }
+      }
+    },
+    "random": {
+      "0.5": {
+        "per_seed": {
+          "0": {
+            "neuron": 5837,
+            "col_norm": 1.3874918222427368,
+            "push_value": -228.32695894236036,
+            "per_prompt": [
+              -1.771630173573147,
+              -19.64303934546256,
+              -7.781938343848378,
+              -8.461147150430916,
+              -23.135570825540935,
+              -27.38735189084371,
+              -15.681223782553976,
+              -17.64163842673263,
+              -5.0490393705008145,
+              -5.506285729632237,
+              -14.893710679264098,
+              -29.786136120962684,
+              -15.930853058858975,
+              -12.43521617963054,
+              -11.828375953084507,
+              -18.63237060013586
+            ],
+            "mean": -14.722845476940998
+          },
+          "1": {
+            "neuron": 1696,
+            "col_norm": 1.091387391090393,
+            "push_value": -290.27437087537265,
+            "per_prompt": [
+              -3.226509470271507,
+              -16.910596699800244,
+              -9.41654406629896,
+              -11.079042127979237,
+              -26.654838590194537,
+              -31.194429271738247,
+              -20.57202476437573,
+              -21.540241418242882,
+              -8.314940797592048,
+              -6.69682958900781,
+              -18.911880068366905,
+              -35.05366197023492,
+              -16.992921892515863,
+              -15.993666503032562,
+              -14.051055678541053,
+              -20.893367278084735
+            ],
+            "mean": -17.343909386642327
+          },
+          "2": {
+            "neuron": 5715,
+            "col_norm": 1.7743724584579468,
+            "push_value": -178.54300365178173,
+            "per_prompt": [
+              -0.10165112789480624,
+              -15.808856334773042,
+              -8.829096044191369,
+              -7.299424720561767,
+              -24.134741435373517,
+              -28.196874411827384,
+              -16.81885389532124,
+              -18.613930631766095,
+              -6.011252475315663,
+              -6.885198820249319,
+              -14.98502814561329,
+              -31.016881999335528,
+              -14.577092764775886,
+              -12.234205817362014,
+              -12.56152161580409,
+              -18.737235312282007
+            ],
+            "mean": -14.80074034702794
+          }
+        },
+        "per_prompt_seed_mean": [
+          -1.6999302572464867,
+          -17.454164126678616,
+          -8.675859484779567,
+          -8.946537999657307,
+          -24.64171695036966,
+          -28.926218524803115,
+          -17.690700814083648,
+          -19.265270158913868,
+          -6.4584108811361745,
+          -6.3627713796297884,
+          -16.263539631081432,
+          -31.952226696844377,
+          -15.83362257205024,
+          -13.554362833341704,
+          -12.813651082476548,
+          -19.420991063500868
+        ],
+        "mean": -15.622498403537088,
+        "sd": 8.283854154521288,
+        "n": 16,
+        "shift": {
+          "mean": 1.6489084833417276,
+          "sd": 1.3178723102740117,
+          "n": 16
+        }
+      },
+      "1.0": {
+        "per_seed": {
+          "0": {
+            "neuron": 5837,
+            "col_norm": 1.3874918222427368,
+            "push_value": -456.6539178847207,
+            "per_prompt": [
+              -4.289428312147871,
+              -9.763085445711127,
+              -7.04777265791574,
+              -11.437330489431424,
+              -15.967833496969071,
+              -20.996575674194478,
+              -12.063999885372464,
+              -13.543348208792084,
+              -1.5017594233379121,
+              -5.283628702776333,
+              -13.224472776757873,
+              -20.141685238923515,
+              -15.806217747701814,
+              -11.648553673203494,
+              -8.885123241983463,
+              -11.157010564085404
+            ],
+            "mean": -11.422364096206504
+          },
+          "1": {
+            "neuron": 1696,
+            "col_norm": 1.091387391090393,
+            "push_value": -580.5487417507453,
+            "per_prompt": [
+              -6.33575035104681,
+              -10.883133467622887,
+              -10.327189134485213,
+              -8.274775325320173,
+              -22.22577723088771,
+              -25.690241642547377,
+              -17.818462948117578,
+              -16.674656325106504,
+              -6.167030765947203,
+              -4.8966247644471,
+              -19.99358974298439,
+              -30.189003665336962,
+              -14.878016187691076,
+              -12.409524614393552,
+              -11.175376123742051,
+              -18.612709608074685
+            ],
+            "mean": -14.784491368609455
+          },
+          "2": {
+            "neuron": 5715,
+            "col_norm": 1.7743724584579468,
+            "push_value": -357.08600730356346,
+            "per_prompt": [
+              -1.810603793294943,
+              -8.441649577100154,
+              -7.543374965373185,
+              -6.151418256515678,
+              -17.622938321349608,
+              -22.36756737924743,
+              -9.852354933488328,
+              -13.20823412696005,
+              -4.18154418871767,
+              -4.559155676573741,
+              -10.248615717043094,
+              -23.161569893440333,
+              -11.470678760546724,
+              -9.071093282312129,
+              -10.654055197026372,
+              -17.720260944535013
+            ],
+            "mean": -11.129069688345279
+          }
+        },
+        "per_prompt_seed_mean": [
+          -4.1452608188298745,
+          -9.695956163478057,
+          -8.30611225259138,
+          -8.621174690422423,
+          -18.605516349735463,
+          -23.018128231996428,
+          -13.244939255659455,
+          -14.47541288695288,
+          -3.9501114593342614,
+          -4.913136381265725,
+          -14.488892745595118,
+          -24.497419599233606,
+          -14.051637565313206,
+          -11.043057189969725,
+          -10.238184854250628,
+          -15.829993705565036
+        ],
+        "mean": -12.44530838438708,
+        "sd": 6.120489002178099,
+        "n": 16,
+        "shift": {
+          "mean": 4.826098502491736,
+          "sd": 3.8576068399527634,
+          "n": 16
+        }
+      },
+      "1.5": {
+        "per_seed": {
+          "0": {
+            "neuron": 5837,
+            "col_norm": 1.3874918222427368,
+            "push_value": -684.980876827081,
+            "per_prompt": [
+              -4.797956420994477,
+              -5.549810558708947,
+              -8.154193344761994,
+              -11.584781647651768,
+              -11.667752868065609,
+              -14.404125095652345,
+              -9.81349853859529,
+              -12.028020665699222,
+              0.08185250756001494,
+              -3.0704009411379336,
+              -8.220843919701078,
+              -13.899497821087037,
+              -13.96748627890545,
+              -11.303066855395958,
+              -6.8415074166043235,
+              -7.54310733816776
+            ],
+            "mean": -8.922762325223072
+          },
+          "1": {
+            "neuron": 1696,
+            "col_norm": 1.091387391090393,
+            "push_value": -870.8231126261179,
+            "per_prompt": [
+              -9.437432853967579,
+              -12.745474314510602,
+              -11.474839951592116,
+              -11.264664573964234,
+              -18.688974401652516,
+              -22.63175647937783,
+              -16.341848211197007,
+              -15.477244490636426,
+              -8.028272042115482,
+              -8.493013416631092,
+              -19.522582180288694,
+              -22.78028515719638,
+              -13.194055973385627,
+              -11.899189661988405,
+              -10.902475778906007,
+              -19.265836123963894
+            ],
+            "mean": -14.509246600710867
+          },
+          "2": {
+            "neuron": 5715,
+            "col_norm": 1.7743724584579468,
+            "push_value": -535.6290109553452,
+            "per_prompt": [
+              -4.17199891151842,
+              -8.763592529950778,
+              -8.49778166578605,
+              -5.824861680160868,
+              -12.046286075335198,
+              -16.555598320629823,
+              -5.209705141618065,
+              -8.66749976964961,
+              -5.005870031073247,
+              -3.2672574766390996,
+              -7.191297929082163,
+              -15.998098514851534,
+              -8.664901523623794,
+              -6.652614466982758,
+              -8.48000097338857,
+              -16.762390278704526
+            ],
+            "mean": -8.859984705562155
+          }
+        },
+        "per_prompt_seed_mean": [
+          -6.135796062160158,
+          -9.019625801056776,
+          -9.375604987380052,
+          -9.558102633925623,
+          -14.134337781684442,
+          -17.863826631886667,
+          -10.455017297136788,
+          -12.057588308661751,
+          -4.317429855209571,
+          -4.9435572781360415,
+          -11.644908009690646,
+          -17.559293831044986,
+          -11.942147925304957,
+          -9.951623661455708,
+          -8.741328056299634,
+          -14.52377791361206
+        ],
+        "mean": -10.763997877165366,
+        "sd": 3.950050253485982,
+        "n": 16,
+        "shift": {
+          "mean": 6.50740900971345,
+          "sd": 5.942979294299489,
+          "n": 16
+        }
+      }
+    }
+  },
+  "distinct_2": {
+    "per_seed": {
+      "baseline": {
+        "0": 0.9187592319054653,
+        "1": 0.9115942028985508,
+        "2": 0.9201183431952663
+      },
+      "target": {
+        "0.5": {
+          "0": 0.9060693641618497,
+          "1": 0.9080459770114943,
+          "2": 0.9119402985074627
+        },
+        "1.0": {
+          "0": 0.8445078459343794,
+          "1": 0.8310439560439561,
+          "2": 0.8898678414096917
+        },
+        "1.5": {
+          "0": 0.583739837398374,
+          "1": 0.6050269299820467,
+          "2": 0.6028119507908611
+        }
+      },
+      "random": {
+        "0.5": {
+          "0": 0.9266467065868264,
+          "1": 0.9127988748241913,
+          "2": 0.9304347826086956
+        },
+        "1.0": {
+          "0": 0.8344827586206897,
+          "1": 0.8945086705202312,
+          "2": 0.8645669291338582
+        },
+        "1.5": {
+          "0": 0.4237012987012987,
+          "1": 0.6903225806451613,
+          "2": 0.558303886925795
+        }
+      }
+    },
+    "summary": {
+      "baseline": {
+        "mean": 0.9168239259997608,
+        "sd": 0.004579770590435016,
+        "n": 3
+      },
+      "target": {
+        "0.5": {
+          "mean": 0.9086852132269355,
+          "sd": 0.0029872118650965266,
+          "n": 3
+        },
+        "1.0": {
+          "mean": 0.8551398811293424,
+          "sd": 0.030819514948657093,
+          "n": 3
+        },
+        "1.5": {
+          "mean": 0.597192906057094,
+          "sd": 0.011703218593896331,
+          "n": 3
+        }
+      },
+      "random": {
+        "0.5": {
+          "mean": 0.9232934546732378,
+          "sd": 0.009283831894367435,
+          "n": 3
+        },
+        "1.0": {
+          "mean": 0.8645194527582597,
+          "sd": 0.030012984112672978,
+          "n": 3
+        },
+        "1.5": {
+          "mean": 0.5574425887574184,
+          "sd": 0.1333127277203805,
+          "n": 3
+        }
+      }
+    }
+  },
+  "in_distribution": {
+    "elicitation_on_neg": {
+      "dose": 1.0,
+      "direction": 1.0,
+      "baseline": {
+        "mean": -4.639589780668013,
+        "sd": 6.227083976195259,
+        "n": 20
+      },
+      "target": {
+        "mean": -7.40553604625916,
+        "sd": 6.3214255276560545,
+        "n": 20
+      },
+      "random_seed_mean": {
+        "mean": -4.0908591367632265,
+        "sd": 4.764084183744868,
+        "n": 20
+      },
+      "target_shift": {
+        "mean": -2.765946265591145,
+        "sd": 2.4855528580095503,
+        "n": 20
+      },
+      "random_shift": {
+        "mean": 0.5487306439047879,
+        "sd": 2.83966560671249,
+        "n": 20
+      },
+      "per_prompt": {
+        "baseline": [
+          -0.8416701383135059,
+          -8.581450096749233,
+          -9.144136248926463,
+          3.3032068962695473,
+          -0.17443601456496172,
+          -17.4719334550221,
+          2.0929904484251143,
+          -3.331899152925259,
+          -14.261813567814125,
+          -10.912753617542887,
+          -2.1060810779748333,
+          2.717519493675563,
+          1.8698352749147396,
+          -12.638490862028686,
+          -5.553126850636952,
+          -3.765875366214005,
+          -4.863018631398196,
+          -7.405814660626373,
+          4.386419463419831,
+          -6.109267449327495
+        ],
+        "target": [
+          -3.0209004068581313,
+          -7.412228646852988,
+          -10.561667736075497,
+          -3.3739554439624126,
+          -1.1218716897236023,
+          -20.168112982317442,
+          0.7208513577291029,
+          -4.938609566204391,
+          -19.3647189691729,
+          -15.43006038607994,
+          -5.913952304330505,
+          -4.135496265609239,
+          -0.09912345366725983,
+          -17.68872692632091,
+          -4.946452023052277,
+          -3.9918948507834715,
+          -7.539295221592241,
+          -6.6178441541149144,
+          -1.8452613742394153,
+          -10.661399881954749
+        ],
+        "random": [
+          -2.395832887349865,
+          -4.19913482670362,
+          -6.142146861564356,
+          -2.3047141432116587,
+          -0.1658112057698946,
+          -12.71246669810274,
+          2.5189764473362093,
+          -2.7911648068986707,
+          -13.243614996443698,
+          -10.571533361463738,
+          -2.1950098477100664,
+          -2.5803220330153853,
+          2.3937061500784647,
+          -10.700055806405253,
+          -3.5515470223294607,
+          0.13165071366322909,
+          -3.267568906586558,
+          -4.205914522862396,
+          1.9245809231339457,
+          -7.759259043059012
+        ]
+      }
+    },
+    "suppression_on_pos": {
+      "dose": 1.0,
+      "direction": -1.0,
+      "baseline": {
+        "mean": 9.896983919738634,
+        "sd": 3.6905883746261003,
+        "n": 20
+      },
+      "target": {
+        "mean": 8.264262251018149,
+        "sd": 3.583165276459011,
+        "n": 20
+      },
+      "random_seed_mean": {
+        "mean": 6.4618280160885435,
+        "sd": 2.5786210698378698,
+        "n": 20
+      },
+      "target_shift": {
+        "mean": -1.632721668720486,
+        "sd": 1.6323571194391935,
+        "n": 20
+      },
+      "random_shift": {
+        "mean": -3.4351559036500916,
+        "sd": 1.4840231892309554,
+        "n": 20
+      },
+      "per_prompt": {
+        "baseline": [
+          9.40478694935854,
+          12.037047444276968,
+          10.941241888626037,
+          9.68558992637422,
+          10.888227269355669,
+          -3.922903350896181,
+          11.474569566339222,
+          11.62092621577634,
+          11.186949460042602,
+          11.922565504168228,
+          13.2452943729022,
+          8.146898877371836,
+          12.60393233673627,
+          9.451429727213558,
+          11.353175458654546,
+          6.935486095727621,
+          10.62285562331618,
+          11.648700958172437,
+          11.870230817588636,
+          6.822673253667786
+        ],
+        "target": [
+          8.125963509319234,
+          9.550110557915103,
+          9.639037696946673,
+          8.93107237180949,
+          7.287895839386859,
+          -2.3646002105803863,
+          8.720865121852402,
+          7.975993695816941,
+          10.014285420392246,
+          12.785000043084478,
+          13.468777669797594,
+          4.848201106277901,
+          11.442534819156323,
+          7.718719798052744,
+          11.097390628672855,
+          5.619417415795093,
+          10.291306608420637,
+          9.784757088001928,
+          7.676616706534697,
+          2.671899133710177
+        ],
+        "random": [
+          5.364116109619087,
+          8.264662673615566,
+          8.048011347268252,
+          6.550709332056098,
+          6.522652669398436,
+          -1.9126997444932006,
+          7.195879367049799,
+          7.146164201868044,
+          7.650108101886343,
+          8.145640856685377,
+          9.029628307955267,
+          4.212815179277385,
+          9.083863744673963,
+          6.990471657812009,
+          7.194472810919733,
+          4.81639728777258,
+          7.112313734100019,
+          8.757044956910974,
+          6.627117619432298,
+          2.437190107962842
+        ]
+      }
+    }
+  },
+  "decision": {
+    "criteria": {
+      "stage1_p_lt_alpha": true,
+      "shift_ge_2sd": false,
+      "beats_random": false,
+      "distinct2_ok": true
+    },
+    "shift_mean": 0.9922645375959944,
+    "random_shift_mean": 4.826098502491736,
+    "sd_baseline": 9.3477778911148,
+    "threshold": 18.6955557822296,
+    "target_distinct2_mean": 0.8551398811293424,
+    "causal_effect": false,
+    "verdict": "refuted (Stage 2)",
+    "exploratory": false
+  },
+  "samples_seed0": {
+    "baseline": [
+      "I am an AI assistant developed by Alibaba Group. My purpose is to assist users in their daily lives by providing information, answering questions, and helping with various tasks. I am designed to be helpful, polite, and friendly, and I strive to provide accurate and useful information to the best of my ability. If you have",
+      "I can help with tasks such as writing emails, drafting reports, and organizing schedules. I can assist with problem-solving and brainstorming ideas. I can also provide guidance on various topics and help with daily tasks like shopping, cooking, and managing finances.",
+      "Negotiating a higher salary can be a powerful way to improve your financial situation and professional growth. Here’s a step-by-step guide to help you negotiate effectively:\n\n---\n\n### **1. Prepare Thoroughly**\nBefore you start, do the following:\n\n- **Research the market:** Use salary surveys from platforms like Glass",
+      "Handling a difficult coworker can be challenging, but there are several effective strategies to approach the situation with professionalism, empathy, and clear communication. Here's a structured approach:\n\n---\n\n### **1. Assess the Situation**\n- **Identify the nature of the difficulty**: Is it a conflict, poor performance, communication issues,",
+      "The sky appears blue during the day due to a phenomenon called **Rayleigh scattering**.\n\n### What is Rayleigh Scattering?\n\nRayleigh scattering is a physical process that occurs when light interacts with particles in the Earth's atmosphere. It is named after the physicist **Lord Rayleigh** (John William Strutt), who"
+    ],
+    "target_a0.5": [
+      "I am a large language model developed by Alibaba Group, and my purpose is to assist users in various tasks. I can provide information, answer questions, and engage in conversations. My goal is to be a helpful and useful assistant for users. If you have any questions or need assistance, feel free to ask!",
+      "I can help with tasks such as writing emails, drafting reports, and organizing schedules. I can assist with research, finding information, and solving problems. I can also help with creative tasks like brainstorming ideas or generating creative content.",
+      "Negotiating a higher salary can be a powerful way to improve your financial situation and career growth. Here’s a step-by-step guide to help you navigate the process effectively:\n\n---\n\n### **1. Research and Set a Clear Goal**\n- **Research Market Rates**: Use tools like Glassboard, LinkedIn, or Salary Survey",
+      "Handling a difficult coworker can be challenging, but there are several strategies that can help you navigate the situation effectively. The key is to remain professional, empathetic, and focused on your own goals while also being mindful of the impact on the workplace. Here’s a structured approach:\n\n---\n\n### **1. Understand the Situation",
+      "The sky appears blue during the day due to a phenomenon called **Rayleigh scattering**.\n\n### Explanation:\n\n1. **Light and the Atmosphere**:  \n   Sunlight is made up of different colors, each with a different **wavelength**. The visible spectrum of light ranges from **red (long wavelength)** to"
+    ],
+    "random_a0.5": [
+      "Hello! I'm an AI assistant developed by Alibaba Group. My purpose is to help users with various tasks, answer questions, provide information, and assist in solving problems. I'm here to support and assist you in different ways. If you need help with anything, feel free to ask! 😊",
+      "I can help with tasks like organizing and managing documents, creating and editing text-based content, and providing assistance with language and grammar. I can also support with planning and executing digital projects, as well as offering help with problem-solving and creative ideas. Additionally, I can assist with technical and practical tasks, such as troubleshooting,",
+      "Negotiating a higher salary is a valuable and empowering step in career development. Here's a step-by-step guide to help you approach this confidently and effectively:\n\n---\n\n### **1. Prepare Thoroughly**\n\n**A. Review Your Worth:**\n- **Research Market Rates:** Use platforms like **Glassdoor**, **",
+      "Handling a difficult coworker requires a combination of emotional intelligence, clear communication, and a structured approach. Here's a step-by-step guide to managing challenging workplace interactions effectively:\n\n---\n\n### **1. Assess the Situation**\n- **Identify the Root Cause**: Determine if the behavior is a one-time incident or a pattern.",
+      "The reason the sky appears blue during the day, and not red or yellow, is a fascinating example of how light interacts with the Earth's atmosphere.\n\n### Key Explanation:\n\n1. **Light and Color**:\n   - Light is a form of electromagnetic radiation, and different wavelengths correspond to different colors.\n   - The visible"
+    ],
+    "target_a1.0": [
+      "I am a large natural language generation model developed by the Chinese Natural Language Processing Laboratory (CNLP) for the China Road and Rail Development Research Committee. My primary purpose is to provide general knowledge and information to users in a natural and clear manner. I can understand and respond to various topics, including history, science, mathematics",
+      "I can help with research, research analysis, and research summarization. I can help with drafting, editing, and proofing for various purposes, such as articles, reports, and emails. I can assist with tasks that require understanding and summarizing complex information, ensuring clarity and clarity in your communication.",
+      "Neguring a higher salary is a powerful and empowering process. It can be a powerful message to your employer that you are a valuable employee, and it can lead to better opportunities for you and your career. Here are some key strategies to help you negotiate a higher salary:\n\n---\n\n### **1. Research the Market**\n-",
+      "Handling a difficult coworke is a common challenge in any workplace, and the best approach depends on the specific situation, your role, and the broader organizational context. Here are some strategies that can help you navigate the situation effectively:\n\n---\n\n### **1. Understand the Situation**\n- **Clarify the situation**: Understand why the",
+      "The color of the **plain** (the **plain** of the **plain** of the **plain** of the **plain** of the **plain** of the **plain** of the **plain** of the **plain** of the **plain** of the **plain** of the **plain** of the"
+    ],
+    "random_a1.0": [
+      "Hello and welcome! 😊\n\nI'm your AI assistant, and my name is Awa. My purpose is to help you with any kind of help you need. Whether you're looking for information, inspiration, or support. You can ask me anything you're curious or even a little out of the ordinary. �",
+      "Sure! I can help with tasking, language translation, and project management. I can assist with brainstorming and planning, as well as executing and tracking project timelines. And if you need creative or creative content, I'm here to help you inspire and motivate. ✨. 🚨. 🚋.",
+      "Negroing a higher salary is a common and valuable career and life investment. Here are key steps and advice to help you effectively and confidently:\n\n---\n\n### **1. Evaluate Your Current and Potential Value.**\n\n- **Assess Your Skills and Contributions:**\n  - What are your key strengths and what value do you",
+      "Handling a difficult coworking, especially one that affects your or others' comfort and productivity, is a common but challenging workplace and even personal life. Here are some effective and respectful strategies to approach and manage a difficult coworker:\n\n---\n\n### 1. **Start with a Positive and Constructive Approach:\n\n- **Set a",
+      "The reason the sky appears blue during the day and not red or green, and why it appears darker and even black in some other colors of the day, is a fascinating and well-detailed physical and atmospheric explanation.\n\n### ✑️ **What Causes the Sky to Be Blue?**\n\n#### ✅ **1. What"
+    ],
+    "target_a1.5": [
+      "I am a natural chat-based virtual assistant that is generally composed by the Natural Comsualual, a natural, by the Chinese Natural. The purpose of the Natural is to provide a natural, and a natural, and a natural, and a natural, and the natural, the natural, and the natural. The natural",
+      "I can assist with various tasks such as research research, research, and research. You can ask me to perform research, perform research, and research. You can ask me to do research, research, and research. You can ask me to do research, research, and research. You can ask me to do research,",
+      "Naviguring a new or newualualualual a. it is a common and important task for any professional to do. Here are some key strategies that can help you to a newualualualual that may be a newualualualual, even if it is a newualualualual that is.",
+      "The **best** and **most effective** way to handle a **diffured** or **difficult** a **wa** (a.k. a **a** that is a **a** that is a **a** that is a **a** that is a **a** that is a **a**",
+      "The **ural** of the **plain** of the **road** is **s**. The **a** of **the** **it** **s** of the **the** **t** of the **the** of the ** the** of the ** the** of the ** the** of the **"
+    ],
+    "random_a1.5": [
+      "What's the purpose of this and what's the role of what you're doing and what you're trying to?\n\nWhat's the role of what you're doing and what you?\n\nWhat's the role and what's what you?\n\nWhat's the purpose of what and what's what and what and what and what?\n\nWhat",
+      "Andriy's and what they're and what they're and what they're and what they. But what's what what what. What what. What what. And what what. What what. What what. And what what. And what what. What what. What what. And what what. What what.",
+      "A healthy and respectful approach to salary and workplace and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and and",
+      "Handling a difficult or even unpleasant coworking or workplace, especially with a \"good or even good to the ends of the brain and with a good to the ends of the in. 1. 1. 1. 1. 1. 1. 1. 1. 1. ",
+      "The reason the sky's.\n\nBut what you're looking for is the reason why the sky appears blue during the day.\n\nAnd here's what:\n\nThe reason the sky appears blue during the day.\n\nBut what you're looking for is the reason why the sky's.\n\nBut what you.\n\nBut what you.\n\nBut what you"
+    ]
+  },
+  "wall_s": 456.4193127155304
+}
