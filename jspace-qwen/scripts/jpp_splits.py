@@ -27,9 +27,16 @@ Round-1 lenses re-evaluated: J++, R-lens, J-lens, logit, JB-mix,
 Routed-LRP-a200, Routed-LRP-s0.5, B-lens.
 
 python scripts/jpp_splits.py --seeds 0 1 2 3 4 5 --bags 8 --tag round2
+
+Round 3 (paper/prereg_round3.md): 20 new splits, the two round-2 winners and
+RLB-mix over [R-lens, LRP broadcast lens], plus out-of-pool scoring on the
+items that fail the correctness filter:
+python scripts/jpp_splits.py --seeds $(seq 6 25) --bags 8 --candidates Bagged-J++ RB-mix RLB-mix \
+    --lrp-b lenses/lrp_later_final.pt --oop --tag round3
 """
 
 import argparse
+import copy
 import json
 import os
 import sys
@@ -55,8 +62,16 @@ ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3, 4, 5])
 ap.add_argument("--bags", type=int, default=8)
 ap.add_argument("--steps", type=int, default=200, help="J++ Adam steps (reference: 200)")
 ap.add_argument("--b-lens", default="lenses/later_final.pt")
+CANDS = ["JppB", "RB-mix", "JB-mix", "Bagged-J++", "Routed-J++-a200", "RLB-mix"]
+ap.add_argument("--candidates", nargs="+", choices=CANDS, default=CANDS[:5],
+                help="label-dependent lenses to fit besides J++ (default: the round-2 set)")
+ap.add_argument("--lrp-b", default=None, help="LRP broadcast lens (adds LRP-B-lens; needed for RLB-mix)")
+ap.add_argument("--oop", action="store_true",
+                help="also score the items that fail the correctness filter (out-of-pool, secondary)")
+ap.add_argument("--min-win-frac", type=float, default=0.8, help="win criterion: wins >= frac * n splits")
 ap.add_argument("--tag", required=True)
 a = ap.parse_args()
+assert "RLB-mix" not in a.candidates or a.lrp_b, "RLB-mix needs --lrp-b"
 
 T0 = time.time()
 
@@ -78,6 +93,11 @@ cols = list(range(len(layers)))
 J = Lens.load(os.path.join(P.LENSES, "exact_final.pt"))
 Rl = Lens.load(os.path.join(P.LENSES, "lrp_final.pt"))
 B = Lens.load(P.resolve(a.b_lens))
+LB = Lens.load(P.resolve(a.lrp_b)) if a.lrp_b else None
+if a.oop:
+    prep_all = copy.copy(prep)
+    prep_all.correct = [None] * len(prep.correct)  # score every item; subset = correctness failures
+    oop = {i for i in range(len(prep.items)) if not keep[i] and E.scored_item_mask(prep_all)[i]}
 ex = torch.load(os.path.join(P.LENSES, "lrp_experts_final.pt"), weights_only=True)
 experts, pooled, counts = {}, {}, {}
 for l, v in ex["experts"].items():
@@ -105,6 +125,8 @@ fixed = {
                                   router),
     "Routed-LRP-s0.5": RoutedLens({l: 0.5 * experts[l] + 0.5 * pooled[l][None] for l in layers}, router),
 }
+if LB is not None:
+    fixed["LRP-B-lens"] = LB
 R_fixed = {}
 for name, lens in fixed.items():
     R_fixed[name] = ranks(lens)
@@ -147,40 +169,43 @@ def stratified_bootstrap(items_fit, rng):
     return out
 
 
-out = {"layers": layers, "seeds": a.seeds, "bags": a.bags, "steps": a.steps, "per_seed": {}}
+out = {"layers": layers, "seeds": a.seeds, "bags": a.bags, "steps": a.steps, "candidates": a.candidates,
+       "lrp_b": a.lrp_b, "per_seed": {}}
+if a.oop:
+    out["n_oop"] = len(oop)
+    log(f"out-of-pool items (fail the correctness filter): {len(oop)}")
 for seed in a.seeds:
     fit_idx, held_idx = split_items(prep.items, keep, seed=seed)
     held, fit_set = set(held_idx), set(fit_idx)
     fr, items_fit, pos_of = fit_rows_of(fit_idx)
     log(f"seed {seed}: {len(fit_idx)} fitting, {len(held_idx)} held-out items")
-    jpp, jppb, rb, jb, bag, wlog = {}, {}, {}, {}, {}, {}
+    jpp, jppb, rb, jb, rlb, bag, wlog = {}, {}, {}, {}, {}, {}, {}
     rng = np.random.default_rng(1000 + seed)
     samples = [stratified_bootstrap(items_fit, rng) for _ in range(a.bags)]
     for l in layers:
         w, sc = fit_weights(experts[l], fr, items_fit, pos_of, l)
         jpp[l] = combine(experts[l], w)
         wlog[f"J++|{l}"] = {"w": w.tolist(), "train": sc}
-        two = torch.stack([unit(jpp[l]), unit(B.maps[l])])
-        w2, sc2 = fit_weights(two, fr, items_fit, pos_of, l)
-        jppb[l] = combine(two, w2)
-        wlog[f"JppB|{l}"] = {"w": w2.tolist(), "train": sc2}
-        two = torch.stack([unit(Rl.maps[l]), unit(B.maps[l])])
-        w2, sc2 = fit_weights(two, fr, items_fit, pos_of, l)
-        rb[l] = combine(two, w2)
-        wlog[f"RB-mix|{l}"] = {"w": w2.tolist(), "train": sc2}
-        two = torch.stack([unit(J.maps[l]), unit(B.maps[l])])
-        w2, sc2 = fit_weights(two, fr, items_fit, pos_of, l)
-        jb[l] = combine(two, w2)
-        wlog[f"JB-mix|{l}"] = {"w": w2.tolist(), "train": sc2}
-        ws = []
-        for smp in samples:
-            wb, _ = fit_weights(experts[l], fr, items_fit, pos_of, l, sample=smp)
-            ws.append(wb)
-        wbar = torch.stack(ws).mean(0)
-        wbar = wbar / wbar.norm()
-        bag[l] = combine(experts[l], wbar)
-        wlog[f"Bagged-J++|{l}"] = {"w": wbar.tolist(), "w_bags": [x.tolist() for x in ws]}
-        log(f"seed {seed} layer {l}: J++ train {sc:.3f}; JppB w={np.round(wlog[f'JppB|{l}']['w'], 2).tolist()}")
+        for name, first, second, store in (("JppB", jpp, B, jppb), ("RB-mix", Rl.maps, B, rb),
+                                           ("JB-mix", J.maps, B, jb), ("RLB-mix", Rl.maps, LB, rlb)):
+            if name not in a.candidates:
+                continue
+            two = torch.stack([unit(first[l]), unit(second.maps[l])])
+            w2, sc2 = fit_weights(two, fr, items_fit, pos_of, l)
+            store[l] = combine(two, w2)
+            wlog[f"{name}|{l}"] = {"w": w2.tolist(), "train": sc2}
+        if "Bagged-J++" in a.candidates:
+            ws = []
+            for smp in samples:
+                wb, _ = fit_weights(experts[l], fr, items_fit, pos_of, l, sample=smp)
+                ws.append(wb)
+            wbar = torch.stack(ws).mean(0)
+            wbar = wbar / wbar.norm()
+            bag[l] = combine(experts[l], wbar)
+            wlog[f"Bagged-J++|{l}"] = {"w": wbar.tolist(), "w_bags": [x.tolist() for x in ws]}
+        log(f"seed {seed} layer {l}: J++ train {sc:.3f}; " +
+            "; ".join(f"{n} w={np.round(wlog[f'{n}|{l}']['w'], 2).tolist()}" for n in ("JppB", "RB-mix", "RLB-mix")
+                      if f"{n}|{l}" in wlog))
     # Routed hybrid: experts shrunk toward the (rescaled) J++ map.
     hyb = {}
     for l in layers:
@@ -189,8 +214,9 @@ for seed in a.seeds:
         hyb[l] = lam[:, None, None] * experts[l] + (1 - lam)[:, None, None] * target[None]
     sup = {"J++": Lens("jlens", jpp, name="J++"), "JppB": Lens("jlens", jppb, name="JppB"),
            "RB-mix": Lens("jlens", rb, name="RB-mix"), "JB-mix": Lens("jlens", jb, name="JB-mix"),
-           "Bagged-J++": Lens("jlens", bag, name="Bagged-J++"),
+           "RLB-mix": Lens("jlens", rlb, name="RLB-mix"), "Bagged-J++": Lens("jlens", bag, name="Bagged-J++"),
            "Routed-J++-a200": RoutedLens(hyb, router)}
+    sup = {n: v for n, v in sup.items() if n == "J++" or n in a.candidates}
     R_seed = dict(R_fixed)
     for name, lens in sup.items():
         R_seed[name] = ranks(lens)
@@ -203,8 +229,15 @@ for seed in a.seeds:
         res[name] = {"held@10": h["macro"]["mean"], "held_ci": [h["macro"]["lo"], h["macro"]["hi"]],
                      "fit@10": f["macro"]["mean"], "diff_vs_jpp": d,
                      "per_eval": {ev: h[ev]["mean"] for ev in E.MACRO_EVALS if ev in h}}
+        extra = ""
+        if a.oop:
+            o = E.recall_at_k(prep_all, r, cols, 10, items_subset=oop, n_boot=200)
+            od = E.paired_bootstrap_diff(prep_all, r, R_seed["J++"], cols, cols, 10, items_subset=oop, n_boot=200)
+            res[name]["oop@10"] = o["macro"]["mean"]
+            res[name]["oop_diff_vs_jpp"] = od
+            extra = f"  | oop {o['macro']['mean']:.3f} diff {od['diff']:+.3f}"
         log(f"seed {seed} {name:<16} held {res[name]['held@10']:.3f} fit {res[name]['fit@10']:.3f} "
-            f"diff {d['diff']:+.3f} [{d['lo']:+.3f},{d['hi']:+.3f}]")
+            f"diff {d['diff']:+.3f} [{d['lo']:+.3f},{d['hi']:+.3f}]" + extra)
     out["per_seed"][str(seed)] = {"n_fit": len(fit_idx), "n_held": len(held_idx), "results": res, "weights": wlog}
     os.makedirs(P.RESULTS, exist_ok=True)
     with open(os.path.join(P.RESULTS, f"jpp_splits_{a.tag}.json"), "w") as fh:
@@ -219,9 +252,20 @@ if conf:
         d = [out["per_seed"][str(s)]["results"][n]["diff_vs_jpp"]["diff"] for s in conf]
         h = [out["per_seed"][str(s)]["results"][n]["held@10"] for s in conf]
         summ[n] = {"mean_held": float(np.mean(h)), "mean_diff": float(np.mean(d)), "min_diff": float(np.min(d)),
-                   "max_diff": float(np.max(d)), "wins": int(sum(x > 0 for x in d)), "n": len(d)}
+                   "max_diff": float(np.max(d)), "wins": int(sum(x > 0 for x in d)),
+                   "ties": int(sum(x == 0 for x in d)), "losses": int(sum(x < 0 for x in d)), "n": len(d)}
+        summ[n]["meets_criterion"] = bool(n in a.candidates and summ[n]["mean_diff"] > 0
+                                          and summ[n]["wins"] >= a.min_win_frac * len(d))
+        extra = ""
+        if a.oop:
+            od = [out["per_seed"][str(s)]["results"][n]["oop_diff_vs_jpp"]["diff"] for s in conf]
+            oh = [out["per_seed"][str(s)]["results"][n]["oop@10"] for s in conf]
+            summ[n].update({"mean_oop": float(np.mean(oh)), "mean_oop_diff": float(np.mean(od)),
+                            "oop_wins": int(sum(x > 0 for x in od))})
+            extra = f"  | oop {np.mean(oh):.3f} diff {np.mean(od):+.3f} wins {summ[n]['oop_wins']}"
         print(f"  {n:<16} mean held {np.mean(h):.3f}  mean diff vs J++ {np.mean(d):+.3f} "
-              f"[{np.min(d):+.3f},{np.max(d):+.3f}]  wins {summ[n]['wins']}/{len(d)}")
+              f"[{np.min(d):+.3f},{np.max(d):+.3f}]  W/T/L {summ[n]['wins']}/{summ[n]['ties']}/{summ[n]['losses']}"
+              f"{'  MEETS CRITERION' if summ[n]['meets_criterion'] else ''}" + extra)
     out["confirmatory"] = summ
     with open(os.path.join(P.RESULTS, f"jpp_splits_{a.tag}.json"), "w") as fh:
         json.dump(out, fh, indent=1)
