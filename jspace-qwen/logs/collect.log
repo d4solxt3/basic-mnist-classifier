@@ -1,0 +1,9 @@
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 4629.84it/s]
+{0: (12288, 1024), 1: (12288, 1024)} (12288, 1024)
+regression lens layer 0: ridge=1 held-out R^2 = 0.211
+regression lens layer 4: ridge=0.1 held-out R^2 = 0.290
+regression lens layer 8: ridge=0.1 held-out R^2 = 0.336
+regression lens layer 12: ridge=0.1 held-out R^2 = 0.368
+regression lens layer 16: ridge=0.1 held-out R^2 = 0.411
+regression lens layer 20: ridge=0.1 held-out R^2 = 0.559
+regression lens layer 24: ridge=0.01 held-out R^2 = 0.751

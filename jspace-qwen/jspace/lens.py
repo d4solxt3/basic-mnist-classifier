@@ -121,10 +121,14 @@ class Calibration:
 
 @torch.no_grad()
 def fit_calibration(model: LensModel, lens: Lens, acts: dict[int, torch.Tensor], *, chunk: int = 512,
-                    std_floor_rel: float = 0.05) -> Calibration:
-    """Mean/std of each token's lens logit over the positions in ``acts``."""
+                    std_floor_rel: float = 0.05, max_positions: int = 3072, seed: int = 0) -> Calibration:
+    """Mean/std of each token's lens logit over (a random subset of) the
+    positions in ``acts``."""
     mean, std = {}, {}
+    g = torch.Generator().manual_seed(seed)
     for l, X in acts.items():
+        if X.shape[0] > max_positions:
+            X = X[torch.randperm(X.shape[0], generator=g)[:max_positions]]
         s1 = torch.zeros(model.vocab_size, dtype=torch.float64)
         s2 = torch.zeros(model.vocab_size, dtype=torch.float64)
         for i in range(0, X.shape[0], chunk):
@@ -138,3 +142,31 @@ def fit_calibration(model: LensModel, lens: Lens, acts: dict[int, torch.Tensor],
         sd = sd.clamp_min(std_floor_rel * sd.median())
         mean[l], std[l] = m.float(), sd.float()
     return Calibration(mean, std)
+
+
+class AffineLens(Lens):
+    """First-order Taylor transport around the corpus mean (ours):
+        mode="affine":   h_L ~ mu_L + J (h - mu_l)
+        mode="centered": J (h - mu_l)
+    The plain J-lens is J h = J (h - mu_l) + J mu_l, i.e. it replaces the
+    true final-layer mean mu_L by the transported mean J mu_l. Directions
+    (``vectors``) are those of the underlying J-lens."""
+
+    def __init__(self, base: Lens, mu_in: dict[int, torch.Tensor], mu_out: torch.Tensor,
+                 mode: str = "affine", alpha: float = 1.0, name: str | None = None):
+        maps = base.maps
+        if alpha != 1.0:
+            maps = {l: torch.eye(J.shape[0]) + alpha * (J - torch.eye(J.shape[0])) for l, J in maps.items()}
+        super().__init__("jlens", maps, name=name or f"{base.name}-{mode}")
+        self.mu_in = {int(l): m.float() for l, m in mu_in.items()}
+        self.mu_out = mu_out.float()
+        self.mode = mode
+
+    def transport(self, h: torch.Tensor, layer: int) -> torch.Tensor:
+        h = h.float()
+        if self.mode == "plain":
+            return h @ self.maps[layer].T
+        out = (h - self.mu_in[layer]) @ self.maps[layer].T
+        if self.mode == "affine":
+            out = out + self.mu_out
+        return out

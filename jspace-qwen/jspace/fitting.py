@@ -114,19 +114,37 @@ def batched_vjp_rows(model: LensModel, input_ids: torch.Tensor, cot_KD: torch.Te
 
 
 def exact_prompt_jacobian(model: LensModel, input_ids: torch.Tensor, source_layers: Sequence[int],
-                          target_layer: int, *, dim_batch: int = 16, skip_first: int = SKIP_FIRST
-                          ) -> dict[int, torch.Tensor]:
+                          target_layer: int, *, dim_batch: int = 16, skip_first: int = SKIP_FIRST,
+                          router=None, cl_sum: dict | None = None, cl_count: dict | None = None,
+                          lrp: bool = False) -> dict[int, torch.Tensor]:
+    """Exact per-prompt J_n (reference reduction). If ``router`` is given, also
+    adds per-position gradient rows into per-cluster sums ``cl_sum[l]``
+    ``[E, d, d]`` (J++ expert Jacobians = cl_sum / cl_count). ``lrp`` records
+    the graph under the R-Lens/J++ LRP rules."""
+    from jspace.lrp import lrp_rules
+
     d = model.d_model
-    g = PromptGraph(model, input_ids, source_layers, target_layer, dim_batch, skip_first)
+    with lrp_rules(model, lrp):
+        g = PromptGraph(model, input_ids, source_layers, target_layer, dim_batch, skip_first)
     J = {l: torch.zeros(d, d) for l in source_layers}
-    starts = list(range(0, d, dim_batch))
-    for i, s in enumerate(starts):
-        k = min(dim_batch, d - s)
-        cot = torch.zeros(k, d)
-        cot[torch.arange(k), s + torch.arange(k)] = 1.0
-        rows = g.vjp_rows(cot, retain=i < len(starts) - 1)
+    onehot = {}
+    if router is not None:
         for l in source_layers:
-            J[l][s:s + k] = rows[l]
+            a = router.assign(g.sources[source_layers.index(l)][0, g.pos].detach(), l)
+            onehot[l] = torch.nn.functional.one_hot(a, router.E).float()      # [P, E]
+            cl_count[l] += onehot[l].sum(0)
+    starts = list(range(0, d, dim_batch))
+    with torch.enable_grad():
+        for i, s in enumerate(starts):
+            k = min(dim_batch, d - s)
+            cot = torch.zeros_like(g.target)
+            cot[torch.arange(k)[:, None], g.pos[None, :], (s + torch.arange(k))[:, None]] = 1.0
+            grads = torch.autograd.grad(g.target, g.sources, grad_outputs=cot, retain_graph=i < len(starts) - 1)
+            for l, gr in zip(source_layers, grads):
+                rows_kPd = gr[:k, g.pos, :].float()
+                J[l][s:s + k] = rows_kPd.mean(1)
+                if router is not None:
+                    cl_sum[l][:, s:s + k, :] += torch.einsum("kpd,pe->ekd", rows_kPd, onehot[l])
     return J
 
 
@@ -162,6 +180,8 @@ class FitState:
     tokens_bwd: int = 0        # sum over prompts of rows * seq_len
     seconds: float = 0.0
     log: list = field(default_factory=list)
+    cl_sum: dict | None = None
+    cl_count: dict | None = None
 
     def mean(self) -> dict[int, torch.Tensor]:
         return {l: s / max(self.n, 1) for l, s in self.sum_.items()}
@@ -172,12 +192,15 @@ def fit(model: LensModel, prompts_ids: Sequence[torch.Tensor], *, source_layers:
         W: torch.Tensor | None = None, Winv: torch.Tensor | None = None, J_pilot: dict | None = None,
         dim_batch: int = 16, seed: int = 0, snapshots: Sequence[int] = (), snapshot_dir: str | None = None,
         save_per_prompt_layers: Sequence[int] = (), per_prompt_path: str | None = None,
-        tag: str = "", verbose: bool = True) -> FitState:
+        tag: str = "", verbose: bool = True, router=None, lrp: bool = False) -> FitState:
     L, d = model.n_layers, model.d_model
     target_layer = L - 1 if target_layer is None else target_layer
     source_layers = list(range(target_layer)) if source_layers is None else sorted(source_layers)
     st = FitState(source_layers, target_layer, d, method, K, cv)
     st.sum_ = {l: torch.zeros(d, d) for l in source_layers}
+    if router is not None:
+        st.cl_sum = {l: torch.zeros(router.E, d, d) for l in source_layers}
+        st.cl_count = {l: torch.zeros(router.E) for l in source_layers}
     gen = torch.Generator().manual_seed(seed)
     eye = torch.eye(d)
     per_prompt: dict[int, list] = {l: [] for l in save_per_prompt_layers}
@@ -189,7 +212,8 @@ def fit(model: LensModel, prompts_ids: Sequence[torch.Tensor], *, source_layers:
         t0 = time.perf_counter()
         T = ids.shape[1]
         if method == "exact":
-            Jn = exact_prompt_jacobian(model, ids, source_layers, target_layer, dim_batch=dim_batch)
+            Jn = exact_prompt_jacobian(model, ids, source_layers, target_layer, dim_batch=dim_batch,
+                                       router=router, cl_sum=st.cl_sum, cl_count=st.cl_count, lrp=lrp)
             rows = d
         elif method == "sketch":
             Q = haar_frame(d, K, gen)
@@ -231,6 +255,8 @@ def fit(model: LensModel, prompts_ids: Sequence[torch.Tensor], *, source_layers:
                   f"total={st.seconds / 60:.1f}min", flush=True)
         if snapshot_dir and st.n in snaps:
             save_lens_state(st, os.path.join(snapshot_dir, f"{tag}_n{st.n}.pt"))
+            if st.cl_sum is not None:
+                save_experts(st, os.path.join(snapshot_dir, f"{tag}_experts_n{st.n}.pt"))
 
     if per_prompt_path and save_per_prompt_layers:
         torch.save({l: torch.stack(v) for l, v in per_prompt.items()}, per_prompt_path)
@@ -245,6 +271,14 @@ def save_lens_state(st: FitState, path: str) -> None:
         "vjp_rows": st.vjp_rows, "tokens_bwd": st.tokens_bwd, "seconds": st.seconds,
         "source_layers": st.source_layers, "target_layer": st.target_layer, "d": st.d,
     }, tmp)
+    os.replace(tmp, path)
+
+
+def save_experts(st: FitState, path: str) -> None:
+    """Per-cluster expert Jacobians (position-weighted means), fp16."""
+    tmp = path + ".tmp"
+    torch.save({"experts": {l: (s / st.cl_count[l].clamp_min(1)[:, None, None]).half() for l, s in st.cl_sum.items()},
+                "counts": st.cl_count, "n": st.n}, tmp)
     os.replace(tmp, path)
 
 

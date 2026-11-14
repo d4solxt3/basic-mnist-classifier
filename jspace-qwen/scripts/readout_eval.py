@@ -98,9 +98,8 @@ if __name__ == "__main__":
     all_ranks = {}
     for name, lens in lenses.items():
         cal = get_calib(model, lens, f"{a.tag}_{name}", lens_dir, acts) if a.calib else None
-        variants = [("raw", None)] + ([("z", None)] if a.calib else [])
-        if a.filter:
-            variants += [("raw", "filter")] + ([("z", "filter")] if a.calib else [])
+        modes = ["raw"] + (["center", "z"] if a.calib else [])
+        variants = [(m, None) for m in modes] + ([(m, "filter") for m in modes] if a.filter else [])
         for mode, filt in variants:
             key = f"{name}|{mode}" + ("|filter" if filt else "")
             r = E.lens_ranks(model, prep, lens, layers, calib=cal, mode=mode,

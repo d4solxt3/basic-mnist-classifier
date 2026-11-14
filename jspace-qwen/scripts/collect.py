@@ -35,10 +35,20 @@ torch.save({"acts": {l: v.half() for l, v in acts.items()}, "target": target.hal
            os.path.join(a.out, "corpus_acts.pt"))
 # Regression lens on the first 3/4 of positions; the rest stays available as a check.
 n_fit = int(0.75 * target.shape[0])
-reg = fit_regression_lens({l: v[:n_fit] for l, v in acts.items()}, target[:n_fit])
-reg.save(os.path.join(a.out, "regress.pt"))
-for l in sorted(acts)[:: max(1, len(acts) // 5)]:
-    X, Y = acts[l][n_fit:], target[n_fit:]
-    pred = reg.transport(X, l)
-    r2 = 1 - ((pred - Y).pow(2).sum() / (Y - Y.mean(0)).pow(2).sum())
-    print(f"regression lens layer {l}: held-out R^2 = {float(r2):.3f}")
+# Ridge chosen per layer on held-out R^2, then refit on all positions.
+best = {}
+for ridge in (1e-3, 1e-2, 1e-1, 1.0):
+    reg = fit_regression_lens({l: v[:n_fit] for l, v in acts.items()}, target[:n_fit], ridge=ridge)
+    for l in acts:
+        X, Y = acts[l][n_fit:], target[n_fit:]
+        r2 = float(1 - ((reg.transport(X, l) - Y).pow(2).sum() / (Y - Y.mean(0)).pow(2).sum()))
+        if l not in best or r2 > best[l][1]:
+            best[l] = (ridge, r2)
+maps, bias = {}, {}
+for l in acts:
+    one = fit_regression_lens({l: acts[l]}, target, ridge=best[l][0])
+    maps[l], bias[l] = one.maps[l], one.bias[l]
+from jspace.lens import Lens  # noqa: E402
+Lens("regress", maps, bias, name="regress").save(os.path.join(a.out, "regress.pt"))
+for l in sorted(acts)[:: max(1, len(acts) // 6)]:
+    print(f"regression lens layer {l}: ridge={best[l][0]:g} held-out R^2 = {best[l][1]:.3f}")

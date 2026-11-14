@@ -117,3 +117,28 @@ for K in (4, 16):
             if not shaped:
                 assert err < 2.0 * pred + 1e-3, (err, pred)
 print("[ok] sketch estimators unbiased, error matches sqrt((d/K-1)/m) theory")
+
+# --- 4. J++ pieces: LRP leaves forward values unchanged; cluster sums are consistent
+from jspace.fitting import FitState  # noqa: E402,F401
+from jspace.lrp import lrp_rules  # noqa: E402
+from jspace.routing import fit_router  # noqa: E402
+
+with Recorder(model, list(range(L))) as r0, torch.no_grad():
+    model.forward(ids)
+with lrp_rules(model), Recorder(model, list(range(L))) as r1, torch.no_grad():
+    model.forward(ids)
+fdiff = max(float((r0.acts[l] - r1.acts[l]).abs().max()) for l in range(L))
+print(f"  LRP forward max abs diff = {fdiff:.1e}")
+assert fdiff < 1e-5
+Jl = exact_prompt_jacobian(model, ids, src, tgt, dim_batch=8, lrp=True)
+print("  LRP vs plain Jacobian rel. diff (should be clearly > 0):",
+      {l: round(float((Jl[l] - J[l]).norm() / J[l].norm()), 3) for l in src})
+router = fit_router({l: r0.acts[l][0, 16:47].float() for l in src}, E=3, D=8)
+cl_sum = {l: torch.zeros(3, d, d) for l in src}
+cl_count = {l: torch.zeros(3) for l in src}
+J2 = exact_prompt_jacobian(model, ids, src, tgt, dim_batch=8, router=router, cl_sum=cl_sum, cl_count=cl_count)
+for l in src:
+    pooled = cl_sum[l].sum(0) / cl_count[l].sum()
+    assert torch.allclose(pooled, J[l], atol=1e-5), "cluster sums do not pool back to J_n"
+    assert int(cl_count[l].sum()) == len(valid_positions(ids.shape[1]))
+print("[ok] LRP forward-invariant; per-cluster expert sums pool back exactly to J_n")

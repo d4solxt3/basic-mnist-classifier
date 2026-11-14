@@ -204,21 +204,28 @@ def scored_item_mask(prep: Prepared) -> np.ndarray:
 
 
 def recall_at_k(prep: Prepared, ranks: np.ndarray, layer_cols: Sequence[int], k: int, *,
-                evals: Sequence[str] = MACRO_EVALS, n_boot: int = 2000, seed: int = 0) -> dict:
-    """Per-eval and macro recall@k with item-level bootstrap 95% CIs."""
+                evals: Sequence[str] = MACRO_EVALS, n_boot: int = 2000, seed: int = 0,
+                items_subset: set[int] | None = None, weighting: str = "item") -> dict:
+    """Per-eval and macro recall@k with item-level bootstrap 95% CIs.
+
+    weighting="item": per item, the fraction of its intermediates hit, averaged
+    over items (Anthropic README). weighting="pair": hit rate over (item,
+    intermediate) pairs (J++ pair_pass_at_k); bootstrap still resamples items."""
     rows = row_index(prep)
     best = ranks[:, list(layer_cols)].min(axis=1)
     hit = best <= k
     item_scores: dict[str, list[float]] = {}
+    item_w: dict[str, list[float]] = {}
     keep = scored_item_mask(prep)
     per_item: dict[int, list[bool]] = {}
     for r, (i, _) in enumerate(rows):
         per_item.setdefault(i, []).append(bool(hit[r]))
     for i, hs in per_item.items():
-        if not keep[i]:
+        if not keep[i] or (items_subset is not None and i not in items_subset):
             continue
         ev = prep.items[i].eval
         item_scores.setdefault(ev, []).append(float(np.mean(hs)))
+        item_w.setdefault(ev, []).append(float(len(hs)) if weighting == "pair" else 1.0)
     rng = np.random.default_rng(seed)
     res = {}
     boots = []
@@ -226,8 +233,11 @@ def recall_at_k(prep: Prepared, ranks: np.ndarray, layer_cols: Sequence[int], k:
         s = np.array(item_scores.get(ev, []))
         if len(s) == 0:
             continue
-        bs = rng.choice(s, size=(n_boot, len(s)), replace=True).mean(1)
-        res[ev] = {"mean": float(s.mean()), "lo": float(np.quantile(bs, 0.025)),
+        w = np.array(item_w[ev])
+        idx = rng.integers(0, len(s), size=(n_boot, len(s)))
+        bs = (s[idx] * w[idx]).sum(1) / w[idx].sum(1)
+        m = float((s * w).sum() / w.sum())
+        res[ev] = {"mean": m, "lo": float(np.quantile(bs, 0.025)),
                    "hi": float(np.quantile(bs, 0.975)), "n": int(len(s))}
         boots.append(bs)
     if boots:
@@ -238,7 +248,8 @@ def recall_at_k(prep: Prepared, ranks: np.ndarray, layer_cols: Sequence[int], k:
 
 
 def paired_bootstrap_diff(prep: Prepared, ranks_a: np.ndarray, ranks_b: np.ndarray, cols_a, cols_b, k: int,
-                          evals: Sequence[str] = MACRO_EVALS, n_boot: int = 5000, seed: int = 0) -> dict:
+                          evals: Sequence[str] = MACRO_EVALS, n_boot: int = 5000, seed: int = 0,
+                          items_subset: set[int] | None = None) -> dict:
     """Macro recall@k difference (a - b), paired over items, with 95% CI and
     the bootstrap probability that a <= b."""
     rows = row_index(prep)
@@ -250,7 +261,7 @@ def paired_bootstrap_diff(prep: Prepared, ranks_a: np.ndarray, ranks_b: np.ndarr
     for r, (i, _) in enumerate(rows):
         acc.setdefault(i, []).append((bool(ha[r]), bool(hb[r])))
     for i, v in acc.items():
-        if keep[i]:
+        if keep[i] and (items_subset is None or i in items_subset):
             a = np.mean([x for x, _ in v])
             b = np.mean([y for _, y in v])
             per_ev.setdefault(prep.items[i].eval, []).append((a, b))

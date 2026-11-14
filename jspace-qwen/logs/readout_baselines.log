@@ -1,0 +1,10 @@
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 21195.75it/s]
+items (correct/total): {'multihop': [14, 84], 'multilingual': [15, 107], 'order-ops': [18, 55], 'poetry': [8, 98], 'association': [0, 99], 'typo': [0, 96]}
+logit|raw                    all@1=0.136 all@10=0.319 [0.265,0.365] band@10=0.187
+logit|z                      all@1=0.144 all@10=0.280 [0.223,0.336] band@10=0.175
+logit|raw|filter             all@1=0.148 all@10=0.335 [0.280,0.383] band@10=0.203
+logit|z|filter               all@1=0.146 all@10=0.280 [0.223,0.336] band@10=0.194
+regress|raw                  all@1=0.052 all@10=0.160 [0.114,0.212] band@10=0.070
+regress|z                    all@1=0.043 all@10=0.140 [0.087,0.192] band@10=0.054
+regress|raw|filter           all@1=0.056 all@10=0.201 [0.150,0.255] band@10=0.091
+regress|z|filter             all@1=0.043 all@10=0.142 [0.089,0.193] band@10=0.054

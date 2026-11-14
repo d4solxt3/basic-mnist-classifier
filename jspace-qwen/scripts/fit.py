@@ -17,7 +17,8 @@ import torch
 ROOT = __file__.rsplit("/scripts/", 1)[0]
 sys.path.insert(0, ROOT)
 from jspace.corpus import tokenize, wikitext_records  # noqa: E402
-from jspace.fitting import fit, readout_shaping, save_lens_state  # noqa: E402
+from jspace.fitting import fit, readout_shaping, save_experts, save_lens_state  # noqa: E402
+from jspace.routing import Router  # noqa: E402
 from jspace.model import load_model  # noqa: E402
 from jspace import paths as P  # noqa: E402
 
@@ -37,6 +38,8 @@ ap.add_argument("--per-prompt-layers", type=int, nargs="*", default=[])
 ap.add_argument("--tag", required=True)
 ap.add_argument("--out", default=P.LENSES)
 ap.add_argument("--threads", type=int, default=4)
+ap.add_argument("--router", default=None, help="router .pt: also accumulate J++ expert Jacobians")
+ap.add_argument("--lrp", action="store_true", help="R-Lens/J++ LRP backward rules")
 a = ap.parse_args()
 
 torch.set_num_threads(a.threads)
@@ -53,8 +56,11 @@ if a.shaped:
 st = fit(model, prompts, method=a.method, K=a.K, cv=a.cv, W=W, Winv=Winv, dim_batch=a.dim_batch,
          seed=a.seed, snapshots=a.snapshots, snapshot_dir=a.out, tag=a.tag,
          save_per_prompt_layers=a.per_prompt_layers,
-         per_prompt_path=os.path.join(a.out, f"{a.tag}_per_prompt.pt") if a.per_prompt_layers else None)
+         per_prompt_path=os.path.join(a.out, f"{a.tag}_per_prompt.pt") if a.per_prompt_layers else None,
+         router=Router.load(a.router) if a.router else None, lrp=a.lrp)
 save_lens_state(st, os.path.join(a.out, f"{a.tag}_final.pt"))
+if st.cl_sum is not None:
+    save_experts(st, os.path.join(a.out, f"{a.tag}_experts_final.pt"))
 with open(os.path.join(a.out, f"{a.tag}_log.json"), "w") as f:
     json.dump({"args": vars(a), "seconds": st.seconds, "vjp_rows": st.vjp_rows, "tokens_bwd": st.tokens_bwd,
                "log": st.log}, f)
