@@ -56,7 +56,9 @@ paper.
 | Reproduction readouts on Qwen3-0.6B (`results/readout_main.json`, `band.json`) | done |
 | J++ head-to-head, round 1 (`results/jpp_compare_main*.json`) | done |
 | J++ head-to-head, round 2 (multi-split, pre-registered; `results/jpp_splits_round2.json`) | done |
-| Clamp-swap causal evals, ignition | running |
+| Clamp-swap causal evals (`results/swaps_*.json`) | done |
+| Ignition (first pass done; linear-interpolation control running) | running |
+| J++ head-to-head, round 3 (pre-registered, 20 splits) | running |
 | Sketch estimators: learning curves vs compute | queued |
 
 ## Layout
@@ -86,23 +88,48 @@ results/           JSON results (committed); lenses/ holds fitted matrices (not 
 
 ## Reproduce
 
+About 11 CPU-hours end to end on 4 cores / 15 GB RAM, no GPU. Run one job at a time.
+
 ```bash
 pip install torch "transformers>=5.5" datasets numpy scipy matplotlib
 python scripts/test_estimators.py                       # correctness, ~1 min
-python scripts/collect.py --n 256 --offset 5000         # held-out corpus residuals + regression lens
+# corpus residuals + regression lens, J++ router, future-token targets
+python scripts/collect.py --n 256 --offset 5000
 python -c "import torch; from jspace.routing import fit_router; \
   a = torch.load('lenses/corpus_acts.pt'); fit_router({int(l): v.float() for l, v in a['acts'].items()}).save('lenses/router_E8.pt')"
-python scripts/collect_future.py                        # future-token targets for the label-free variants
-python scripts/fit.py --method exact --n 32 --dim-batch 8 --router lenses/router_E8.pt \
-    --snapshots 1 2 4 8 16 32 --tag exact               # J-lens + plain experts
-python scripts/fit.py --method exact --n 32 --dim-batch 8 --router lenses/router_E8.pt --lrp \
-    --snapshots 8 16 32 --tag lrp                       # R-lens + LRP experts (J++)
-python scripts/fit.py --method exact --n 8 --dim-batch 8 --targets later --tag later   # broadcast lens
+python scripts/collect_future.py
+# lenses: J-lens + plain experts (~80 min), R-lens + LRP experts (~80 min), broadcast lens (~21 min)
+python scripts/fit.py --method exact --n 32 --dim-batch 8 --router lenses/router_E8.pt --snapshots 1 2 4 8 16 32 --tag exact
+python scripts/fit.py --method exact --n 32 --dim-batch 8 --router lenses/router_E8.pt --lrp --snapshots 8 16 32 --tag lrp
+python scripts/fit.py --method exact --n 8 --dim-batch 8 --targets later --tag later
+# reproduction readouts and the pre-declared band rule
 python scripts/readout_eval.py --lens J-lens=lenses/exact_final.pt --regress --filter --tag main
 python scripts/choose_band.py results/readout_main.json "J-lens|raw"
-python scripts/jpp_compare.py --plain exact --lrp lrp --extra B-lens=lenses/later_final.pt \
-    --mix JB-mix=lenses/exact_final.pt,lenses/later_final.pt --tag main
+# J++ round 1 (one split; then the all-items panel)
+EXTRA="--extra J-lens-n8=lenses/exact_n8.pt B-lens=lenses/later_final.pt --mix JB-mix=lenses/exact_final.pt,lenses/later_final.pt"
+python scripts/jpp_compare.py --plain exact --lrp lrp $EXTRA --tag main
+python scripts/jpp_compare.py --plain exact --lrp lrp $EXTRA --all-items --tag main_all
+# J++ round 2 (pre-registered, paper/prereg_round2.md)
 python scripts/jpp_splits.py --seeds 0 1 2 3 4 5 --bags 8 --tag round2
+# causal swaps and ignition
+python scripts/swaps.py --jlens lenses/exact_final.pt --regress --band 20 24 --tag main
+python scripts/swaps.py --jlens lenses/exact_final.pt --band 7 20 --scales 1 2 4 --tag midband
+python scripts/swap_stats.py --tags main midband
+python scripts/ignition.py --jlens lenses/exact_final.pt --carriers 10 --controls --tag main
+python scripts/ignition.py --jlens lenses/exact_final.pt --carriers 10 --controls --linear-control --tag main
+python scripts/ignition_stats.py --tag main
+# J++ round 3 (pre-registered, paper/prereg_round3.md)
+python scripts/fit.py --method exact --n 8 --dim-batch 8 --targets later --lrp --tag lrp_later
+python scripts/jpp_splits.py --seeds $(seq 6 25) --bags 8 --candidates Bagged-J++ RB-mix RLB-mix \
+    --lrp-b lenses/lrp_later_final.pt --oop --tag round3
+# sketch estimators and learning curves
+python scripts/fit.py --method sketch --K 16 --cv online --n 512 --snapshots 16 32 64 128 256 512 --tag sk16 --seed 1
+python scripts/fit.py --method sketch --K 16 --cv online --shaped --n 512 --snapshots 16 32 64 128 256 512 --tag sk16w --seed 1
+python scripts/fit.py --method sketch --K 16 --cv identity --n 256 --snapshots 16 32 64 128 256 --tag sk16id --seed 1
+python scripts/fit.py --method sketch --K 16 --cv none --n 256 --snapshots 16 32 64 128 256 --tag sk16none --seed 1
+python scripts/curves.py --tags exact sk16 sk16w sk16id sk16none
+# figures and the assembled paper draft
+python scripts/figures.py && python paper/build.py
 ```
 
 See `scripts/run_queue*.sh` for the exact commands and order used. Measured cost on this machine

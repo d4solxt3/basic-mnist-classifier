@@ -1,3 +1,4 @@
 === 20:38:15 START LB
 Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3962.42it/s]
 8 prompts, mean len 128.0
+[lrp_later] prompt 1/8 T=128 rows=1024 341.7s total=5.7min
