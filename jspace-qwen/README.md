@@ -13,6 +13,22 @@ budget (4 cores, 15 GB RAM, no GPU).
 - [`paper/prereg_round2.md`](paper/prereg_round2.md): the pre-registration (and amendment) for
   the round-2 test of improvements over J++, committed before any round-2 number was computed.
 
+## At a glance: which large-model claims carry over to 0.6B
+
+| Claim (large models) | Qwen3-0.6B (this work) | Verdict |
+|---|---|---|
+| The J-lens reads latent intermediates better than the logit lens | 36.7% vs 31.9% recall@10; advantage in layers 4–19 and on typos | holds |
+| Readable content occupies a contiguous band of layers | readouts peak in layers 20–24, chosen by a pre-declared rule | holds |
+| J-lens directions are used causally | argument swaps 28–48% vs 7–8% for logit-lens directions, ≤2% for an unrelated target | holds, narrowly |
+| Causal content is confined to that band | swaps work better across mid-depth layers | not at 0.6B |
+| Ignition-like switching | the network sharpens competing concepts, but progressively with depth and as much through the logit lens | partly |
+| Implicit concepts are readable | ≤1% recall on association and rhyme plans | not at 0.6B |
+| J++ makes readouts far more faithful | +5.5 points over the J-lens, nearly all from the LRP backward pass | much smaller |
+| J++'s learned expert weights add substantially | +0.6 points over the plain LRP lens; they overfit | not at 0.6B |
+
+Figures are in `paper/figures/` (`scripts/figures.py`); the method schematic is
+`paper/arxiv/figures/schematic.tex`.
+
 ## Results so far
 
 **Round 2 (pre-registered, `paper/prereg_round2.md`).** Five fresh stratified splits (seeds 1–5).
