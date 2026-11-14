@@ -75,32 +75,60 @@ if main:
 # ---------------------------------------------------------------- J++ bars
 panels = [(t, load(f"jpp_compare_{t}.json")) for t in ("main", "main_all")]
 panels = [(t, d) for t, d in panels if d]
+OURS = ("SS-", "Semi-", "Routed", "B-lens", "JB-mix")
 if panels:
-    fig, axes = plt.subplots(1, len(panels), figsize=(4.2 * len(panels), 4.2), sharey=True, squeeze=False)
-    order = ["logit", "regress", "J-lens", "R-lens", "Pooled", "Pooled-LRP", "J-filt", "J++", "Routed", "Routed-LRP",
-             "SS-J-filt", "SS-J++", "Semi-J-filt", "Semi-J++"]
+    fig, axes = plt.subplots(1, len(panels), figsize=(4.4 * len(panels), 4.6), sharey=True, squeeze=False)
+    order = ["logit", "regress", "J-lens", "R-lens", "J-filt", "J++", "SS-J++", "Semi-J++", "Routed",
+             "Routed-LRP", "B-lens", "JB-mix"]
     for ax, (t, d) in zip(axes[0], panels):
-        names = [n for n in order if f"{n}|raw|filter" in d["results"]]
-        means = [d["results"][f"{n}|raw|filter"]["item@10"]["macro"]["mean"] for n in names]
-        lo = [d["results"][f"{n}|raw|filter"]["item@10"]["macro"]["lo"] for n in names]
-        hi = [d["results"][f"{n}|raw|filter"]["item@10"]["macro"]["hi"] for n in names]
+        names = [n for n in order if n in d.get("selected", {})]
+        keys = [d["selected"][n] for n in names]
+        labels = [k.split("|")[0] for k in keys]
+        means = [d["results"][k]["item@10"]["macro"]["mean"] for k in keys]
+        lo = [d["results"][k]["item@10"]["macro"]["lo"] for k in keys]
+        hi = [d["results"][k]["item@10"]["macro"]["hi"] for k in keys]
         y = np.arange(len(names))[::-1]
-        cols = [COLOR["J++"] if n == "J++" else (SLOT[0] if n.startswith(("SS", "Semi", "Routed")) else "#b9b8b2")
-                for n in names]
+        cols = [COLOR["J++"] if n == "J++" else (SLOT[0] if n.startswith(OURS) else "#b9b8b2") for n in names]
         ax.barh(y, means, height=0.62, color=cols, edgecolor=SURF, linewidth=2)
         ax.errorbar(means, y, xerr=[np.array(means) - lo, np.array(hi) - means], fmt="none", ecolor=INK2,
                     elinewidth=1, capsize=2)
         for yi, m in zip(y, means):
-            ax.text(m + 0.01, yi, f"{m:.2f}", va="center", fontsize=7.5, color=INK)
-        ax.set_yticks(y, names)
+            ax.text(m + 0.012, yi, f"{m:.3f}", va="center", fontsize=7.5, color=INK)
+        ax.set_yticks(y, labels)
         ax.grid(axis="x", color=GRID, linewidth=0.8)
         ax.set_axisbelow(True)
-        ax.set_xlabel("held-out recall@10 (item-weighted)")
+        ax.set_xlabel("held-out recall@10 (macro over items)")
         ax.set_title({"main": "correctness-filtered items", "main_all": "all items"}[t] +
                      f"  (n={d['n_held']})", loc="left", fontsize=9.5, color=INK)
-    fig.suptitle("Head-to-head under the J++ protocol (Readout Filtering, best of 7 layers)", x=0.01, ha="left",
-                 fontsize=10, color=INK)
+    handles = [plt.Rectangle((0, 0), 1, 1, color=c) for c in ("#b9b8b2", COLOR["J++"], SLOT[0])]
+    axes[0][-1].legend(handles, ["baseline / prior work", "J++", "ours"], frameon=False, fontsize=7.5,
+                       loc="lower right")
+    fig.suptitle("Round 1: head-to-head under the J++ protocol (Readout Filtering, best of 7 layers, split seed 0)",
+                 x=0.01, ha="left", fontsize=10, color=INK)
     save(fig, "fig_jpp")
+
+# ---------------------------------------------------------------- round 2 (multi-split)
+r2 = load("jpp_splits_round2.json")
+if r2 and "confirmatory" in r2:
+    conf = r2["confirmatory"]
+    seeds = [s_ for s_ in r2["seeds"] if s_ != 0]
+    order = ["JppB", "RB-mix", "Routed-J++-a200", "Bagged-J++", "JB-mix", "Routed-LRP-a200", "Routed-LRP-s0.5",
+             "R-lens", "J-lens", "logit"]
+    names = [n for n in order if n in conf]
+    fig, ax = plt.subplots(figsize=(6.4, 0.42 * len(names) + 1.0))
+    ax.axvline(0, color=INK2, lw=1)
+    for yi, n in zip(np.arange(len(names))[::-1], names):
+        ds = [r2["per_seed"][str(s_)]["results"][n]["diff_vs_jpp"]["diff"] for s_ in seeds]
+        c = SLOT[0] if n in ("JppB", "RB-mix", "Routed-J++-a200", "Bagged-J++") else "#8d8c87"
+        ax.scatter(ds, [yi] * len(ds), s=22, color=c, alpha=0.55, edgecolor=SURF, linewidth=1, zorder=3)
+        ax.scatter([conf[n]["mean_diff"]], [yi], s=70, marker="|", color=INK, linewidth=2, zorder=4)
+    ax.set_yticks(np.arange(len(names))[::-1], [f"{n}  ({conf[n]['wins']}/{conf[n]['n']})" for n in names])
+    ax.grid(axis="x", color=GRID, linewidth=0.8)
+    ax.set_axisbelow(True)
+    ax.set_xlabel("held-out recall@10 minus J++ (paired, same split)")
+    ax.set_title(f"Round 2: five fresh splits (dots), mean (bar); wins vs J++ in brackets", loc="left",
+                 fontsize=9.5, color=INK)
+    save(fig, "fig_round2")
 
 # ---------------------------------------------------------------- learning curves
 cur = load("curves.json")
