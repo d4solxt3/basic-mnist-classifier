@@ -1,0 +1,25 @@
+experiment_name: "qwen3_1_7b_single_neuron_probe"
+
+# Active model config (fits 8 GB Zephyrus GPU with ~2.3 GB headroom)
+model_id: "Qwen/Qwen3-1.7B"
+revision: "main"          # Exact commit hash is resolved and logged at runtime
+load_in_4bit: false
+dtype: "bfloat16"
+
+# Intervention parameters (post-SwiGLU neuron input to mlp.down_proj)
+layer: 14
+target_neuron: 1024
+dose: 1.0                 # Residual-normalized push: v = dose * median(||h_L||) / ||W_down[:, n]||
+
+# Evaluation & reproducibility
+seeds: [0, 1, 2]
+batch_size: 4
+max_new_tokens: 64
+temperature: 0.7
+top_p: 0.9
+prompts_file: "prompts.jsonl"
+samples_to_save: 5
+
+# First-token log-prob contrast sets (updated per axis during Stage 2)
+target_tokens: ["Ah", "Fool", "Mortals", "Pathetic", "Behold", "Bow"]
+neutral_tokens: ["Sure", "Here", "To", "The", "Yes", "A"]
