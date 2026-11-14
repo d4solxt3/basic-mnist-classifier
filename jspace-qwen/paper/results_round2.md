@@ -3,7 +3,7 @@
 ### 5.3 Round 2: pre-registered candidates on five fresh splits
 
 Round 1 used one split, and its held-out items had already been looked at when we designed
-improvements. Round 2 therefore tests four candidates fixed in advance (§4, `prereg_round2.md`):
+improvements. Round 2 therefore tests four candidates fixed in advance (§3.6, `prereg_round2.md`):
 
 - JppB;
 - RB-mix;
