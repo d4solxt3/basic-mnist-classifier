@@ -3,16 +3,32 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
-\usepackage[sfdefault]{noto}
+\usepackage{amsmath}
+\usepackage{newtxtext}
+\usepackage{newtxmath}
+\usepackage[varqu]{zi4}
 \usepackage{microtype}
 \setlength{\emergencystretch}{1.5em}
-\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{xcolor}
+\usepackage[font=small, labelfont=bf, skip=5pt]{caption}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, fit, backgrounds, calc}
+\usepackage{fancyhdr}
 \usepackage{hyperref}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape Single-Neuron Localization and Causal Steering in Qwen3-1.7B}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
+\setlist{itemsep=2pt, topsep=4pt}
 
 % Every empirical number below is generated from outputs/*.json by make_tables.py.
 \input{generated/macros.tex}
@@ -20,7 +36,9 @@
 \makeatletter\newcommand{\rowsfrom}[1]{\@@input #1 }\makeatother
 
 \definecolor{accentblue}{RGB}{24, 78, 119}
-\definecolor{slatetext}{RGB}{71, 85, 105}
+\definecolor{stageonefill}{RGB}{234, 241, 250}
+\definecolor{stagetwofill}{RGB}{253, 238, 231}
+\definecolor{boxline}{RGB}{82, 81, 78}
 
 \hypersetup{
     colorlinks=true,
@@ -31,7 +49,7 @@
 
 \title{\textbf{A Confound-Controlled Multi-Axis Benchmark and Pre-Registered Protocol for Single-Neuron Localization and Causal Steering in Qwen3-1.7B}}
 
-\author{Four \\ UCL}
+\author{Four\\[2pt] \normalsize University College London}
 
 \date{November 2026}
 
@@ -40,7 +58,7 @@
 \maketitle
 
 \begin{abstract}
-Linear representation engineering has established that high-level behavioral traits in large language models---including refusal, sycophancy, and stylistic persona shifts---often align with low-rank directions in residual activation space. However, linear subspace identifiability leaves open a fundamental mechanistic question: do these behavioral features localize onto individual basis-aligned units within gated feed-forward layers, or are they distributed across polysemantic subspaces via superposition? Answering this question reliably is impeded by three methodological hazards: severe multiple-testing inflation across hundreds of thousands of neurons, surface-token leakage at the discovery position, and uncalibrated intervention norms. We introduce a confound-controlled four-axis contrast benchmark (80 matched prompt pairs; 160 prompts) and a two-stage pre-registered experimental protocol for \texttt{Qwen/\allowbreak{}Qwen3-1.7B}. The protocol is sized for an 8~GB GPU, and we execute it end to end on CPU. Stage~1 screens all $172{,}032$ post-SwiGLU units using output-norm-weighted Cohen's $d$ calibrated against a Westfall--Young max-statistic permutation null distribution ($p_{\mathrm{FWER}} < 0.01$). Stage~2 tests causal steering via residual-norm-calibrated additive activation pushes against unedited baselines and equal-norm random-neuron controls across three seeds and three doses. It contrasts in-distribution trigger prompts with neutral out-of-distribution queries to separate input keyword detection from downstream policy control. In the executed run, the Sycophancy, Uncertainty, and Persona axes each yield units that survive whole-network family-wise error control (permutation maxima exceeding the candidate's $|d|$: \SycExceed, \UncExceed, and \PerExceed), while the Caution axis is refuted at Stage~1. None of the surviving candidates passes the pre-registered causal test on neutral prompts. Their shifts in the first-token log-probability margin stay well below two baseline standard deviations, and the Persona unit moves the margin less than equal-norm random edits. Statistical localization at the discovery token therefore did not translate into single-neuron causal control. We release the benchmark, code, run log, and all generations.
+Behavioral traits of large language models such as refusal, sycophancy, and persona often align with low-rank directions in the residual stream. Whether they also localize onto individual units of the gated feed-forward layers is an open question, and testing it is hampered by multiple-testing inflation across hundreds of thousands of neurons, surface-token leakage at the discovery position, and uncalibrated intervention norms. We introduce a confound-controlled benchmark of 80 matched prompt pairs spanning four behavioral axes, together with a two-stage pre-registered protocol for \texttt{Qwen/\allowbreak{}Qwen3-1.7B}. Stage~1 screens all $172{,}032$ post-SwiGLU units with output-norm-weighted Cohen's $d$ against a Westfall--Young max-statistic permutation null. Stage~2 tests whether residual-norm-calibrated additive pushes on the selected unit steer a first-token log-probability margin on neutral out-of-distribution prompts, against unedited baselines and equal-norm random-neuron controls, across three seeds and three doses. We execute the protocol end to end. Sycophancy, Uncertainty, and Persona each yield a unit that survives whole-network family-wise error control (permutation maxima exceeding the candidate's $|d|$: \SycExceed, \UncExceed, and \PerExceed), while Caution is refuted at Stage~1. No surviving candidate passes the causal test: margin shifts stay well below two baseline standard deviations, and the Persona unit moves the margin less than random units of equal norm. Statistical localization at the discovery token therefore did not translate into single-neuron causal control. Code, data, the run log, and all generations are released.
 \end{abstract}
 
 \section{Introduction}
@@ -74,7 +92,7 @@ To resolve these issues while keeping full reproducibility accessible on a singl
 \section{Architectural Formulation and Basis Geometry}
 
 We examine \texttt{Qwen/\allowbreak{}Qwen3-1.7B} \cite{yang2025qwen3}, a dense decoder-only transformer with $L = 28$ layers, residual hidden dimension $d_{\mathrm{model}} = 2048$, and MLP intermediate width $d_{\mathrm{mlp}} = 6144$, yielding $N = L \times d_{\mathrm{mlp}} = 172{,}032$ intermediate neurons. At layer $\ell \in \{0, \dots, 27\}$, the SwiGLU feed-forward block \cite{shazeer2020glu} maps normalized residual state $\mathbf{x}^{(\ell)} \in \mathbb{R}^{d_{\mathrm{model}}}$ to a residual update via:
-\begin{equation}
+\begin{equation}\label{eq:swiglu}
     \mathbf{z}^{(\ell)} = \mathrm{SiLU}\!\left(W_{\mathrm{gate}}^{(\ell)} \mathbf{x}^{(\ell)}\right) \odot \left(W_{\mathrm{up}}^{(\ell)} \mathbf{x}^{(\ell)}\right) \in \mathbb{R}^{d_{\mathrm{mlp}}}, \qquad
     \Delta \mathbf{h}_{\mathrm{mlp}}^{(\ell)} = \sum_{n=1}^{d_{\mathrm{mlp}}} z_n^{(\ell)} \mathbf{w}_{\mathrm{down}, n}^{(\ell)},
 \end{equation}
@@ -82,8 +100,8 @@ where $\mathrm{SiLU}(u) = u \cdot \sigma(u)$ is applied elementwise, $\odot$ den
 
 \subsection{Rank-1 Residual Geometry of Single-Neuron Interventions}
 
-Equation~(1) reveals why single-neuron interventions constitute a strict geometric special case of residual-stream steering. Whereas general activation addition injects an arbitrary vector $\alpha \mathbf{v} \in \mathbb{R}^{d_{\mathrm{model}}}$, editing coordinate $z_n^{(\ell)}$ alters the residual stream exclusively along the fixed column direction $\mathbf{w}_{\mathrm{down}, n}^{(\ell)}$. Clamping $z_n^{(\ell)} \leftarrow c$ and adding a constant $z_n^{(\ell)} \leftarrow z_n^{(\ell)} + c$ give, respectively,
-\begin{equation}
+Equation~\eqref{eq:swiglu} reveals why single-neuron interventions constitute a strict geometric special case of residual-stream steering. Whereas general activation addition injects an arbitrary vector $\alpha \mathbf{v} \in \mathbb{R}^{d_{\mathrm{model}}}$, editing coordinate $z_n^{(\ell)}$ alters the residual stream exclusively along the fixed column direction $\mathbf{w}_{\mathrm{down}, n}^{(\ell)}$. Clamping $z_n^{(\ell)} \leftarrow c$ and adding a constant $z_n^{(\ell)} \leftarrow z_n^{(\ell)} + c$ give, respectively,
+\begin{equation}\label{eq:edit}
     \tilde{\mathbf{h}}^{(\ell)} - \mathbf{h}^{(\ell)} = \left(c - z_n^{(\ell)}(\mathbf{x})\right) \mathbf{w}_{\mathrm{down}, n}^{(\ell)}
     \qquad \text{and} \qquad
     \tilde{\mathbf{h}}^{(\ell)} - \mathbf{h}^{(\ell)} = c\, \mathbf{w}_{\mathrm{down}, n}^{(\ell)}.
@@ -130,23 +148,61 @@ The complete 80-pair benchmark is provided in Appendix~\ref{app:datasets}.
 
 \section{Two-Stage Pre-Registered Experimental Protocol}
 
+Figure~\ref{fig:pipeline} summarizes the protocol. Stage~1 selects at most one candidate unit per axis under whole-network family-wise error control. Stage~2 asks whether pushing that unit changes the model's behavior on prompts that share none of the contrast set's surface cues.
+
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}[
+        font=\footnotesize,
+        box/.style={draw=boxline, line width=0.5pt, fill=white, rounded corners=2pt, align=center,
+                    text width=2.42cm, minimum height=1.3cm, inner sep=3pt},
+        key/.style={box, line width=1.0pt},
+        arr/.style={-{Stealth[length=4pt]}, line width=0.6pt, draw=boxline},
+        node distance=0.5cm
+    ]
+        \node[box] (data) {Contrast set $\mathcal{D}_a$\\20 positive and 20 negative prompts};
+        \node[box, right=of data] (acts) {Post-SwiGLU activations at the final prompt token};
+        \node[box, right=of acts] (score) {Cohen's $d$, firing mask $M$, and score $S$ (Eq.~\ref{eq:score})};
+        \node[box, right=of score] (null) {Westfall--Young null, $B = 200$ label permutations};
+        \node[key, right=of null] (cand) {Candidate $(\ell^*, n^*)$:\\highest $S$ with $p_{\mathrm{FWER}} < 0.01$};
+        \node[box, below=1.45cm of data] (push) {Additive push of norm $\alpha\tilde{\rho}_{\ell^*}$ along $\mathbf{w}_{\mathrm{down},n^*}$};
+        \node[box, right=of push] (cond) {Baseline vs.\ target unit vs.\ random unit in layer $\ell^*$};
+        \node[box, right=of cond] (eval) {$\mathcal{P}_{\mathrm{OOD}}$ and $\mathcal{D}_a$;\\3 seeds $\times$ 3 doses};
+        \node[box, right=of eval] (metric) {Margin $\Delta \log P$ and fluency \texttt{distinct\_2}};
+        \node[key, right=of metric] (verdict) {Verdict: confirm, refute, or inconclusive};
+        \foreach \a/\b in {data/acts, acts/score, score/null, null/cand, push/cond, cond/eval, eval/metric, metric/verdict}
+            \draw[arr] (\a) -- (\b);
+        \draw[arr] (cand.south) -- ++(0, -0.38) -| (push.north);
+        \coordinate (s1top) at ($(cand.north east)+(0, 0.42)$);
+        \coordinate (s2top) at ($(verdict.north east)+(0, 0.42)$);
+        \begin{scope}[on background layer]
+            \node[fit=(data)(cand)(s1top), fill=stageonefill, rounded corners=3pt, inner sep=5pt] (s1) {};
+            \node[fit=(push)(verdict)(s2top), fill=stagetwofill, rounded corners=3pt, inner sep=5pt] (s2) {};
+        \end{scope}
+        \node[anchor=north east, font=\footnotesize\bfseries] at ($(s1.north east)+(-3pt, -2pt)$) {Stage 1: whole-network discovery};
+        \node[anchor=north east, font=\footnotesize\bfseries] at ($(s2.north east)+(-3pt, -2pt)$) {Stage 2: causal steering};
+    \end{tikzpicture}
+    \caption{Overview of the two-stage protocol, run separately for each behavioral axis $a$. Stage~1 screens all $28 \times 6144$ post-SwiGLU units of \texttt{Qwen/\allowbreak{}Qwen3-1.7B}. Stage~2 tests the selected unit with a norm-calibrated additive push against an unedited baseline and an equal-norm random unit, and applies the pre-registered decision rules.}
+    \label{fig:pipeline}
+\end{figure}
+
 \subsection{Stage 1: Whole-Network Discovery with Westfall--Young Permutation Control}
 
 For each axis $\mathcal{D}_a$, prompts are formatted with the native chat template (thinking/reasoning tags disabled) and post-SwiGLU activations $\mathbf{z}^{(\ell)}(x) \in \mathbb{R}^{6144}$ are recorded at the final prompt token across all $\ell \in \{0, \dots, 27\}$.
 
 Let $\mu_{\ell,n}^+, \mu_{\ell,n}^-$ and $s_{\ell,n}^+, s_{\ell,n}^-$ denote the sample means and standard deviations across the $n_+ = 20$ positive and $n_- = 20$ negative prompts, and let $r_{\ell,n}^+ = \frac{1}{n_+}\sum_{i=1}^{n_+} \mathbb{I}(z_{\ell,n}(x_i^+) > 0)$ denote the positive firing rate (and analogously $r_{\ell,n}^-$). We compute pooled Cohen's $d$:
-\begin{equation}
+\begin{equation}\label{eq:cohen}
     d_{\ell,n} = \frac{\mu_{\ell,n}^+ - \mu_{\ell,n}^-}{s_{\mathrm{pooled}}(\ell,n)}, \qquad
     s_{\mathrm{pooled}}(\ell,n) = \sqrt{\frac{(n_+ - 1)(s_{\ell,n}^+)^2 + (n_- - 1)(s_{\ell,n}^-)^2}{n_+ + n_- - 2}}.
 \end{equation}
 
 To filter dead or rarely firing units and deprioritize neurons with negligible residual write norms, we apply an active-firing indicator $M_{\ell,n} = \mathbb{I}\!\left(\max(r_{\ell,n}^+, r_{\ell,n}^-) \ge 0.25\right)$ and rank candidates by the composite score:
-\begin{equation}
+\begin{equation}\label{eq:score}
     S_{\ell,n} = M_{\ell,n} \cdot |d_{\ell,n}| \cdot \left\|\mathbf{w}_{\mathrm{down}, n}^{(\ell)}\right\|_2.
 \end{equation}
 
 \paragraph{Family-Wise Error Rate Control.} Because a Bonferroni threshold over $N = 172{,}032$ correlated units ($\alpha / N \approx 5.8 \times 10^{-8}$) ignores strong cross-layer activation correlations, we employ a Westfall--Young max-statistic permutation procedure. Across $B = 200$ random label permutations $\pi_b$ of the $40$ prompts, we compute the whole-network maximum standardized difference $T_b = \max_{\ell,n} \left(M_{\ell,n} \cdot |d_{\ell,n}^{(\pi_b)}|\right)$. A candidate unit $(\ell^*, n^*)$ passes statistical screening only if its empirical family-wise $p$-value satisfies:
-\begin{equation}
+\begin{equation}\label{eq:pfwer}
     p_{\mathrm{FWER}}(\ell^*, n^*) = \frac{1}{B} \sum_{b=1}^{B} \mathbb{I}\!\left(T_b \ge |d_{\ell^*, n^*}|\right) < 0.01.
 \end{equation}
 The mask $M_{\ell,n}$ is computed once from the true labels and held fixed across permutations. With $B = 200$, the smallest attainable non-zero $p_{\mathrm{FWER}}$ is $0.005$, and $p_{\mathrm{FWER}} = 0$ means that no permutation maximum reached $|d_{\ell^*, n^*}|$; we therefore report the exceedance count alongside each $p$-value. The Stage~2 candidate for each axis is the unit with the highest score $S_{\ell,n}$ among units with $p_{\mathrm{FWER}} < 0.01$. If no unit passes, the top-$S$ unit is still carried into Stage~2, but only as an exploratory analysis that cannot confirm the hypothesis. Because SwiGLU outputs can be negative, ``firing'' means $z_{\ell,n} > 0$.
@@ -157,10 +213,10 @@ The mask $M_{\ell,n}$ is computed once from the true labels and held fixed acros
 Candidates are evaluated causally across three seeds $s \in \{0, 1, 2\}$ on two complementary evaluation sets: (i) a held-out \textbf{neutral out-of-distribution suite} $\mathcal{P}_{\mathrm{OOD}}$ ($16$ everyday queries containing no persona-style or security-related keywords), and (ii) the \textbf{in-distribution contrast set} $\mathcal{D}_a$ to measure bidirectional elicitation and suppression.
 
 \paragraph{Residual-Norm Calibration.} To ensure interventions are commensurate across layers and strictly matched against random-neuron baselines, we first cache the median post-layer residual $\ell_2$ norm $\tilde{\rho}_\ell = \mathrm{median}(\|\mathbf{h}^{(\ell)}\|_2)$ over $\mathcal{P}_{\mathrm{OOD}}$, excluding padding and the first token of each sequence. For dimensionless dose $\alpha \in \{0.5, 1.0, 1.5\}$, a forward pre-hook on \texttt{mlp.down\_proj} adds the value
-\begin{equation}
+\begin{equation}\label{eq:push}
     c_{\ell,n}(\alpha) = \operatorname{sign}(d_{\ell^*,n^*}) \cdot \frac{\alpha \cdot \tilde{\rho}_\ell}{\left\|\mathbf{w}_{\mathrm{down}, n}^{(\ell)}\right\|_2}
 \end{equation}
-to coordinate $n$ at every token position, prompt and generated tokens alike. By Eq.~(2), the injected residual perturbation then has $\ell_2$ norm exactly $\alpha \tilde{\rho}_\ell$, up to BF16 rounding of the edited activation. The sign pushes the unit towards the activation level it has on the positive prompts.
+to coordinate $n$ at every token position, prompt and generated tokens alike. By Eq.~\eqref{eq:edit}, the injected residual perturbation then has $\ell_2$ norm exactly $\alpha \tilde{\rho}_\ell$, up to BF16 rounding of the edited activation. The sign pushes the unit towards the activation level it has on the positive prompts.
 
 \paragraph{Controlled Conditions and Quantitative Metrics.} We evaluate three conditions under identical decoding ($T = 0.7$, $p_{\mathrm{top}} = 0.9$, $64$ generated tokens):
 \begin{enumerate}[leftmargin=1.5em]
@@ -208,7 +264,7 @@ Candidates from axes that do not pass Stage~1 are run through Stage~2 for comple
 
 A review of the draft protocol before any model was run found internal inconsistencies. We corrected them before execution and list every change here. No amendment was made after results were seen.
 \begin{enumerate}[leftmargin=1.5em]
-    \item \textbf{Intervention form.} The draft clamped $z_n \leftarrow c$ but claimed an exact perturbation norm $\alpha\tilde{\rho}_\ell$, which holds only when $z_n(\mathbf{x}) = 0$ (Eq.~2). We switched to the additive push of Eq.~(6), for which the claim is exact, and push in the direction of $\operatorname{sign}(d)$.
+    \item \textbf{Intervention form.} The draft clamped $z_n \leftarrow c$ but claimed an exact perturbation norm $\alpha\tilde{\rho}_\ell$, which holds only when $z_n(\mathbf{x}) = 0$ (Eq.~\eqref{eq:edit}). We switched to the additive push of Eq.~\eqref{eq:push}, for which the claim is exact, and push in the direction of $\operatorname{sign}(d)$.
     \item \textbf{Seed-independence of $\Delta \log P$.} The first-token margin does not depend on the sampling seed, so a standard deviation ``across seeds'' would be zero. SDs of $\Delta \log P$ are now taken across the $16$ prompts, and seeds instead redraw the random-control unit and drive sampling for \texttt{distinct\_2}.
     \item \textbf{Multi-token contrast words.} Six contrast words are split by the tokenizer (Table~\ref{tab:token_pieces}). They are scored by exact sequence probability rather than by their first sub-token, and the vocabulary projection is computed in float32.
     \item \textbf{Axis~1 length invariant.} Six Axis~1 pairs differed by four or five words, violating the stated $1$--$3$-word match. Their negative prompts were lengthened by one to three words without changing their content (Appendix~\ref{app:datasets}), and the invariant is now stated as ``at most three words apart''.
@@ -220,7 +276,14 @@ The model revision was pinned at run time to commit \ModelCommit{}. Software ver
 
 \subsection{Stage 1: Whole-Network Discovery}
 
-Table~\ref{tab:stage1} reports the Stage~1 screen. Three of four axes pass with $p_{\mathrm{FWER}} = 0$. For Sycophancy (\SycExceed{} exceedances), Uncertainty (\UncExceed{}), and Persona (\PerExceed{}), the candidate's $|d|$ lies far above the $99$th percentile of the permutation maxima (\SycNull, \UncNull, and \PerNull{} respectively). The Caution axis is refuted: its top-scoring unit \CauUnit{} reaches $d = $ \CauD, below the null's $99$th percentile of \CauNull, and no unit attains $p_{\mathrm{FWER}} < 0.05$ (smallest $p_{\mathrm{FWER}} = $ \CauMinP, \CauExceed{} exceedances).
+Table~\ref{tab:stage1} reports the Stage~1 screen, and Figure~\ref{fig:stage1} shows each candidate against its permutation null. Three of four axes pass with $p_{\mathrm{FWER}} = 0$. For Sycophancy (\SycExceed{} exceedances), Uncertainty (\UncExceed{}), and Persona (\PerExceed{}), the candidate's $|d|$ lies far above the $99$th percentile of the permutation maxima (\SycNull, \UncNull, and \PerNull{} respectively). The Caution axis is refuted: its top-scoring unit \CauUnit{} reaches $d = $ \CauD, below the null's $99$th percentile of \CauNull, and no unit attains $p_{\mathrm{FWER}} < 0.05$ (smallest $p_{\mathrm{FWER}} = $ \CauMinP, \CauExceed{} exceedances).
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig_stage1_null.pdf}
+    \caption{Stage~1 permutation nulls. Bars show the whole-network maximum $|d|$ (over active units) in each of the $200$ shuffled-label permutations. The dashed line marks the null's $99$th percentile and the solid line the candidate's $|d|$. Three candidates lie far outside the null; the Caution candidate does not.}
+    \label{fig:stage1}
+\end{figure}
 
 \begin{table}[htbp]
     \centering
@@ -241,7 +304,14 @@ The pre-registered predictions (Table~\ref{tab:predictions}) fare unevenly. The 
 
 \subsection{Stage 2: Causal Steering on Neutral Prompts}
 
-Table~\ref{tab:stage2} reports Stage~2 at the decision dose $\alpha = 1.0$. \textbf{No axis meets the confirmation rule.} All three axes that passed Stage~1 fail criterion~(a): their mean shifts in $\Delta \log P$ (\SycShift{} for Sycophancy, \UncShift{} for Uncertainty, \PerShift{} for Persona) fall far short of the $2\,\mathrm{SD}$ thresholds (\SycThreshold, \UncThreshold, and \PerThreshold). The Sycophancy unit moves the margin in the wrong direction. It does so less than its random controls (random shift \SycRandShift), so it formally meets criterion~(b) while failing~(a). The Persona unit fails~(b) as well: equal-norm random edits in layer \PerLayer{} move the persona margin further (\PerRandShift) than the discovered unit does. The Uncertainty unit is the only candidate whose effect points the predicted way and exceeds its random control at every dose (Table~\ref{tab:dose}: \UncShiftHalf, \UncShiftOne, \UncShiftOneHalf{} versus \UncRandShiftHalf, \UncRandShiftOne, \UncRandShiftOneHalf{} at $\alpha = 0.5, 1.0, 1.5$). However, it remains well below the pre-registered threshold because the baseline margin varies widely across the neutral prompts (SD \UncBaseSD). The exploratory Caution unit sits in layer \CauLayer, where the push destroys fluency ($\texttt{distinct\_2} = $ \CauDistTgt).
+Table~\ref{tab:stage2} reports Stage~2 at the decision dose $\alpha = 1.0$, and Figure~\ref{fig:dose} shows all three doses. \textbf{No axis meets the confirmation rule.} All three axes that passed Stage~1 fail criterion~(a): their mean shifts in $\Delta \log P$ (\SycShift{} for Sycophancy, \UncShift{} for Uncertainty, \PerShift{} for Persona) fall far short of the $2\,\mathrm{SD}$ thresholds (\SycThreshold, \UncThreshold, and \PerThreshold). The Sycophancy unit moves the margin in the wrong direction. It does so less than its random controls (random shift \SycRandShift), so it formally meets criterion~(b) while failing~(a). The Persona unit fails~(b) as well: equal-norm random edits in layer \PerLayer{} move the persona margin further (\PerRandShift) than the discovered unit does. The Uncertainty unit is the only candidate whose effect points the predicted way and exceeds its random control at every dose (Table~\ref{tab:dose}: \UncShiftHalf, \UncShiftOne, \UncShiftOneHalf{} versus \UncRandShiftHalf, \UncRandShiftOne, \UncRandShiftOneHalf{} at $\alpha = 0.5, 1.0, 1.5$). However, it remains well below the pre-registered threshold because the baseline margin varies widely across the neutral prompts (SD \UncBaseSD). The exploratory Caution unit sits in layer \CauLayer, where the push destroys fluency ($\texttt{distinct\_2} = $ \CauDistTgt).
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig_stage2_dose.pdf}
+    \caption{Stage~2 dose response on $\mathcal{P}_{\mathrm{OOD}}$. \emph{Top:} mean paired shift in $\Delta \log P$ for the Stage~1 candidate and for the random control (mean over three seed-specific random units). The dashed line is the pre-registered $2\,\mathrm{SD}$ threshold, applied at $\alpha = 1.0$. \emph{Bottom:} \texttt{distinct\_2} (mean $\pm$ SD across seeds), with the $0.45$ fluency guard (dashed) and the unedited model's level (dotted). $^{\dagger}$Exploratory: the axis did not pass Stage~1.}
+    \label{fig:dose}
+\end{figure}
 
 \begin{table}[htbp]
     \centering
@@ -314,7 +384,7 @@ Before interpreting empirical runs, we formalize four skeptical objections that 
 \begin{enumerate}[leftmargin=1.5em]
     \item \textbf{Input Keyword Detection vs.\ Generative Policy Control:} Although syntax and trailing punctuation are matched, positive prompts in Axis~3 and Axis~4 contain explicit risk or persona cues (e.g., \emph{``ransomware''}, \emph{``supervillain''}). A high-scoring unit at the final prompt token may therefore operate as an \emph{input lexical detector} rather than a \emph{generative controller}. Requiring Stage~2 causal shifts to generalize onto neutral out-of-distribution prompts ($\mathcal{P}_{\mathrm{OOD}}$, which contains no persona-style or security-related keywords) directly tests downstream behavioral control.
     \item \textbf{Polysemantic Collateral Activation:} At $d_{\mathrm{mlp}} = 6144$, individual neurons routinely encode multiple unrelated features in superposition \cite{elhage2022superposition}. High-dose pushes ($\alpha \ge 1.5$) can co-activate unrelated features, degrading coherence. Sweeping $\alpha \in \{0.5, 1.0, 1.5\}$ and enforcing $\texttt{distinct\_2} \ge 0.45$ prevents mistaking generic text degradation for targeted behavioral steering.
-    \item \textbf{Additive Push vs.\ Clamping vs.\ Multiplicative Scaling:} Overwriting $z_n^{(\ell)} \leftarrow c$ forces uniform activation across all tokens and makes the perturbation norm input-dependent (Eq.~2). Multiplicative scaling $z_n^{(\ell)} \leftarrow \gamma z_n^{(\ell)}$ preserves token-selective SwiGLU gating but has no fixed norm. The additive push we use keeps the token-dependent activation pattern and fixes the perturbation norm exactly, at the cost of shifting every position by the same amount. Clamping and multiplicative scaling remain untested ablations.
+    \item \textbf{Additive Push vs.\ Clamping vs.\ Multiplicative Scaling:} Overwriting $z_n^{(\ell)} \leftarrow c$ forces uniform activation across all tokens and makes the perturbation norm input-dependent (Eq.~\eqref{eq:edit}). Multiplicative scaling $z_n^{(\ell)} \leftarrow \gamma z_n^{(\ell)}$ preserves token-selective SwiGLU gating but has no fixed norm. The additive push we use keeps the token-dependent activation pattern and fixes the perturbation norm exactly, at the cost of shifting every position by the same amount. Clamping and multiplicative scaling remain untested ablations.
     \item \textbf{Dual-Use Safety Governance:} Probing caution-boundary neurons (Axis~3) can reveal units that suppress refusal when pushed negatively. All Stage~2 evaluations remain restricted to benign dual-use prompts, and any discovered refusal-suppressing coordinates should be disclosed responsibly to model developers prior to public release of exact neuron indices.
 \end{enumerate}
 
@@ -322,47 +392,48 @@ Before interpreting empirical runs, we formalize four skeptical objections that 
 
 Single-neuron interpretability requires the same statistical rigor as multi-dimensional representation engineering: confound-matched contrast sets, correlation-preserving permutation null controls, norm-calibrated causal interventions, and out-of-distribution behavioral verification. We combined a 160-prompt four-axis benchmark with a pre-registered two-stage protocol for \texttt{Qwen/\allowbreak{}Qwen3-1.7B} and executed it. The results illustrate why both stages are needed. Three axes produced units that survive whole-network family-wise error control, yet none of these units steered behavior on neutral prompts beyond the pre-registered threshold, and one did worse than random units of equal norm. In this model, at this discovery position, the tested behavioral contrasts are separable at the level of individual units but are not controlled by them. The benchmark, code, run log, and generations are released so that the null result can be checked and extended to other models, positions, and intervention families.
 
-\begin{thebibliography}{9}
+\begin{thebibliography}{8}
+\small
 
 \bibitem{arditi2024refusal}
 Andy Arditi, Oscar Obeso, Aaquib Syed, Daniel Paleka, Nina Panickssery, Wes Gurnee, and Neel Nanda.
 \newblock Refusal in language models is mediated by a single direction.
-\newblock \emph{arXiv preprint arXiv:2406.11717}, 2024.
+\newblock \emph{arXiv preprint}, 2024. \newblock \href{https://arxiv.org/abs/2406.11717}{arXiv:2406.11717}.
 
 \bibitem{elhage2022superposition}
-Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, Roger Grosse, Sam McCandlish, Jared Kaplan, Dario Amodei, Martin Wattenberg, and Christopher Olah.
+Nelson Elhage, Tristan Hume, Catherine Olsson, et~al.
 \newblock Toy models of superposition.
-\newblock \emph{Transformer Circuits Thread / arXiv preprint arXiv:2209.10652}, 2022.
+\newblock \emph{Transformer Circuits Thread}, 2022. \newblock \href{https://arxiv.org/abs/2209.10652}{arXiv:2209.10652}.
 
 \bibitem{gurnee2023haystack}
 Wes Gurnee, Neel Nanda, Matthew Pauly, Katherine Harvey, Dmitrii Troitskii, and Dimitris Bertsimas.
 \newblock Finding neurons in a haystack: Case studies with sparse probing.
-\newblock \emph{arXiv preprint arXiv:2305.01610}, 2023.
+\newblock \emph{arXiv preprint}, 2023. \newblock \href{https://arxiv.org/abs/2305.01610}{arXiv:2305.01610}.
 
 \bibitem{perez2023discovering}
-Ethan Perez, Sam Ringer, Kamil\.e Luko\v{s}i\={u}t\.e, Karina Nguyen, Edwin Chen, Scott Heiner, Craig Pettit, Catherine Olsson, Sandipan Kundu, Saurav Kadavath, Andy Jones, Anna Chen, Ben Mann, Brian Israel, Bryan Seethor, Cameron McKinnon, Christopher Olah, Da Yan, Daniela Amodei, Dario Amodei, Dawn Drain, Dustin Li, Eli Tran-Johnson, Guro Khundadze, Jackson Kernion, James Landis, Jamie Kerr, Jared Mueller, Jeeyoon Hyun, Joshua Landau, Kamal Ndousse, Landon Goldberg, Liane Lovitt, Martin Lucas, Michael Sellitto, Miranda Zhang, Neerav Kingsland, Nelson Elhage, Nicholas Joseph, Noem\'i Mercado, Nova DasSarma, Oliver Rausch, Robin Larson, Sam McCandlish, Scott Johnston, Shauna Kravec, Sheer El Showk, Tamera Lanham, Timothy Telleen-Lawton, Tom Brown, Tom Henighan, Tristan Hume, Yuntao Bai, Zac Hatfield-Dodds, Jack Clark, Samuel R. Bowman, Amanda Askell, Roger Grosse, Danny Hernandez, Deep Ganguli, Evan Hubinger, Nicholas Schiefer, and Jared Kaplan.
+Ethan Perez, Sam Ringer, Kamil\.e Luko\v{s}i\={u}t\.e, et~al.
 \newblock Discovering language model behaviors with model-written evaluations.
-\newblock In \emph{Findings of the Association for Computational Linguistics: ACL 2023 / arXiv:2212.09251}, 2023.
+\newblock In \emph{Findings of the Association for Computational Linguistics: ACL 2023}, 2023. \newblock \href{https://arxiv.org/abs/2212.09251}{arXiv:2212.09251}.
 
 \bibitem{sharma2024sycophancy}
-Mrinank Sharma, Meg Tong, Tomek Korbak, David Duvenaud, Amanda Askell, Samuel R. Bowman, Esin Durmus, Zac Hatfield-Dodds, Scott R. Johnston, Shauna Kravec, Timothy Maxwell, Sam McCandlish, Kamal Ndousse, Oliver Rausch, Nicholas Schiefer, Da Yan, Miranda Zhang, and Ethan Perez.
+Mrinank Sharma, Meg Tong, Tomek Korbak, et~al.
 \newblock Towards understanding sycophancy in language models.
-\newblock In \emph{International Conference on Learning Representations (ICLR) / arXiv:2310.13548}, 2024.
+\newblock In \emph{International Conference on Learning Representations (ICLR)}, 2024. \newblock \href{https://arxiv.org/abs/2310.13548}{arXiv:2310.13548}.
 
 \bibitem{shazeer2020glu}
 Noam Shazeer.
-\newblock GLU variants improve transformer.
-\newblock \emph{arXiv preprint arXiv:2002.05202}, 2020.
+\newblock {GLU} variants improve transformer.
+\newblock \emph{arXiv preprint}, 2020. \newblock \href{https://arxiv.org/abs/2002.05202}{arXiv:2002.05202}.
 
 \bibitem{yang2025qwen3}
-An Yang, Anfeng Li, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng, Bowen Yu, Chang Gao, Chengen Huang, Chenxu Lv, Chujie Zheng, Dayiheng Liu, Fan Zhou, Fei Huang, Feng Hu, Hao Ge, Haoran Wei, Huan Lin, Jialong Tang, Jian Yang, Jianhong Tu, Jianwei Zhang, Jianxin Yang, Jiaxi Yang, Jing Zhou, Jingren Zhou, Junyang Lin, Kai Dang, Keqin Bao, Kexin Yang, Le Yu, Lianghao Deng, Mei Li, Mingfeng Xue, Mingze Li, Pei Zhang, Peng Wang, Qin Zhu, Rui Men, Ruize Gao, Shixuan Liu, Shuang Luo, Tianhao Li, Tianyi Tang, Wenbiao Yin, Xingzhang Ren, Xinyu Wang, Xinyu Zhang, Xuancheng Ren, Yang Fan, Yang Su, Yichang Zhang, Yinger Zhang, Yu Wan, Yuqiong Liu, Zekun Wang, Zeyu Cui, Zhenru Zhang, Zhipeng Zhou, and Zihan Qiu.
-\newblock Qwen3 technical report.
-\newblock \emph{arXiv preprint arXiv:2505.09388}, 2025.
+An Yang, Anfeng Li, Baosong Yang, et~al.
+\newblock {Qwen3} technical report.
+\newblock \emph{arXiv preprint}, 2025. \newblock \href{https://arxiv.org/abs/2505.09388}{arXiv:2505.09388}.
 
 \bibitem{zou2023repe}
-Andy Zou, Long Phan, Sarah Chen, James Campbell, Phillip Guo, Richard Ren, Alexander Pan, Xuwang Yin, Mantas Mazeika, Ann-Kathrin Dombrowski, Shashwat Goel, Nathaniel Li, Michael J. Byun, Zifan Wang, Alex Mallen, Steven Basart, Sanmi Koyejo, Dawn Song, Matt Fredrikson, J. Zico Kolter, and Dan Hendrycks.
-\newblock Representation engineering: A top-down approach to AI transparency.
-\newblock \emph{arXiv preprint arXiv:2310.01405}, 2023.
+Andy Zou, Long Phan, Sarah Chen, et~al.
+\newblock Representation engineering: A top-down approach to {AI} transparency.
+\newblock \emph{arXiv preprint}, 2023. \newblock \href{https://arxiv.org/abs/2310.01405}{arXiv:2310.01405}.
 
 \end{thebibliography}
 

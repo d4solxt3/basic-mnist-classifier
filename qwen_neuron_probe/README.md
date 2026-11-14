@@ -14,6 +14,7 @@ of `Qwen/Qwen3-1.7B`.
 | `discover_neurons.py` | Stage 1: activations, Cohen's d, Westfall–Young max-statistic null |
 | `run_stage2.py` | Stage 2: residual-norm-calibrated additive push, random controls, fluency guard |
 | `make_tables.py` | Writes every number in the paper (`paper/generated/*.tex`) from `outputs/*.json` |
+| `make_figures.py` | Draws the result figures (`paper/figures/*.pdf`) from `outputs/*.json` |
 | `outputs/` | Raw results (`stage1_*.json`, `stage2_*.json`, `calibration.json`, `resources.json`, all generations) |
 | `RUNLOG.md` | Machine-written log of every run: commits, versions, timings, key metrics |
 | `paper/main.tex`, `paper/main.pdf` | Manuscript source (pdfLaTeX) and compiled PDF |
@@ -27,7 +28,8 @@ python extract_benchmark.py .        # optional: rebuild datasets/ from the pape
 python discover_neurons.py           # Stage 1  (~1 min on 4 CPU cores)
 python run_stage2.py                 # Stage 2  (~30 min on 4 CPU cores)
 python make_tables.py
-cd paper && pdflatex main && pdflatex main
+python make_figures.py              # needs matplotlib
+cd paper && pdflatex main && pdflatex main   # needs newtx, inconsolata, tikz (full TeX Live)
 ```
 
 The reported run used CPU only (4-core Xeon with AMX-BF16, BF16 weights). The model revision is pinned
