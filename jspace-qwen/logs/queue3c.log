@@ -456,3 +456,194 @@ confirmatory summary over seeds [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
 [sk16] prompt 170/512 T=128 rows=16 2.7s total=8.2min
 [sk16] prompt 180/512 T=128 rows=16 2.7s total=8.6min
 [sk16] prompt 190/512 T=128 rows=16 3.0s total=9.1min
+[sk16] prompt 200/512 T=128 rows=16 2.8s total=9.6min
+[sk16] prompt 210/512 T=128 rows=16 2.5s total=10.0min
+[sk16] prompt 220/512 T=128 rows=16 2.5s total=10.5min
+[sk16] prompt 230/512 T=128 rows=16 2.5s total=10.9min
+[sk16] prompt 240/512 T=128 rows=16 2.5s total=11.3min
+[sk16] prompt 250/512 T=128 rows=16 2.5s total=11.7min
+[sk16] prompt 260/512 T=128 rows=16 2.4s total=12.2min
+[sk16] prompt 270/512 T=128 rows=16 2.6s total=12.6min
+[sk16] prompt 280/512 T=128 rows=16 2.6s total=13.0min
+[sk16] prompt 290/512 T=128 rows=16 3.0s total=13.4min
+[sk16] prompt 300/512 T=128 rows=16 2.4s total=13.9min
+[sk16] prompt 310/512 T=128 rows=16 2.5s total=14.3min
+[sk16] prompt 320/512 T=128 rows=16 2.5s total=14.7min
+[sk16] prompt 330/512 T=128 rows=16 2.4s total=15.1min
+[sk16] prompt 340/512 T=128 rows=16 2.5s total=15.5min
+[sk16] prompt 350/512 T=128 rows=16 2.6s total=15.9min
+[sk16] prompt 360/512 T=128 rows=16 2.5s total=16.3min
+[sk16] prompt 370/512 T=128 rows=16 2.4s total=16.7min
+[sk16] prompt 380/512 T=128 rows=16 2.5s total=17.2min
+[sk16] prompt 390/512 T=128 rows=16 2.4s total=17.6min
+[sk16] prompt 400/512 T=128 rows=16 2.4s total=18.0min
+[sk16] prompt 410/512 T=128 rows=16 2.4s total=18.4min
+[sk16] prompt 420/512 T=128 rows=16 2.5s total=18.8min
+[sk16] prompt 430/512 T=128 rows=16 2.5s total=19.2min
+[sk16] prompt 440/512 T=128 rows=16 2.7s total=19.6min
+[sk16] prompt 450/512 T=128 rows=16 2.6s total=20.1min
+[sk16] prompt 460/512 T=128 rows=16 2.6s total=20.5min
+[sk16] prompt 470/512 T=128 rows=16 2.6s total=20.9min
+[sk16] prompt 480/512 T=128 rows=16 2.5s total=21.4min
+[sk16] prompt 490/512 T=128 rows=16 2.5s total=21.8min
+[sk16] prompt 500/512 T=128 rows=16 2.7s total=22.2min
+[sk16] prompt 510/512 T=128 rows=16 2.5s total=22.7min
+done: 512 prompts, 8192 VJP rows, 22.7 min
+=== 00:01:11 END rc=0
+=== 00:01:11 START S2
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 4253.50it/s]
+512 prompts, mean len 127.8
+[sk16w] prompt 1/512 T=128 rows=16 2.9s total=0.0min
+[sk16w] prompt 2/512 T=128 rows=16 3.3s total=0.1min
+[sk16w] prompt 3/512 T=128 rows=16 2.7s total=0.1min
+[sk16w] prompt 10/512 T=128 rows=16 2.7s total=0.5min
+[sk16w] prompt 20/512 T=128 rows=16 3.2s total=1.0min
+[sk16w] prompt 30/512 T=128 rows=16 2.9s total=1.5min
+[sk16w] prompt 40/512 T=128 rows=16 3.0s total=2.0min
+[sk16w] prompt 50/512 T=128 rows=16 2.9s total=2.4min
+[sk16w] prompt 60/512 T=128 rows=16 3.0s total=2.9min
+[sk16w] prompt 70/512 T=128 rows=16 3.2s total=3.4min
+[sk16w] prompt 80/512 T=128 rows=16 3.0s total=3.9min
+[sk16w] prompt 90/512 T=128 rows=16 3.1s total=4.3min
+[sk16w] prompt 100/512 T=128 rows=16 2.9s total=4.8min
+[sk16w] prompt 110/512 T=128 rows=16 3.1s total=5.3min
+[sk16w] prompt 120/512 T=128 rows=16 2.7s total=5.8min
+[sk16w] prompt 130/512 T=128 rows=16 2.9s total=6.2min
+[sk16w] prompt 140/512 T=128 rows=16 3.1s total=6.7min
+[sk16w] prompt 150/512 T=128 rows=16 2.7s total=7.1min
+[sk16w] prompt 160/512 T=128 rows=16 2.9s total=7.5min
+[sk16w] prompt 170/512 T=128 rows=16 2.8s total=8.0min
+[sk16w] prompt 180/512 T=128 rows=16 2.5s total=8.4min
+[sk16w] prompt 190/512 T=128 rows=16 2.9s total=8.9min
+[sk16w] prompt 200/512 T=128 rows=16 2.6s total=9.3min
+[sk16w] prompt 210/512 T=128 rows=16 2.8s total=9.8min
+[sk16w] prompt 220/512 T=128 rows=16 2.6s total=10.3min
+[sk16w] prompt 230/512 T=128 rows=16 3.2s total=10.7min
+[sk16w] prompt 240/512 T=128 rows=16 2.6s total=11.2min
+[sk16w] prompt 250/512 T=128 rows=16 3.1s total=11.6min
+[sk16w] prompt 260/512 T=128 rows=16 2.7s total=12.1min
+[sk16w] prompt 270/512 T=128 rows=16 2.5s total=12.6min
+[sk16w] prompt 280/512 T=128 rows=16 3.0s total=13.0min
+[sk16w] prompt 290/512 T=128 rows=16 3.2s total=13.5min
+[sk16w] prompt 300/512 T=128 rows=16 2.5s total=13.9min
+[sk16w] prompt 310/512 T=128 rows=16 2.9s total=14.4min
+[sk16w] prompt 320/512 T=128 rows=16 2.6s total=14.8min
+[sk16w] prompt 330/512 T=128 rows=16 2.6s total=15.3min
+[sk16w] prompt 340/512 T=128 rows=16 2.7s total=15.8min
+[sk16w] prompt 350/512 T=128 rows=16 3.2s total=16.2min
+[sk16w] prompt 360/512 T=128 rows=16 3.3s total=16.7min
+[sk16w] prompt 370/512 T=128 rows=16 2.7s total=17.2min
+[sk16w] prompt 380/512 T=128 rows=16 2.8s total=17.7min
+[sk16w] prompt 390/512 T=128 rows=16 3.2s total=18.1min
+[sk16w] prompt 400/512 T=128 rows=16 2.7s total=18.6min
+[sk16w] prompt 410/512 T=128 rows=16 3.1s total=19.0min
+[sk16w] prompt 420/512 T=128 rows=16 3.2s total=19.5min
+[sk16w] prompt 430/512 T=128 rows=16 3.0s total=20.0min
+[sk16w] prompt 440/512 T=128 rows=16 2.9s total=20.5min
+[sk16w] prompt 450/512 T=128 rows=16 2.7s total=21.0min
+[sk16w] prompt 460/512 T=128 rows=16 2.7s total=21.5min
+[sk16w] prompt 470/512 T=128 rows=16 2.4s total=21.9min
+[sk16w] prompt 480/512 T=128 rows=16 2.7s total=22.4min
+[sk16w] prompt 490/512 T=128 rows=16 2.5s total=22.9min
+[sk16w] prompt 500/512 T=128 rows=16 3.1s total=23.3min
+[sk16w] prompt 510/512 T=128 rows=16 2.5s total=23.8min
+done: 512 prompts, 8192 VJP rows, 23.9 min
+=== 00:25:10 END rc=0
+=== 00:25:10 START S3
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3938.21it/s]
+256 prompts, mean len 127.8
+[sk16id] prompt 1/256 T=128 rows=16 2.6s total=0.0min
+[sk16id] prompt 2/256 T=128 rows=16 3.0s total=0.1min
+[sk16id] prompt 3/256 T=128 rows=16 2.9s total=0.1min
+[sk16id] prompt 10/256 T=128 rows=16 2.6s total=0.5min
+[sk16id] prompt 20/256 T=128 rows=16 2.5s total=0.9min
+[sk16id] prompt 30/256 T=128 rows=16 2.4s total=1.4min
+[sk16id] prompt 40/256 T=128 rows=16 2.8s total=1.8min
+[sk16id] prompt 50/256 T=128 rows=16 2.9s total=2.2min
+[sk16id] prompt 60/256 T=128 rows=16 3.0s total=2.7min
+[sk16id] prompt 70/256 T=128 rows=16 2.8s total=3.2min
+[sk16id] prompt 80/256 T=128 rows=16 2.4s total=3.6min
+[sk16id] prompt 90/256 T=128 rows=16 2.4s total=4.0min
+[sk16id] prompt 100/256 T=128 rows=16 2.6s total=4.5min
+[sk16id] prompt 110/256 T=128 rows=16 2.8s total=4.9min
+[sk16id] prompt 120/256 T=128 rows=16 2.8s total=5.4min
+[sk16id] prompt 130/256 T=128 rows=16 2.8s total=5.8min
+[sk16id] prompt 140/256 T=128 rows=16 2.3s total=6.3min
+[sk16id] prompt 150/256 T=128 rows=16 2.7s total=6.7min
+[sk16id] prompt 160/256 T=128 rows=16 2.5s total=7.2min
+[sk16id] prompt 170/256 T=128 rows=16 2.7s total=7.6min
+[sk16id] prompt 180/256 T=128 rows=16 2.7s total=8.1min
+[sk16id] prompt 190/256 T=128 rows=16 2.5s total=8.5min
+[sk16id] prompt 200/256 T=128 rows=16 2.4s total=8.9min
+[sk16id] prompt 210/256 T=128 rows=16 2.7s total=9.4min
+[sk16id] prompt 220/256 T=128 rows=16 2.5s total=9.8min
+[sk16id] prompt 230/256 T=128 rows=16 2.5s total=10.2min
+[sk16id] prompt 240/256 T=128 rows=16 2.6s total=10.7min
+[sk16id] prompt 250/256 T=128 rows=16 2.5s total=11.1min
+done: 256 prompts, 4096 VJP rows, 11.3 min
+=== 00:36:36 END rc=0
+=== 00:36:36 START S4
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3637.99it/s]
+256 prompts, mean len 127.8
+[sk16none] prompt 1/256 T=128 rows=16 2.7s total=0.0min
+[sk16none] prompt 2/256 T=128 rows=16 2.7s total=0.1min
+[sk16none] prompt 3/256 T=128 rows=16 3.0s total=0.1min
+[sk16none] prompt 10/256 T=128 rows=16 2.9s total=0.5min
+[sk16none] prompt 20/256 T=128 rows=16 2.3s total=0.9min
+[sk16none] prompt 30/256 T=128 rows=16 3.1s total=1.4min
+[sk16none] prompt 40/256 T=128 rows=16 3.0s total=1.8min
+[sk16none] prompt 50/256 T=128 rows=16 2.7s total=2.3min
+[sk16none] prompt 60/256 T=128 rows=16 2.9s total=2.7min
+[sk16none] prompt 70/256 T=128 rows=16 2.9s total=3.2min
+[sk16none] prompt 80/256 T=128 rows=16 2.6s total=3.6min
+[sk16none] prompt 90/256 T=128 rows=16 3.0s total=4.1min
+[sk16none] prompt 100/256 T=128 rows=16 2.5s total=4.5min
+[sk16none] prompt 110/256 T=128 rows=16 2.4s total=5.0min
+[sk16none] prompt 120/256 T=128 rows=16 2.5s total=5.4min
+[sk16none] prompt 130/256 T=128 rows=16 2.4s total=5.9min
+[sk16none] prompt 140/256 T=128 rows=16 2.5s total=6.4min
+[sk16none] prompt 150/256 T=128 rows=16 2.5s total=6.8min
+[sk16none] prompt 160/256 T=128 rows=16 2.5s total=7.2min
+[sk16none] prompt 170/256 T=128 rows=16 2.4s total=7.7min
+[sk16none] prompt 180/256 T=128 rows=16 2.9s total=8.1min
+[sk16none] prompt 190/256 T=128 rows=16 2.7s total=8.6min
+[sk16none] prompt 200/256 T=128 rows=16 2.4s total=9.0min
+[sk16none] prompt 210/256 T=128 rows=16 2.7s total=9.5min
+[sk16none] prompt 220/256 T=128 rows=16 2.4s total=9.9min
+[sk16none] prompt 230/256 T=128 rows=16 2.5s total=10.4min
+[sk16none] prompt 240/256 T=128 rows=16 2.7s total=10.8min
+[sk16none] prompt 250/256 T=128 rows=16 2.6s total=11.2min
+done: 256 prompts, 4096 VJP rows, 11.5 min
+=== 00:48:13 END rc=0
+=== 00:48:13 START CU
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3484.83it/s]
+exact_n1         rows=   1024 recall@10 filt=0.252 all=0.215 err={7: 0.9338365197181702, 14: 0.736618161201477, 21: 0.40541785955429077}
+exact_n2         rows=   2048 recall@10 filt=0.296 all=0.244 err={7: 0.8358396887779236, 14: 0.6504371762275696, 21: 0.34988322854042053}
+exact_n4         rows=   4096 recall@10 filt=0.330 all=0.273 err={7: 0.7424616813659668, 14: 0.5504480600357056, 21: 0.2872644364833832}
+exact_n8         rows=   8192 recall@10 filt=0.323 all=0.269 err={7: 0.647498607635498, 14: 0.47104886174201965, 21: 0.248959019780159}
+exact_n16        rows=  16384 recall@10 filt=0.325 all=0.265 err={7: 0.5892931818962097, 14: 0.44523921608924866, 21: 0.2429046332836151}
+exact_n32        rows=  32768 recall@10 filt=0.319 all=0.258 err={}
+sk16_n16         rows=    256 recall@10 filt=0.000 all=0.000 err={7: 2544.98291015625, 14: 2407.019287109375, 21: 1751.7591552734375}
+sk16_n32         rows=    512 recall@10 filt=0.000 all=0.000 err={7: 3697.05419921875, 14: 3568.068115234375, 21: 2564.072998046875}
+sk16_n64         rows=   1024 recall@10 filt=0.000 all=0.000 err={7: 3242.755126953125, 14: 3102.857421875, 21: 2266.158203125}
+sk16_n128        rows=   2048 recall@10 filt=0.000 all=0.000 err={7: 1726.4097900390625, 14: 1636.4832763671875, 21: 1195.95458984375}
+sk16_n256        rows=   4096 recall@10 filt=0.000 all=0.000 err={7: 914.5465698242188, 14: 863.1851806640625, 21: 632.5504760742188}
+sk16_n512        rows=   8192 recall@10 filt=0.000 all=0.000 err={7: 517.7408447265625, 14: 485.4883728027344, 21: 355.4581604003906}
+sk16w_n16        rows=    256 recall@10 filt=0.000 all=0.000 err={7: 2211.759033203125, 14: 2126.7314453125, 21: 1575.3746337890625}
+sk16w_n32        rows=    512 recall@10 filt=0.000 all=0.000 err={7: 2914.42919921875, 14: 2805.8916015625, 21: 2078.754638671875}
+sk16w_n64        rows=   1024 recall@10 filt=0.000 all=0.000 err={7: 2414.413818359375, 14: 2323.03515625, 21: 1722.2449951171875}
+sk16w_n128       rows=   2048 recall@10 filt=0.000 all=0.000 err={7: 1513.567138671875, 14: 1454.410888671875, 21: 1078.71728515625}
+sk16w_n256       rows=   4096 recall@10 filt=0.000 all=0.000 err={7: 854.2777709960938, 14: 821.82861328125, 21: 611.791748046875}
+sk16w_n512       rows=   8192 recall@10 filt=0.000 all=0.000 err={7: 453.24249267578125, 14: 435.5328674316406, 21: 323.1662902832031}
+sk16id_n16       rows=    256 recall@10 filt=0.117 all=0.072 err={7: 2.38081431388855, 14: 2.1679208278656006, 21: 1.4388848543167114}
+sk16id_n32       rows=    512 recall@10 filt=0.252 all=0.157 err={7: 1.6459566354751587, 14: 1.4820829629898071, 21: 0.9935820698738098}
+sk16id_n64       rows=   1024 recall@10 filt=0.288 all=0.186 err={7: 1.2449549436569214, 14: 1.0964215993881226, 21: 0.7250789999961853}
+sk16id_n128      rows=   2048 recall@10 filt=0.291 all=0.205 err={7: 0.9275222420692444, 14: 0.8106241226196289, 21: 0.5382890701293945}
+sk16id_n256      rows=   4096 recall@10 filt=0.320 all=0.226 err={7: 0.69777512550354, 14: 0.5893428325653076, 21: 0.3849462866783142}
+sk16none_n16     rows=    256 recall@10 filt=0.022 all=0.009 err={7: 2.396709442138672, 14: 2.2893075942993164, 21: 2.1832780838012695}
+sk16none_n32     rows=    512 recall@10 filt=0.097 all=0.058 err={7: 1.6599370241165161, 14: 1.5673282146453857, 21: 1.5183922052383423}
+sk16none_n64     rows=   1024 recall@10 filt=0.184 all=0.102 err={7: 1.2549943923950195, 14: 1.1508444547653198, 21: 1.0849063396453857}
+sk16none_n128    rows=   2048 recall@10 filt=0.235 all=0.153 err={7: 0.9345611333847046, 14: 0.8485434651374817, 21: 0.7850160002708435}
+sk16none_n256    rows=   4096 recall@10 filt=0.277 all=0.201 err={7: 0.7018507719039917, 14: 0.6145978569984436, 21: 0.5579614639282227}
+=== 00:52:51 END rc=0
+=== QUEUE3C DONE

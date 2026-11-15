@@ -28,7 +28,13 @@ is unbiased for E[J_n] whenever J0 is independent of (Q_n, prompt n), because
 * ``cv="none"``     J0 = 0        (plain sketch)
 * ``cv="identity"`` J0 = I        (the exactly known residual path)
 * ``cv="online"``   J0 = running mean of the previous estimates (martingale
-  control variate: conditionally unbiased term by term)
+  control variate: conditionally unbiased term by term). Unstable for
+  n < (d/K - 2)/2: the running-mean error is re-amplified by (d/K - 1) at every
+  step (paper, Proposition 4); its error peaks near n = d/K / 2.
+* ``cv="shrink"``   J0 = I + lambda_n (running mean - I), lambda_n = n / (n + kappa),
+  kappa = d/K by default: the online control variate shrunk toward the identity
+  until the running mean is better than I. Never worse than J0 = I under the
+  variance recursion; still unbiased.
 * ``W = I``         uniform probes;  ``W = (A^T A + eps I)^{1/4}`` with
   A = W_U diag(g) concentrates probes on the output directions the unembedding
   reads ("readout-aware" importance sketch).
@@ -207,7 +213,7 @@ class FitState:
 def fit(model: LensModel, prompts_ids: Sequence[torch.Tensor], *, source_layers: Sequence[int] | None = None,
         target_layer: int | None = None, method: str = "exact", K: int = 16, cv: str = "online",
         W: torch.Tensor | None = None, Winv: torch.Tensor | None = None, J_pilot: dict | None = None,
-        dim_batch: int = 16, seed: int = 0, snapshots: Sequence[int] = (), snapshot_dir: str | None = None,
+        kappa: float | None = None, dim_batch: int = 16, seed: int = 0, snapshots: Sequence[int] = (), snapshot_dir: str | None = None,
         save_per_prompt_layers: Sequence[int] = (), per_prompt_path: str | None = None,
         tag: str = "", verbose: bool = True, router=None, lrp: bool = False, targets: str = "all") -> FitState:
     L, d = model.n_layers, model.d_model
@@ -245,6 +251,10 @@ def fit(model: LensModel, prompts_ids: Sequence[torch.Tensor], *, source_layers:
                     J0 = eye
                 elif cv == "online":
                     J0 = eye if st.n == 0 else st.sum_[l] / st.n
+                elif cv == "shrink":
+                    kap = d / K if kappa is None else kappa
+                    lam = st.n / (st.n + kap)
+                    J0 = eye if st.n == 0 else eye + lam * (st.sum_[l] / st.n - eye)
                 elif cv == "pilot":
                     J0 = J_pilot[l]
                 else:

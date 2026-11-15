@@ -358,36 +358,87 @@ if ist and "linear_jlens|country" in ist["per_layer"]:
     save(fig, "fig_ignition")
 
 # ================================================================ Figure: sketch estimators
-cur, rho = load("curves.json"), load("rho.json")
+cur, rho, th = load("curves.json"), load("rho.json"), load("sketch_theory.json")
 if cur:
-    lab = {"exact": "exact", "sk16": "sketch", "sk16w": "shaped", "sk16id": "identity-cv", "sk16none": "no-cv"}
-    nice = {"exact": "exact estimator", "sketch": "sketch + online CV", "shaped": "shaped sketch + online CV",
-            "identity-cv": "sketch + identity CV", "no-cv": "sketch, no CV"}
-    fig, axes = plt.subplots(1, 2, figsize=(FULL, 2.4))
-    for tag, name in lab.items():
-        rows = sorted([v for v in cur.values() if isinstance(v, dict) and v.get("tag") == tag],
+    EST = {  # tag: (label, colour, linestyle)
+        "exact": ("exact", INK, (0, (3, 1.5))),
+        "sk16": ("online CV", SLOT[0], "-"),
+        "sk16sh": ("shrunk online CV", SLOT[7], "-"),
+        "sk16id": ("identity CV", SLOT[2], "-"),
+        "sk16idw": ("identity CV, shaped", SLOT[6], "-"),
+        "sk16none": ("no CV", SLOT[1], "-"),
+    }
+    ERRL = ["7", "14", "21"]
+
+    def rows_of(tag):
+        return sorted([v for v in cur.values() if isinstance(v, dict) and v.get("tag") == tag],
                       key=lambda v: v["vjp_rows"])
-        if not rows:
-            continue
-        ls = (0, (3, 1.5)) if name == "exact" else "-"
-        x = [v["vjp_rows"] for v in rows]
-        axes[0].plot(x, [100 * v["recall10_all"]["mean"] for v in rows], color=LENS[name], marker="o", ms=2.6,
-                     ls=ls, label=nice[name])
-        er = [(v["vjp_rows"], np.mean(list(v["dict_err"].values()))) for v in rows if "dict_err" in v]
-        if er:
-            axes[1].plot(*zip(*er), color=LENS[name], marker="o", ms=2.6, ls=ls, label=nice[name])
-    for k, (ax, yl, t) in enumerate(zip(axes, ("recall@10 (%, all items)", r"relative error of $AJ$"),
-                                        ("lens quality vs compute", "dictionary error vs compute"))):
-        ax.set_xscale("log")
-        ax.set_xlabel("backward VJP rows (compute)")
-        ax.set_ylabel(yl)
+
+    fig, axes = plt.subplots(1, 3, figsize=(FULL, 2.35), gridspec_kw={"width_ratios": [1.15, 0.8, 1.15]})
+    # (a) error of AJ vs prompts: the online control variate diverges, as Proposition 4 predicts
+    ax = axes[0]
+    for tag in ("sk16", "sk16sh", "sk16id"):
+        rs = [v for v in rows_of(tag) if "dict_err" in v]
+        if rs:
+            lab, col, ls = EST[tag]
+            ax.plot([v["n"] for v in rs], [np.mean([v["dict_err"][l] for l in ERRL]) for v in rs],
+                    color=col, ls=ls, marker="o", ms=2.6, label=lab)
+    if th:
+        ns = sorted(int(n) for n in th["theory"]["7"]["online_v"])
+        thy = [np.mean([np.sqrt(th["theory"][l]["online_v"][str(n)] / th["stats"][l]["J2"]) for l in ERRL])
+               for n in ns]
+        ax.plot(ns, thy, color=GREY, ls=(0, (1, 1.2)), lw=1.1, label="online CV, theory")
+        ax.axvline(th["stats"]["7"]["critical_n"], color=MUTED, lw=0.6, ls=(0, (2, 2)))
+        ax.text(th["stats"]["7"]["critical_n"] * 1.08, 2e-1, r"$n^*$", color=INK2, fontsize=7)
+    ax.set_xscale("log", base=2)
+    ax.set_yscale("log")
+    ax.set_xlim(0.8, 700)
+    ax.set_xlabel("prompts $n$")
+    ax.set_ylabel(r"relative error of $AJ$")
+    grid(ax)
+    panel(ax, "a", "error vs prompts")
+    ax.legend(loc="lower left", fontsize=6.3, handlelength=1.4)
+    # (b) shaping: measured vs predicted noise-variance ratio, and the weights-only rho(A)
+    ax = axes[1]
+    if th and "noise_check" in th:
+        nc = th["noise_check"]
+        xs = np.arange(len(ERRL))
+        for j, n in enumerate((16, 32)):
+            a_, b_ = nc.get(f"sk16idw_n{n}"), nc.get(f"sk16id_n{n}")
+            if not (a_ and b_):
+                continue
+            meas = [(a_[l]["meas_readout_rel"] / b_[l]["meas_readout_rel"]) ** 2 for l in ERRL]
+            pred = [(a_[l]["pred_readout_rel"] / b_[l]["pred_readout_rel"]) ** 2 for l in ERRL]
+            off = -0.12 + 0.24 * j
+            ax.scatter(xs + off, meas, s=16, color=SLOT[6], zorder=3, edgecolor="white", lw=0.6,
+                       marker="o" if n == 32 else "s", label=f"measured, $n$={n}")
+            ax.scatter(xs + off, pred, s=18, facecolor="none", edgecolor=INK, lw=0.7, zorder=4,
+                       marker="o" if n == 32 else "s", label="exact expectation" if j == 1 else None)
+        if rho:
+            ax.axhline(rho["rho_ideal"], color=GREY, lw=0.9, ls=(0, (3, 1.5)))
+            ax.text(len(ERRL) - 0.55, rho["rho_ideal"] - 0.012, rf"$\rho(A)$ = {rho['rho_ideal']:.3f}",
+                    ha="right", va="top", fontsize=6.5, color=INK2)
+        ax.set_xticks(xs, [f"layer {l}" for l in ERRL])
+        ax.set_xlim(-0.5, len(ERRL) - 0.5)
+        ax.set_ylim(0.68, 0.92)
+        ax.set_ylabel("noise variance, shaped / uniform")
         grid(ax)
-        panel(ax, "ab"[k], t)
-    axes[1].set_yscale("log")
-    axes[0].legend(loc="lower right", fontsize=6.5)
-    if rho:
-        axes[1].text(0.98, 0.95, rf"predicted shaping factor $\rho(A)$ = {rho['rho_ideal']:.3f}",
-                     transform=axes[1].transAxes, ha="right", va="top", fontsize=6.5, color=INK2)
-    fig.subplots_adjust(wspace=0.3)
+        ax.legend(loc="upper left", fontsize=6.1, handlelength=1.0, ncol=1)
+    panel(ax, "b", "probe shaping")
+    # (c) lens quality vs compute (recall@10, correctness-filtered items)
+    ax = axes[2]
+    for tag in ("exact", "sk16id", "sk16idw", "sk16sh", "sk16none"):
+        rs = rows_of(tag)
+        if rs:
+            lab, col, ls = EST[tag]
+            ax.plot([v["vjp_rows"] for v in rs], [100 * v["recall10_filtered"]["mean"] for v in rs],
+                    color=col, ls=ls, marker="o", ms=2.6, label=lab)
+    ax.set_xscale("log", base=2)
+    ax.set_xlabel("backward VJP rows")
+    ax.set_ylabel("recall@10 (%)")
+    grid(ax)
+    panel(ax, "c", "recall vs compute")
+    ax.legend(loc="lower right", fontsize=6.3, handlelength=1.4)
+    fig.subplots_adjust(wspace=0.42)
     save(fig, "fig_curves")
 print("done")

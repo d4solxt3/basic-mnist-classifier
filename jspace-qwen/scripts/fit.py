@@ -28,7 +28,8 @@ ap.add_argument("--method", choices=["exact", "sketch"], default="exact")
 ap.add_argument("--n", type=int, default=64)
 ap.add_argument("--offset", type=int, default=0, help="first corpus record to use")
 ap.add_argument("--K", type=int, default=16)
-ap.add_argument("--cv", default="online", choices=["none", "identity", "online"])
+ap.add_argument("--cv", default="online", choices=["none", "identity", "online", "shrink"])
+ap.add_argument("--kappa", type=float, default=None, help="shrink control variate: lambda_n = n/(n+kappa); default d/K")
 ap.add_argument("--shaped", action="store_true", help="readout-aware probe shaping W=(A^T A)^(1/4)")
 ap.add_argument("--dim-batch", type=int, default=16)
 ap.add_argument("--seq", type=int, default=128)
@@ -55,7 +56,7 @@ print(f"{len(prompts)} prompts, mean len {sum(p.shape[1] for p in prompts) / len
 W = Winv = None
 if a.shaped:
     W, Winv = readout_shaping(model.unembed_matrix())
-st = fit(model, prompts, method=a.method, K=a.K, cv=a.cv, W=W, Winv=Winv, dim_batch=a.dim_batch,
+st = fit(model, prompts, method=a.method, K=a.K, cv=a.cv, W=W, Winv=Winv, kappa=a.kappa, dim_batch=a.dim_batch,
          seed=a.seed, snapshots=a.snapshots, snapshot_dir=a.out, tag=a.tag,
          save_per_prompt_layers=a.per_prompt_layers,
          per_prompt_path=os.path.join(a.out, f"{a.tag}_per_prompt.pt") if a.per_prompt_layers else None,

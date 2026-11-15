@@ -26,6 +26,7 @@
 \setlist{nosep,leftmargin=*}
 
 \newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
 \newtheorem{observation}{Observation}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
@@ -324,20 +325,56 @@ $\E[\hat J_n\mid J_0]=\E[J_n]$.
 $\E[QQ^{\top}]=\frac{K}{d}I$ for a Haar $K$-frame, so
 $\E[\frac{d}{K}W^{-1}QQ^{\top}W(J_n-J_0)]=J_n-J_0$.
 \end{proof}
-This holds for any $J_0$ built from earlier prompts and probes, so the running mean of earlier
-estimates (an online control variate) keeps every term conditionally unbiased.
+This holds for any $J_0$ built from earlier prompts and probes, including the running mean of
+earlier estimates (an \emph{online} control variate). Unbiasedness says nothing about variance,
+however, and \cref{prop:online} shows that the online control variate's variance explodes.
 
 \begin{proposition}[Variance, $W=I$]
+\label{prop:var}
 For any $M\in\R^{d\times d}$, $\E\|\frac{d}{K}QQ^{\top}M-M\|_F^2=(\frac{d}{K}-1)\|M\|_F^2$. Each prompt
 therefore contributes variance $\sigma^2+(\frac{d}{K}-1)\E\|J_n-J_0\|_F^2$, where
 $\sigma^2=\E\|J_n-\E J_n\|_F^2$.
 \end{proposition}
-Without a control variate the sketch pays for the large mean $\|\E J_n\|^2$; $J_0=I$ removes the
-identity exactly; and as the online $J_0$ converges the per-prompt cost approaches
-$\frac{d}{K}\sigma^2$, which matches the exact estimator at equal VJP budget. Sketching therefore buys
-anytime estimates, $K/d$-times-cheaper access to distinct contexts, and the option to shape probes.
+Without a control variate the sketch pays for the large mean $\|\E J_n\|^2$, and $J_0=I$ removes the
+identity exactly. Neither choice beats the exact estimator:
+
+\begin{corollary}[No sketch beats the exact estimator at equal cost]
+\label{cor:cost}
+With independent prompts and a fixed $J_0$, a budget of $R$ VJP rows buys $R/d$ exact prompts or $R/K$
+sketched ones, with variance $\sigma^2 d/R$ and $\frac{d}{R}\big[\sigma^2+(1-\frac{K}{d})\|\E J_n-J_0\|_F^2\big]$
+respectively. Their ratio, $1+(1-\frac{K}{d})\|\E J_n-J_0\|_F^2/\sigma^2$, is at least 1.
+\end{corollary}
+For Qwen3-0.6B with $J_0=I$ the ratio is 2.1, 3.3 and 5.7 at layers 7, 14 and 21 (\cref{sec:sketch}).
+Under independent prompts, sketching can only give \emph{anytime} estimates below one exact prompt's
+$d$ rows, spread a budget over $d/K$ times as many \emph{distinct} prompts (which helps when nearby
+prompts are correlated), and \emph{shape} the probes (\cref{prop:shape}).
+
+\begin{proposition}[The online control variate is unstable]
+\label{prop:online}
+Let $W=I$, $c=\frac{d}{K}-1$, $J_0=I$ for the first prompt and $J_0=\bar J_n$, the mean of the first $n$
+estimates, afterwards. Then $v_n=\E\|\bar J_n-\E J_n\|_F^2$ satisfies
+\begin{equation}
+v_1=(c+1)\sigma^2+c\|\E J_n-I\|_F^2,\qquad
+v_{n+1}=\frac{(n^2+c)\,v_n+(c+1)\sigma^2}{(n+1)^2}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+The new estimate's error is $(J_{n+1}-\E J)+(\frac{d}{K}QQ^{\top}-I)(J_{n+1}-\bar J_n)$. Conditional on
+the past, both terms have mean zero and are uncorrelated with each other and with $\bar J_n-\E J$.
+\Cref{prop:var} gives the second term's variance, $c(\sigma^2+v_n)$. Averaging into the running mean
+gives the recursion.
+\end{proof}
+The coefficient $(n^2+c)/(n+1)^2$ exceeds 1 while $n<(c-1)/2$. Each sketched prompt re-amplifies the
+current error of $J_0$ by $c$, and early on the running mean holds too few prompts to dilute it.
+The error therefore \emph{grows} for the first $\approx d/2K$ prompts. For $d/K=64$ it grows through
+$n=31$, by $1.8\times10^5$ in variance (430 in norm), and only then decays.
+\emph{Fix:} shrink the control variate toward the identity, $J_0=I+\lambda_n(\bar J_n-I)$ with
+$\lambda_n=n/(n+d/K)$. The coefficient becomes $(n^2+c\lambda_n^2)/(n+1)^2<1$ for every $n$, so the error
+never grows, and $J_0$ still converges to the lens. We derived this fix after the online control
+variate diverged, so its test is exploratory.
 
 \begin{proposition}[Readout-aware shaping]
+\label{prop:shape}
 Readouts use only $AJ$, with $A=W_U\,\mathrm{diag}(g)$. For Gaussian probes the leading term of
 $\E\|A(\hat J_n-J_n)\|_F^2$ is $K^{-1}\tr(WMM^{\top}W)\,\tr(W^{-1}A^{\top}AW^{-1})$ with $M=J_n-J_0$.
 Under an isotropic prior $MM^{\top}\propto I$ it is minimised by $W=(A^{\top}A)^{1/4}$, which reduces
