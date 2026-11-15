@@ -69,9 +69,12 @@ two-weight mix of the LRP lens with a new \emph{broadcast lens} that keeps only 
 later positions ($+0.6$). In round 3 (twenty new splits) both tie J++, as does an LRP-broadcast mix:
 J++ is not beaten. Bagging halves J++'s overfitting to its 47 labelled items without raising held-out
 recall. The network sharpens the switch between competing concepts beyond a linear mix, but
-progressively through depth and equally in logit-lens readouts, not in a J-space band. We also document two implementation pitfalls in J++-style evaluations, and derive unbiased
-sketch estimators of the J-lens with a weights-only predictor of the benefit of readout-aware
-probes. Code, results, logs and pre-registrations are public.
+progressively through depth and equally in logit-lens readouts, not in a J-space band. We also document two implementation pitfalls in J++-style evaluations. Finally, our planned sketch
+estimator of the J-lens, with an online control variate, diverges, as a variance recursion we
+derive predicts; a shrunk control variate fixes it. Readout-aware probe shaping cuts sketch noise
+by the factor a weights-only formula predicts (0.74--0.81 measured against 0.764), but does not
+improve recall. With independent prompts, no unbiased sketch beats the exact estimator at equal cost.
+Code, results, logs and pre-registrations are public.
 \end{abstract}
 
 % =====================================================================
@@ -116,9 +119,12 @@ that a workspace reading identifies with availability.
 \item \textbf{Two pre-registered, multi-split tests of improvements over J++, with a negative
 result} (\cref{sec:round2,sec:round3}). Two candidates that met the criterion on five splits tie J++ on
 twenty more: J++ is not beaten, and five overlapping splits proved too few to claim an improvement.
-\item \textbf{Unbiased sketch estimators} of the J-lens (\cref{sec:sketch}): Haar-random probes, an
-exactly known identity path, an online control variate, and readout-aware probe shaping with a
-closed-form, weights-only predictor $\rho(A)$ of its benefit.
+\item \textbf{Sketch estimators, with a negative headline result} (\cref{sec:sketchmethod,sec:sketch}).
+Haar-random probes, the exactly known identity path, control variates and readout-aware probe shaping
+give unbiased estimators whose variance we derive. With independent prompts none beats the exact
+estimator at equal cost. The planned online control variate diverges, as our variance recursion
+predicts, and a shrunk version fixes it. A weights-only predictor $\rho(A)$ matches the measured
+gain from shaping, but shaping does not improve recall.
 \end{itemize}
 We report every comparison we ran, including those our methods lose. \Cref{tab:scorecard} summarises
 which claims carry over to 0.6B parameters, and \cref{fig:schematic} shows the lenses we compare.
@@ -874,9 +880,118 @@ confined to a J-space band.
 \subsection{Sketch estimators}
 \label{sec:sketch}
 
-\pending{Learning curves of the sketch estimators (online control variate, shaped probes, identity
-control variate, no control variate) against the exact estimator at equal numbers of backward passes,
-and the measured gain from shaping against the predicted $\rho(A)$.}
+All sketches use $K=16$ probes per prompt ($d/K=64$) and the same records and probe draws.
+Errors are the relative error of the dictionary $AJ$ at layers 7, 14 and 21 against an independent
+reference, the exact lens on records 16--31. That reference is itself noisy, which adds a floor
+shared by every estimator. Recall@10 is on correctness-filtered items.
+
+\paragraph{The planned estimator diverged.} The online control variate was our planned sketch, and
+it is unusable (\cref{tab:sketch}, \cref{fig:curves}a). Its dictionary error reached 2,600--3,700 times
+the lens's own norm at 32 prompts, and was still 355--518 at 512 prompts. Recall@10 was 0 at every
+budget up to 8,192 rows, and shaped probes did not rescue it (peak 2,100--2,900).
+\Cref{prop:online} explains the failure: each sketched prompt re-amplifies the running mean's error by
+63, so the error grows until $n\approx31$, where the measured peak lies. Three checks rule out an
+implementation bug.
+(i)~\emph{Replay.} Every sketch estimate is linear in $J_n$. From the stored exact $J_n$ of records
+0--31 and the same probes, we rebuild the saved snapshots at 16 and 32 prompts of all six sketch runs.
+They agree to within 3\% ($J_n$ is stored in half precision).
+(ii)~\emph{Monte Carlo.} With prompts resampled from the 32 (8 seeds, 512 prompts), the recursion of
+\cref{prop:online} predicts the online control variate's mean squared error to within 15\% at every
+$n$ from 1 to 512, across five orders of magnitude, and the identity control variate's to within 3\%.
+(iii)~\emph{Exact expectation.} For a fixed control variate and the actual prompts, Haar moments give
+the expected sketch noise in closed form. It matches the measured noise of the real-model runs to
+within 1.2\% at 16 prompts and 3\% at 32 (\cref{tab:noise}).
+
+\begin{table}[t]
+\centering
+\caption{Sketch estimators at a matched budget of 4,096 VJP rows (4 exact prompts or 256 sketched
+ones). Relative error of $AJ$ (lower is better) and recall@10 with 95\% bootstrap interval. CV:
+control variate.}
+\label{tab:sketch}
+\small
+\setlength{\tabcolsep}{3.6pt}
+\begin{tabular}{lcccccc}
+\toprule
+Estimator & prompts & err.\ L7 & err.\ L14 & err.\ L21 & recall@10 (\%) & all items (\%) \\
+\midrule
+exact & 4 & 0.742 & 0.550 & \textbf{0.287} & \textbf{33.0} [27.5, 38.2] & \textbf{27.3} \\
+sketch, no CV & 256 & 0.702 & 0.615 & 0.558 & 27.7 [21.9, 33.1] & 20.1 \\
+sketch, identity CV & 256 & 0.698 & 0.589 & 0.385 & 32.0 [27.5, 37.0] & 22.6 \\
+\quad + shaped probes & 256 & \textbf{0.642} & 0.538 & 0.348 & 29.0 [23.5, 34.2] & 21.9 \\
+shrunk online CV$^\dagger$ & 256 & 0.658 & \textbf{0.512} & 0.300 & 32.1 [27.0, 36.9] & 25.1 \\
+online CV (planned) & 256 & 915 & 863 & 633 & 0.0 & 0.0 \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\raggedright\footnotesize $^\dagger$Derived after the online control variate diverged; one exploratory run.
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Sketch noise $\|A(\hat J-\bar J_n)\|/\|A\bar J_n\|$ after $n=32$ prompts, where $\bar J_n$ is the
+exact lens on the same prompts: exact expectation / measured.}
+\label{tab:noise}
+\small
+\begin{tabular}{lccc}
+\toprule
+Estimator & layer 7 & layer 14 & layer 21 \\
+\midrule
+no control variate & 1.839 / 1.785 & 1.646 / 1.623 & 1.547 / 1.537 \\
+identity control variate & 1.823 / 1.770 & 1.557 / 1.533 & 1.013 / 0.998 \\
+identity, shaped probes & 1.605 / 1.592 & 1.360 / 1.354 & 0.884 / 0.879 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_curves.pdf}
+\caption{Sketch estimators. (a) Dictionary error against prompts, averaged over layers 7, 14 and 21. The
+online control variate follows the variance recursion of \cref{prop:online} (dotted) and peaks near
+$n^\ast=31$. The identity and shrunk control variates are stable. (b) Noise variance of shaped probes
+relative to uniform ones: measured on the real-model runs (filled), its exact expectation for the same
+prompts (open), and the weights-only prediction $\rho(A)$ (dashed). (c) Recall@10 against backward VJP
+rows. The online control variate scores 0 at every budget and is not shown.}
+\label{fig:curves}
+\end{figure}
+
+\paragraph{Shaping works as predicted but does not improve recall.} Shaped probes cut the sketch-noise
+variance by a factor of 0.74--0.81 across layers and budgets (\cref{fig:curves}b). The exact expectation
+for these prompts is 0.76--0.78. The weights-only predictor, $\rho(A)=0.764$, falls in the same range.
+With the measured second moment of $J_n-I$ in place of an isotropic prior, the factor is 0.760--0.775,
+so isotropy is a good approximation here. At 256 prompts shaping lowers the dictionary error by
+8--10\% at every layer, but recall@10 does not improve (29.0\% against 32.0\%; the intervals overlap).
+One untested explanation is that the readout normalises $Jh$ before $W_U$. Noise that $W^{-1}$
+amplifies in directions $A$ barely reads still enters that norm.
+
+\paragraph{Sketches against the exact estimator.} \Cref{cor:cost} predicts that, with independent
+prompts and $J_0=I$, the exact estimator has 2.1, 3.3 and 5.7 times less variance at equal cost. The
+Monte Carlo, which resamples prompts independently, agrees: at 4,096 rows the identity control
+variate's squared error is 2.1, 3.5 and 6.7 times the exact estimator's. On the real corpus the gap
+nearly vanishes (\cref{tab:sketch}). At equal rows both the identity and shrunk sketches beat the exact
+estimator at layer 7, and the shrunk sketch also beats it at layer 14. At layer 21 the exact estimator
+stays ahead.
+
+The cause is that consecutive WikiText records are correlated. Jacobians of adjacent records are
+25--38\% closer, in squared distance, than those of records at least 8 apart. The difference between
+the exact lenses from records 0--15 and 16--31 is 2.0--2.5 times its prediction under independence.
+The exact estimator's four prompts are four consecutive records, while the sketch spreads the same
+budget over 256.
+
+Recall@10 saturates early in any case. The exact estimator reaches 32--33\% at 4 prompts and stays
+there through 32 prompts. The identity and shrunk sketches reach the same level at the same 4,096
+rows.
+
+\paragraph{The shrunk control variate (exploratory).} It is stable. At 256 prompts its dictionary
+error is 6--22\% below the identity control variate's, and its all-items recall is 25.1\% against
+22.6\%. In the Monte Carlo it is never more than 1\% worse than the identity control variate at any
+$n$. At 512 prompts it reaches 0.64, 0.50 and 0.36 of that variate's variance, as the recursion
+predicts (0.66, 0.49, 0.36).
+
+\paragraph{Practical upshot.} To fit a J-lens, use the exact estimator on prompts drawn from many
+documents. A sketch helps when the budget is below one exact prompt, or when only correlated prompts
+are cheap. In that case use the identity or shrunk control variate, never the plain running mean.
 
 % =====================================================================
 \section{Negative results}
@@ -940,7 +1055,10 @@ code line by line where possible, and choices not pinned down by released code (
 the band rule, the ignition statistic, the final-norm gain in J-lens directions) are stated explicitly.
 Rounds 2 and 3 vary the split (26 seeds) but not the fitting prompts, the router's $k$-means or the
 probe draws, and all splits draw on the same 250 items; the out-of-pool items are a different
-population, not a replication on new items. Finally, we test operational consequences and make no claim about consciousness.
+population, not a replication on new items. Each sketch variant ran once, with one probe seed and
+one record order, against a reference lens from only 16 records, and the theory checks use the 32
+records whose per-prompt Jacobians were stored; the shrunk control variate was derived post hoc and
+tested once. Finally, we test operational consequences and make no claim about consciousness.
 
 \section{Conclusion}
 
@@ -949,7 +1067,10 @@ logit lens, but the clean late-band workspace of large models does not: causal l
 through mid-depth. J++'s gain shrinks to about 7 points, two-thirds of it from its LRP backward pass;
 two pre-registered rounds found nothing that beats it, and a label-free routed lens comes within two
 points. The network sharpens competing concepts into a categorical choice, but
-progressively through depth rather than in a band. \pending{Sketch estimator results.}
+progressively through depth rather than in a band. Our planned sketch estimator diverged, exactly
+as a variance recursion predicts, and a shrunk control variate fixes it. Probe shaping cut sketch noise
+by the factor a weights-only formula predicts but did not improve recall, and with independent
+prompts no sketch beats the exact estimator at equal cost.
 
 \section*{Reproducibility}
 Code, results, logs, pre-registrations and the exact commands are in the project repository
@@ -987,6 +1108,8 @@ Swap windows (exploratory) & \texttt{run\_windows.sh} (\texttt{swaps\_win*.json}
 Ignition and control & \texttt{ignition.py}, \texttt{ignition\_stats.py} (\texttt{ignition\_main*.json}) & 20 min per run \\
 Round 3 & \texttt{fit.py --targets later --lrp}, \texttt{jpp\_splits.py} (\texttt{jpp\_splits\_round3.json}) & 2 h \\
 Sketch estimators & \texttt{fit.py --method sketch}, \texttt{curves.py} (\texttt{curves.json}) & 1.5 h \\
+Shaped and shrunk sketches (post hoc) & \texttt{run\_queue3d.sh} (\texttt{curves.json}) & 25 min \\
+Sketch theory checks & \texttt{sketch\_theory.py} (\texttt{sketch\_theory.json}) & 3 min \\
 Shaping predictor $\rho(A)$ & \texttt{rho.py} (\texttt{rho.json}) & 1 min \\
 Figures & \texttt{figures.py}; \texttt{figures/schematic.tex} & 1 min \\
 \bottomrule

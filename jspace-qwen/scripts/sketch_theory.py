@@ -9,7 +9,7 @@ sketch estimator offline, without running the model.
    sk16w_n16/n32 from the stored J_n and the same Haar frames (seed 1). Compare
    them with the snapshots that fit.py saved. Agreement means the divergence is
    a property of the estimator and not a bug in the VJP code.
-2. Theory (W = I, Frobenius norm; Proposition 4 of the paper). Let v_n =
+2. Theory (W = I, Frobenius norm; Proposition 3 of the paper). Let v_n =
    E||Jbar_n - J||^2 be the running-mean error and c = d/K - 1. Then
        v_1     = (c+1) s2 + c ||J - I||^2
        v_{n+1} = ((n^2 + c) v_n + (c+1) s2) / (n+1)^2,

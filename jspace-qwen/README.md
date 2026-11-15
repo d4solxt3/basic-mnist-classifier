@@ -60,6 +60,21 @@ wins; `results/jpp_splits_round3.json`):
 
 Round 1 (one split) and the all-items panel are in §5.2 of the paper.
 
+**Sketch estimators** (§3.4 and §5.7 of the paper; `results/curves.json`, `results/sketch_theory.json`):
+
+- **The planned online control variate diverges.** At 32 prompts its dictionary error is
+  2,600–3,700 times the lens's norm, and recall@10 is 0 at every budget. A variance recursion
+  (Proposition 3) predicts growth while n < d/2K = 31, and that is where the error peaks. Replaying
+  the estimator from stored per-prompt Jacobians reproduces the saved snapshots to within 3%, so this
+  is not a code bug.
+- **Shrinking the control variate toward the identity fixes it** (post hoc, one run). At 4,096 VJP
+  rows it is 6–22% more accurate than the identity control variate.
+- **Probe shaping works as predicted.** Sketch-noise variance falls by 0.74–0.81, against the
+  weights-only prediction ρ(A) = 0.764. Recall@10 did not improve (29.0% vs 32.0%).
+- **No sketch beats the exact estimator at equal cost under independent prompts** (proved, and
+  confirmed by Monte Carlo). On WikiText the sketches stay competitive because consecutive records are
+  correlated.
+
 ## Status
 
 | Component | State |
@@ -73,9 +88,9 @@ Round 1 (one split) and the all-items panel are in §5.2 of the paper.
 | J++ head-to-head, round 1 (`results/jpp_compare_main*.json`) | done |
 | J++ head-to-head, round 2 (multi-split, pre-registered; `results/jpp_splits_round2.json`) | done |
 | Clamp-swap causal evals (`results/swaps_*.json`) | done |
-| Ignition (first pass done; linear-interpolation control running) | running |
+| Ignition with linear-interpolation control (`results/ignition_main*.json`) | done |
 | J++ head-to-head, round 3 (pre-registered, 20 splits; `results/jpp_splits_round3.json`) | done |
-| Sketch estimators: learning curves vs compute | queued |
+| Sketch estimators: learning curves, theory checks, shrunk control variate (`results/curves.json`, `sketch_theory.json`) | done |
 
 ## Layout
 
@@ -144,7 +159,10 @@ python scripts/fit.py --method sketch --K 16 --cv online --n 512 --snapshots 16 
 python scripts/fit.py --method sketch --K 16 --cv online --shaped --n 512 --snapshots 16 32 64 128 256 512 --tag sk16w --seed 1
 python scripts/fit.py --method sketch --K 16 --cv identity --n 256 --snapshots 16 32 64 128 256 --tag sk16id --seed 1
 python scripts/fit.py --method sketch --K 16 --cv none --n 256 --snapshots 16 32 64 128 256 --tag sk16none --seed 1
-python scripts/curves.py --tags exact sk16 sk16w sk16id sk16none
+python scripts/fit.py --method sketch --K 16 --cv identity --shaped --n 256 --snapshots 16 32 64 128 256 --tag sk16idw --seed 1
+python scripts/fit.py --method sketch --K 16 --cv shrink --n 256 --snapshots 16 32 64 128 256 --tag sk16sh --seed 1
+python scripts/curves.py --tags exact sk16 sk16w sk16id sk16none sk16idw sk16sh
+python scripts/sketch_theory.py --seeds 8 --steps 512 --threads 4   # replay, exact noise, Monte Carlo
 python scripts/rho.py                                   # weights-only predictor of the shaping gain
 # figures and the assembled paper draft
 python scripts/figures.py && python paper/build.py

@@ -30,6 +30,12 @@ five overlapping splits mislead: two candidates that met round 2's criterion tie
 more. The out-of-pool items (289 that the model answers wrongly) are a different population, not a
 replication on new items.
 
+**Sketch comparison.** Each sketch variant ran once on the real model, with one probe seed and one
+record order. The dictionary errors are measured against an exact lens on only 16 records, whose
+noise is shared by every estimator. The theory checks use only records 0–31, the records for which
+per-prompt Jacobians were stored. We derived the shrunk control variate after the planned one
+diverged. Its real-model run is a single exploratory test, not a pre-registered one.
+
 **What "J-space" means here.** We test operational consequences (readout recall, causal swap
 success, switch sharpness) and make no claims about consciousness or access consciousness,
 which, as the original authors stress, these experiments cannot settle.

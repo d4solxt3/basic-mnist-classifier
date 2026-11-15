@@ -27,7 +27,7 @@ positive-definite *shaping* matrix W and a *control variate* J₀ that is indepe
 
 This holds for any J₀ built from *previous* prompts and probes, including the running mean of
 earlier estimates (the "online" control variate). Unbiasedness says nothing about variance,
-however, and Proposition 4 shows that the online control variate's variance explodes.
+however, and Proposition 3 shows that the online control variate's variance explodes.
 
 **Proposition 2 (variance, W = I).** For any M ∈ ℝ^{d×d},
 E‖(d/K) QQᵀ M − M‖²_F = (d/K − 1) ‖M‖²_F. Hence each prompt contributes variance
@@ -46,9 +46,9 @@ itself. For Qwen3-0.6B with J₀ = I, the ratio is 2.1, 3.3 and 5.7 at layers 7,
 Under independent prompts, sketching therefore cannot reduce variance at equal cost. It can only
 (a) give *anytime* estimates below the d rows of one exact prompt, (b) spread a fixed budget over
 d/K times as many *distinct* prompts, which helps when nearby prompts are correlated (§5.7), and
-(c) *shape* the probes (Proposition 3).
+(c) *shape* the probes (Proposition 4).
 
-**Proposition 4 (the online control variate is unstable).** Let W = I and c = d/K − 1. Use J₀ = I
+**Proposition 3 (the online control variate is unstable).** Let W = I and c = d/K − 1. Use J₀ = I
 for the first prompt and J₀ = J̄_n, the mean of the first n estimates, afterwards. Let
 v_n = E‖J̄_n − E J_n‖²_F. Then
 
@@ -71,7 +71,7 @@ coefficient (n² + cλ_n²)/(n + 1)² is below 1 for every n, so the error never
 online control variate, it approaches the exact estimator's cost per row as n grows. We derived
 this fix after the online control variate diverged (§5.7), so its test is exploratory.
 
-**Proposition 3 (readout-aware shaping).** Readouts and swap directions use only the J-space
+**Proposition 4 (readout-aware shaping).** Readouts and swap directions use only the J-space
 dictionary A J, where A = W_U diag(g) is the unembedding with the final-norm gain folded in.
 For Gaussian probes, the leading term of E‖A(Ĵ_n − J_n)‖²_F is
 K⁻¹ tr(W M Mᵀ W) · tr(W⁻¹ AᵀA W⁻¹), with M = J_n − J₀. Over symmetric PD W, with an

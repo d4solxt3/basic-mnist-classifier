@@ -375,7 +375,7 @@ if cur:
                       key=lambda v: v["vjp_rows"])
 
     fig, axes = plt.subplots(1, 3, figsize=(FULL, 2.35), gridspec_kw={"width_ratios": [1.15, 0.8, 1.15]})
-    # (a) error of AJ vs prompts: the online control variate diverges, as Proposition 4 predicts
+    # (a) error of AJ vs prompts: the online control variate diverges, as Proposition 3 predicts
     ax = axes[0]
     for tag in ("sk16", "sk16sh", "sk16id"):
         rs = [v for v in rows_of(tag) if "dict_err" in v]
@@ -389,7 +389,8 @@ if cur:
                for n in ns]
         ax.plot(ns, thy, color=GREY, ls=(0, (1, 1.2)), lw=1.1, label="online CV, theory")
         ax.axvline(th["stats"]["7"]["critical_n"], color=MUTED, lw=0.6, ls=(0, (2, 2)))
-        ax.text(th["stats"]["7"]["critical_n"] * 1.08, 2e-1, r"$n^*$", color=INK2, fontsize=7)
+        ax.text(th["stats"]["7"]["critical_n"] * 1.1, 0.02, r"$n^*$", color=INK2, fontsize=7,
+                transform=ax.get_xaxis_transform(), va="bottom")
     ax.set_xscale("log", base=2)
     ax.set_yscale("log")
     ax.set_xlim(0.8, 700)
@@ -397,7 +398,7 @@ if cur:
     ax.set_ylabel(r"relative error of $AJ$")
     grid(ax)
     panel(ax, "a", "error vs prompts")
-    ax.legend(loc="lower left", fontsize=6.3, handlelength=1.4)
+    ax.legend(loc="center right", bbox_to_anchor=(1.02, 0.43), fontsize=6.1, handlelength=1.4)
     # (b) shaping: measured vs predicted noise-variance ratio, and the weights-only rho(A)
     ax = axes[1]
     if th and "noise_check" in th:
@@ -415,10 +416,10 @@ if cur:
             ax.scatter(xs + off, pred, s=18, facecolor="none", edgecolor=INK, lw=0.7, zorder=4,
                        marker="o" if n == 32 else "s", label="exact expectation" if j == 1 else None)
         if rho:
-            ax.axhline(rho["rho_ideal"], color=GREY, lw=0.9, ls=(0, (3, 1.5)))
-            ax.text(len(ERRL) - 0.55, rho["rho_ideal"] - 0.012, rf"$\rho(A)$ = {rho['rho_ideal']:.3f}",
-                    ha="right", va="top", fontsize=6.5, color=INK2)
-        ax.set_xticks(xs, [f"layer {l}" for l in ERRL])
+            ax.axhline(rho["rho_ideal"], color=GREY, lw=0.9, ls=(0, (3, 1.5)),
+                       label=rf"$\rho(A)$ = {rho['rho_ideal']:.3f}, weights only")
+        ax.set_xticks(xs, ERRL)
+        ax.set_xlabel("layer")
         ax.set_xlim(-0.5, len(ERRL) - 0.5)
         ax.set_ylim(0.68, 0.92)
         ax.set_ylabel("noise variance, shaped / uniform")

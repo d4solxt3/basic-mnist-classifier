@@ -1,0 +1,119 @@
+=== sk16idw finished
+=== 01:12:39 START S6
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3383.70it/s]
+256 prompts, mean len 127.8
+[sk16sh] prompt 1/256 T=128 rows=16 2.6s total=0.0min
+[sk16sh] prompt 2/256 T=128 rows=16 2.6s total=0.1min
+[sk16sh] prompt 3/256 T=128 rows=16 2.4s total=0.1min
+[sk16sh] prompt 10/256 T=128 rows=16 2.6s total=0.4min
+[sk16sh] prompt 20/256 T=128 rows=16 2.4s total=0.9min
+[sk16sh] prompt 30/256 T=128 rows=16 2.5s total=1.3min
+[sk16sh] prompt 40/256 T=128 rows=16 2.3s total=1.8min
+[sk16sh] prompt 50/256 T=128 rows=16 2.5s total=2.2min
+[sk16sh] prompt 60/256 T=128 rows=16 2.4s total=2.6min
+[sk16sh] prompt 70/256 T=128 rows=16 2.7s total=3.1min
+[sk16sh] prompt 80/256 T=128 rows=16 2.6s total=3.6min
+[sk16sh] prompt 90/256 T=128 rows=16 3.1s total=4.0min
+[sk16sh] prompt 100/256 T=128 rows=16 2.9s total=4.5min
+[sk16sh] prompt 110/256 T=128 rows=16 2.8s total=5.0min
+[sk16sh] prompt 120/256 T=128 rows=16 2.4s total=5.4min
+[sk16sh] prompt 130/256 T=128 rows=16 2.7s total=5.9min
+[sk16sh] prompt 140/256 T=128 rows=16 3.0s total=6.3min
+[sk16sh] prompt 150/256 T=128 rows=16 2.6s total=6.8min
+[sk16sh] prompt 160/256 T=128 rows=16 2.5s total=7.3min
+[sk16sh] prompt 170/256 T=128 rows=16 2.8s total=7.7min
+[sk16sh] prompt 180/256 T=128 rows=16 2.7s total=8.1min
+[sk16sh] prompt 190/256 T=128 rows=16 2.2s total=8.5min
+[sk16sh] prompt 200/256 T=128 rows=16 2.6s total=8.9min
+[sk16sh] prompt 210/256 T=128 rows=16 2.3s total=9.3min
+[sk16sh] prompt 220/256 T=128 rows=16 2.5s total=9.7min
+[sk16sh] prompt 230/256 T=128 rows=16 2.4s total=10.1min
+[sk16sh] prompt 240/256 T=128 rows=16 2.6s total=10.5min
+[sk16sh] prompt 250/256 T=128 rows=16 2.5s total=10.9min
+done: 256 prompts, 4096 VJP rows, 11.2 min
+=== 01:23:55 END rc=0
+=== 01:23:55 START CU
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 4021.55it/s]
+sk16idw_n16      rows=    256 recall@10 filt=0.106 all=0.068 err={7: 2.0978105068206787, 14: 1.8817769289016724, 21: 1.2464666366577148}
+sk16idw_n32      rows=    512 recall@10 filt=0.234 all=0.133 err={7: 1.4845495223999023, 14: 1.3163052797317505, 21: 0.874610960483551}
+sk16idw_n64      rows=   1024 recall@10 filt=0.265 all=0.175 err={7: 1.109381914138794, 14: 0.9651468992233276, 21: 0.6396766901016235}
+sk16idw_n128     rows=   2048 recall@10 filt=0.286 all=0.204 err={7: 0.8225523829460144, 14: 0.7073224782943726, 21: 0.46761006116867065}
+sk16idw_n256     rows=   4096 recall@10 filt=0.290 all=0.219 err={7: 0.6423972845077515, 14: 0.5379218459129333, 21: 0.3478555679321289}
+sk16sh_n16       rows=    256 recall@10 filt=0.128 all=0.085 err={7: 2.3834211826324463, 14: 2.1339597702026367, 21: 1.3921372890472412}
+sk16sh_n32       rows=    512 recall@10 filt=0.246 all=0.147 err={7: 1.6434340476989746, 14: 1.4365836381912231, 21: 0.9371703267097473}
+sk16sh_n64       rows=   1024 recall@10 filt=0.294 all=0.199 err={7: 1.224589228630066, 14: 1.0273957252502441, 21: 0.6515376567840576}
+sk16sh_n128      rows=   2048 recall@10 filt=0.305 all=0.214 err={7: 0.8756948709487915, 14: 0.713819682598114, 21: 0.4406866133213043}
+sk16sh_n256      rows=   4096 recall@10 filt=0.321 all=0.251 err={7: 0.6580861806869507, 14: 0.5117875933647156, 21: 0.29965922236442566}
+=== 01:25:38 END rc=0
+=== 01:25:38 START TH
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3124.53it/s]
+layer 7: sigma2=1.002e+04 sigma2_readout=2.248e+07 J_minus_I2=1.161e+04 J2=1.199e+04 J_minus_I2_readout=2.683e+07 J2_readout=2.761e+07 rho_data_identity_cv=0.775 equal_cost_ratio_identity=2.14 equal_cost_ratio_none=2.178 critical_n=31
+layer 14: sigma2=2994 sigma2_readout=6.291e+06 J_minus_I2=6858 J2=8014 J_minus_I2_readout=1.549e+07 J2_readout=1.732e+07 rho_data_identity_cv=0.7634 equal_cost_ratio_identity=3.255 equal_cost_ratio_none=3.635 critical_n=31
+layer 21: sigma2=194.3 sigma2_readout=3.8e+05 J_minus_I2=923.9 J2=2404 J_minus_I2_readout=2.615e+06 J2_readout=4.66e+06 rho_data_identity_cv=0.7602 equal_cost_ratio_identity=5.68 equal_cost_ratio_none=13.18 critical_n=31
+sk16 16 {'7': 0.0284, '14': 0.0165, '21': 0.0082}
+sk16 32 {'7': 0.0277, '14': 0.0159, '21': 0.0079}
+sk16w 16 {'7': 0.028, '14': 0.0162, '21': 0.0078}
+sk16w 32 {'7': 0.0278, '14': 0.0162, '21': 0.0077}
+sk16id 16 {'7': 0.0192, '14': 0.0109, '21': 0.0056}
+sk16id 32 {'7': 0.0192, '14': 0.0103, '21': 0.005}
+sk16none 16 {'7': 0.0191, '14': 0.0104, '21': 0.004}
+sk16none 32 {'7': 0.0191, '14': 0.0099, '21': 0.0038}
+sk16idw 16 {'7': 0.019, '14': 0.0107, '21': 0.0053}
+sk16idw 32 {'7': 0.0176, '14': 0.0097, '21': 0.0046}
+sk16sh 16 {'7': 0.0201, '14': 0.0116, '21': 0.006}
+sk16sh 32 {'7': 0.0209, '14': 0.0114, '21': 0.0056}
+noise sk16id 16 {'7': (2.497, 2.51), '14': (2.185, 2.209), '21': (1.429, 1.438)}
+noise sk16id 32 {'7': (1.823, 1.77), '14': (1.557, 1.533), '21': (1.013, 0.998)}
+noise sk16none 16 {'7': (2.52, 2.528), '14': (2.312, 2.338), '21': (2.184, 2.206)}
+noise sk16none 32 {'7': (1.839, 1.785), '14': (1.646, 1.623), '21': (1.547, 1.537)}
+noise sk16idw 16 {'7': (2.195, 2.205), '14': (1.909, 1.904), '21': (1.246, 1.243)}
+noise sk16idw 32 {'7': (1.605, 1.592), '14': (1.36, 1.354), '21': (0.884, 0.879)}
+cluster 7 {'adjacent_over_far_sqdist': 0.7507441316685752, 'half_split_rel': 0.6318966746330261, 'half_split_iid_pred': 0.3232515358514985}
+cluster 14 {'adjacent_over_far_sqdist': 0.6958326614587852, 'half_split_rel': 0.4619494080543518, 'half_split_iid_pred': 0.21610155723001875}
+cluster 21 {'adjacent_over_far_sqdist': 0.6197196119665188, 'half_split_rel': 0.24689359962940216, 'half_split_iid_pred': 0.1005203765111783}
+seed 0 done
+seed 1 done
+seed 2 done
+seed 3 done
+seed 4 done
+seed 5 done
+seed 6 done
+seed 7 done
+
+layer 7  n: theory_v  mc_frob2 (online) | identity theory/mc
+     1: 1.373e+06  1.379e+06 | 1.373e+06  1.379e+06
+     2: 2.212e+07  2.102e+07 | 6.864e+05  6.801e+05
+     4: 7.415e+08  7.115e+08 | 3.432e+05  3.401e+05
+     8: 2.025e+10  1.805e+10 | 1.716e+05  1.72e+05
+    16: 1.478e+11  1.259e+11 | 8.579e+04  8.54e+04
+    32: 2.527e+11  2.175e+11 | 4.29e+04  4.264e+04
+    64: 1.7e+11  1.469e+11 | 2.145e+04  2.147e+04
+   128: 6.977e+10  6.01e+10 | 1.072e+04  1.055e+04
+   256: 2.233e+10  1.931e+10 | 5362  5355
+   512: 6.317e+09  5.427e+09 | 2681  2665
+
+layer 14  n: theory_v  mc_frob2 (online) | identity theory/mc
+     1: 6.237e+05  6.193e+05 | 6.237e+05  6.193e+05
+     2: 1.003e+07  9.505e+06 | 3.118e+05  3.068e+05
+     4: 3.36e+08  3.261e+08 | 1.559e+05  1.528e+05
+     8: 9.177e+09  8.385e+09 | 7.796e+04  7.728e+04
+    16: 6.696e+10  5.907e+10 | 3.898e+04  3.892e+04
+    32: 1.145e+11  1.024e+11 | 1.949e+04  1.943e+04
+    64: 7.702e+10  6.905e+10 | 9745  9734
+   128: 3.161e+10  2.822e+10 | 4872  4824
+   256: 1.012e+10  9.06e+09 | 2436  2434
+   512: 2.862e+09  2.554e+09 | 1218  1211
+
+layer 21  n: theory_v  mc_frob2 (online) | identity theory/mc
+     1: 7.064e+04  7.284e+04 | 7.064e+04  7.284e+04
+     2: 1.133e+06  1.136e+06 | 3.532e+04  3.588e+04
+     4: 3.797e+07  3.825e+07 | 1.766e+04  1.775e+04
+     8: 1.037e+09  9.794e+08 | 8830  8899
+    16: 7.568e+09  6.909e+09 | 4415  4441
+    32: 1.294e+10  1.201e+10 | 2208  2214
+    64: 8.705e+09  8.097e+09 | 1104  1106
+   128: 3.573e+09  3.308e+09 | 551.9  550.4
+   256: 1.144e+09  1.063e+09 | 275.9  275.9
+   512: 3.235e+08  2.993e+08 | 138  137.5
+=== 01:28:06 END rc=0
+=== QUEUE3D DONE

@@ -13,8 +13,10 @@ causal handle. The clean late-band workspace of large models does not reproduce.
   the LRP backward pass.
 - **Improving on J++.** Two pre-registered rounds found nothing that beats it under its own protocol.
   Changes that curb its overfitting match it, and a label-free routed lens comes within two points.
+- **Sketch estimators.** The planned online control variate diverged, as a variance recursion
+  predicts, and a shrunk version is stable. Probe shaping cut sketch noise by the factor a
+  weights-only formula predicts, but did not improve recall. With independent prompts, no sketch can
+  beat the exact estimator at equal cost.
 
 The second round overturned the first round's small wins. On benchmarks this small, a single split,
 or even five overlapping ones, is not enough to claim an improvement.
-
-[PENDING: one sentence on the sketch estimators once results/curves.json exists.]

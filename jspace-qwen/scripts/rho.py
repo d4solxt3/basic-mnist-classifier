@@ -1,6 +1,6 @@
 """Weights-only predictor of the benefit of readout-aware probe shaping.
 
-For A = W_U diag(g) (the readout's linear part), Proposition 3 gives the
+For A = W_U diag(g) (the readout's linear part), Proposition 4 gives the
 variance factor of the shaped sketch W = (A^T A)^{1/4} relative to uniform
 probes (W = I), under an isotropic prior on J_n - J_0:
 

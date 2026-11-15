@@ -49,10 +49,14 @@ budget: one 4-core CPU, no GPU. Our contributions:
 
    J++ is not beaten. Bagging halves its overfitting to the 47 labelled items, but does not raise
    held-out recall.
-6. **Unbiased sketch estimators** of the average Jacobian: Haar-random probes, an exactly known
-   identity path, an online control variate, and *readout-aware* probe shaping. We prove they
-   are unbiased, derive their variance, and give a closed-form, weights-only predictor ρ(A) of the
-   gain from shaping.
+6. **Sketch estimators** of the average Jacobian, whose headline result is negative. They use
+   Haar-random probes, the exactly known identity path, control variates and *readout-aware* probe
+   shaping. We prove they are unbiased and derive their variance.
+   - With independent prompts, no such sketch beats the exact estimator at equal cost.
+   - The planned online control variate diverges, as a variance recursion we derive predicts. A
+     shrunk version fixes it.
+   - A closed-form, weights-only predictor ρ(A) matches the measured gain from shaping, but shaping
+     does not improve recall.
 
 We report every comparison, including those our methods lose. Table 0 summarises which claims carry over to 0.6B parameters, and Figure 1 shows the lenses we
 compare.

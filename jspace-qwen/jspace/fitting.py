@@ -30,7 +30,7 @@ is unbiased for E[J_n] whenever J0 is independent of (Q_n, prompt n), because
 * ``cv="online"``   J0 = running mean of the previous estimates (martingale
   control variate: conditionally unbiased term by term). Unstable for
   n < (d/K - 2)/2: the running-mean error is re-amplified by (d/K - 1) at every
-  step (paper, Proposition 4); its error peaks near n = d/K / 2.
+  step (paper, Proposition 3); its error peaks near n = d/K / 2.
 * ``cv="shrink"``   J0 = I + lambda_n (running mean - I), lambda_n = n / (n + kappa),
   kappa = d/K by default: the online control variate shrunk toward the identity
   until the running mean is better than I. Never worse than J0 = I under the

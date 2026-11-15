@@ -39,8 +39,12 @@ Bagging halves J++'s overfitting to its 47 labelled items, but does not raise he
 **Pitfalls.** We document two implementation pitfalls in J++-style evaluations: empty expert
 clusters that score a spurious perfect recall, and masking before combining experts.
 
-**Sketch estimators.** We derive unbiased sketch estimators of the J-lens with a weights-only
-predictor of the benefit of readout-aware probe shaping. [SKETCH RESULT]
+**Sketch estimators.** Our planned sketch of the J-lens, with an online control variate, diverges:
+its error peaks at about 3,700 times the lens's norm after 32 prompts. A variance recursion we derive
+predicts the peak, and a shrunk control variate fixes it. Readout-aware probe shaping cuts sketch
+noise by the factor a weights-only formula predicts (0.74–0.81 measured against ρ(A) = 0.764), but
+does not improve recall. With independent prompts, no unbiased sketch can beat the exact estimator at
+equal cost. Here sketches stay competitive only because consecutive corpus records are correlated.
 
 **Causal swaps.** We swap a templated function's argument (e.g. the country in "The capital of
 A is") along lens directions:
