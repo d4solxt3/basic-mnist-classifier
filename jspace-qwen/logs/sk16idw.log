@@ -1,20 +1,0 @@
-Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   8%|▊         | 26/311 [00:00<00:01, 253.62it/s]Loading weights:  17%|█▋        | 54/311 [00:00<00:00, 268.21it/s]Loading weights:  26%|██▌       | 81/311 [00:00<00:00, 262.00it/s]Loading weights:  35%|███▍      | 108/311 [00:00<00:00, 256.45it/s]Loading weights:  43%|████▎     | 134/311 [00:00<00:00, 257.28it/s]Loading weights:  51%|█████▏    | 160/311 [00:00<00:00, 252.75it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 442.36it/s]
-256 prompts, mean len 127.8
-[sk16idw] prompt 1/256 T=128 rows=16 8.9s total=0.1min
-[sk16idw] prompt 2/256 T=128 rows=16 3.3s total=0.2min
-[sk16idw] prompt 3/256 T=128 rows=16 3.2s total=0.3min
-[sk16idw] prompt 10/256 T=128 rows=16 3.1s total=0.6min
-[sk16idw] prompt 20/256 T=128 rows=16 3.6s total=1.2min
-[sk16idw] prompt 30/256 T=128 rows=16 3.6s total=1.8min
-[sk16idw] prompt 40/256 T=128 rows=16 3.3s total=2.4min
-[sk16idw] prompt 50/256 T=128 rows=16 3.4s total=2.9min
-[sk16idw] prompt 60/256 T=128 rows=16 3.7s total=3.5min
-[sk16idw] prompt 70/256 T=128 rows=16 3.3s total=4.1min
-[sk16idw] prompt 80/256 T=128 rows=16 3.4s total=4.7min
-[sk16idw] prompt 90/256 T=128 rows=16 3.3s total=5.3min
-[sk16idw] prompt 100/256 T=128 rows=16 3.7s total=5.9min
-[sk16idw] prompt 110/256 T=128 rows=16 3.3s total=6.4min
-[sk16idw] prompt 120/256 T=128 rows=16 3.5s total=7.0min
-[sk16idw] prompt 130/256 T=128 rows=16 3.1s total=7.5min
-[sk16idw] prompt 140/256 T=128 rows=16 3.4s total=8.1min
-[sk16idw] prompt 150/256 T=128 rows=16 3.4s total=8.7min
