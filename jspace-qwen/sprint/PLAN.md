@@ -212,3 +212,11 @@ criterion "null ≤ 2%" was miscalibrated. In the swap baseline (E0.3) every len
 is 1.7–8.3% at scale 1 (J++ 6.7%, from 4 of 60 trials). Replacement criterion: at the scale where
 the candidate's success is reported, its null success may exceed J++'s null by at most 5 points.
 Nothing else changes.
+
+**Amendment 2 (2026-11-16, during Exp 1's confirmation stage, before its verdict).** To avoid idle
+time, Experiment 2's pre-registration was written while Exp 1 was running: `sprint/prereg_exp2.md`.
+It does not use any Exp 1 result. Exp 2 code runs only after Exp 1's verdict, as planned. Two changes
+to the plan, made for compute reasons:
+- Exp 2 uses confirmation seeds 100–109 (10 splits) plus 20 leave-one-task-out fold-replicates as
+  its primary test. The task-held-out test is the control the hypothesis names.
+- Exp 2 reuses Exp 1's deterministic J++ (A0) fits on those seeds.
