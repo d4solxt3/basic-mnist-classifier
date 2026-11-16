@@ -1,0 +1,550 @@
+{
+ "edges": [
+  0,
+  16,
+  64,
+  256,
+  1024
+ ],
+ "layers": {
+  "4": {
+   "experts_kept_for_split_half": 8,
+   "bands": [
+    {
+     "band": "0-16",
+     "reliability_frob": 0.8858775559895578,
+     "reliability_readout": 0.8835235511550531,
+     "signal_over_noise_frob": 14.129123568134832,
+     "deviation_energy": 7629246.015625,
+     "pooled_energy": 6339.16357421875,
+     "deviation_energy_frac": 0.36899492915138854,
+     "pooled_energy_frac": 0.4426964401736795
+    },
+    {
+     "band": "16-64",
+     "reliability_frob": 0.8957550830969269,
+     "reliability_readout": 0.8924361972003121,
+     "signal_over_noise_frob": 15.88010275373609,
+     "deviation_energy": 4769442.3515625,
+     "pooled_energy": 3857.78759765625,
+     "deviation_energy_frac": 0.2306781088199399,
+     "pooled_energy_frac": 0.26940917621597554
+    },
+    {
+     "band": "64-256",
+     "reliability_frob": 0.8657227678885405,
+     "reliability_readout": 0.8588224069244438,
+     "signal_over_noise_frob": 12.32850059190965,
+     "deviation_energy": 4199256.4296875,
+     "pooled_energy": 3606.64794921875,
+     "deviation_energy_frac": 0.20310058498410002,
+     "pooled_energy_frac": 0.2518708011530711
+    },
+    {
+     "band": "256-1024",
+     "reliability_frob": 0.8406634898216672,
+     "reliability_readout": 0.8368589485653873,
+     "signal_over_noise_frob": 10.179960074777668,
+     "deviation_energy": 4077802.7890625,
+     "pooled_energy": 515.8379516601562,
+     "deviation_energy_frac": 0.19722637704457158,
+     "pooled_energy_frac": 0.036023620818867605
+    }
+   ],
+   "top10_left_sv_max_coord": [
+    0.564,
+    0.443,
+    0.231,
+    0.164,
+    0.476,
+    0.253,
+    0.21,
+    0.215,
+    0.272,
+    0.221
+   ],
+   "top10_right_sv_max_coord": [
+    0.208,
+    0.569,
+    0.595,
+    0.216,
+    0.285,
+    0.158,
+    0.191,
+    0.137,
+    0.149,
+    0.182
+   ],
+   "singular_values_top5": [
+    47.28,
+    24.03,
+    22.15,
+    20.49,
+    19.57
+   ],
+   "effective_rank": 263.54620361328125
+  },
+  "7": {
+   "experts_kept_for_split_half": 8,
+   "bands": [
+    {
+     "band": "0-16",
+     "reliability_frob": 0.9078259789159839,
+     "reliability_readout": 0.9075250666434804,
+     "signal_over_noise_frob": 18.747018775504547,
+     "deviation_energy": 6933586.75,
+     "pooled_energy": 4931.04248046875,
+     "deviation_energy_frac": 0.41449972246489203,
+     "pooled_energy_frac": 0.40510818342378635
+    },
+    {
+     "band": "16-64",
+     "reliability_frob": 0.903726249589223,
+     "reliability_readout": 0.903148326306125,
+     "signal_over_noise_frob": 18.370302279377736,
+     "deviation_energy": 3546910.8515625,
+     "pooled_energy": 3289.4833984375,
+     "deviation_energy_frac": 0.2120393984513672,
+     "pooled_energy_frac": 0.2702464335324568
+    },
+    {
+     "band": "64-256",
+     "reliability_frob": 0.8845842230299285,
+     "reliability_readout": 0.8789428344833214,
+     "signal_over_noise_frob": 15.083266309025541,
+     "deviation_energy": 3467348.625,
+     "pooled_energy": 3219.427734375,
+     "deviation_energy_frac": 0.2072830548707745,
+     "pooled_energy_frac": 0.26449103334693486
+    },
+    {
+     "band": "256-1024",
+     "reliability_frob": 0.8261991291819129,
+     "reliability_readout": 0.8173705797107181,
+     "signal_over_noise_frob": 9.40869322453681,
+     "deviation_energy": 2779756.650390625,
+     "pooled_energy": 732.2091674804688,
+     "deviation_energy_frac": 0.16617782421296626,
+     "pooled_energy_frac": 0.06015440485437844
+    }
+   ],
+   "top10_left_sv_max_coord": [
+    0.585,
+    0.462,
+    0.228,
+    0.212,
+    0.454,
+    0.26,
+    0.194,
+    0.268,
+    0.259,
+    0.247
+   ],
+   "top10_right_sv_max_coord": [
+    0.239,
+    0.621,
+    0.695,
+    0.197,
+    0.259,
+    0.242,
+    0.15,
+    0.186,
+    0.166,
+    0.147
+   ],
+   "singular_values_top5": [
+    40.2,
+    21.15,
+    19.95,
+    17.89,
+    17.12
+   ],
+   "effective_rank": 311.423095703125
+  },
+  "11": {
+   "experts_kept_for_split_half": 8,
+   "bands": [
+    {
+     "band": "0-16",
+     "reliability_frob": 0.9216466992123376,
+     "reliability_readout": 0.926451551624416,
+     "signal_over_noise_frob": 23.10648041648774,
+     "deviation_energy": 1515432.453125,
+     "pooled_energy": 1759.72021484375,
+     "deviation_energy_frac": 0.27181585813330505,
+     "pooled_energy_frac": 0.2571182718923237
+    },
+    {
+     "band": "16-64",
+     "reliability_frob": 0.9186114963596773,
+     "reliability_readout": 0.9182073656141372,
+     "signal_over_noise_frob": 22.31405551786542,
+     "deviation_energy": 1171258.390625,
+     "pooled_energy": 1756.5523681640625,
+     "deviation_energy_frac": 0.21008300560480858,
+     "pooled_energy_frac": 0.25665540782050683
+    },
+    {
+     "band": "64-256",
+     "reliability_frob": 0.9066513215781364,
+     "reliability_readout": 0.9047375038166149,
+     "signal_over_noise_frob": 19.321766657180653,
+     "deviation_energy": 1617753.828125,
+     "pooled_energy": 2393.4677734375,
+     "deviation_energy_frac": 0.2901687529084248,
+     "pooled_energy_frac": 0.34971712693023826
+    },
+    {
+     "band": "256-1024",
+     "reliability_frob": 0.8425411158581724,
+     "reliability_readout": 0.8339397187598633,
+     "signal_over_noise_frob": 10.688189085405885,
+     "deviation_energy": 1270772.548828125,
+     "pooled_energy": 934.2698364257812,
+     "deviation_energy_frac": 0.22793238335346153,
+     "pooled_energy_frac": 0.13650911309457817
+    }
+   ],
+   "top10_left_sv_max_coord": [
+    0.585,
+    0.122,
+    0.246,
+    0.224,
+    0.307,
+    0.228,
+    0.364,
+    0.241,
+    0.201,
+    0.261
+   ],
+   "top10_right_sv_max_coord": [
+    0.266,
+    0.129,
+    0.222,
+    0.195,
+    0.266,
+    0.24,
+    0.175,
+    0.286,
+    0.181,
+    0.212
+   ],
+   "singular_values_top5": [
+    25.18,
+    11.58,
+    10.21,
+    9.27,
+    9.16
+   ],
+   "effective_rank": 457.65093994140625
+  },
+  "14": {
+   "experts_kept_for_split_half": 8,
+   "bands": [
+    {
+     "band": "0-16",
+     "reliability_frob": 0.9412400961748335,
+     "reliability_readout": 0.9383602930195523,
+     "signal_over_noise_frob": 31.905695988753813,
+     "deviation_energy": 1177692.24609375,
+     "pooled_energy": 2013.7286376953125,
+     "deviation_energy_frac": 0.2405796495477039,
+     "pooled_energy_frac": 0.2533044426590247
+    },
+    {
+     "band": "16-64",
+     "reliability_frob": 0.935232193435199,
+     "reliability_readout": 0.9344153592739577,
+     "signal_over_noise_frob": 28.802991705751115,
+     "deviation_energy": 992260.65625,
+     "pooled_energy": 1797.4752197265625,
+     "deviation_energy_frac": 0.20269957769731006,
+     "pooled_energy_frac": 0.22610219182627295
+    },
+    {
+     "band": "64-256",
+     "reliability_frob": 0.9248523212669373,
+     "reliability_readout": 0.9230873534333922,
+     "signal_over_noise_frob": 24.596122918613165,
+     "deviation_energy": 1468863.416015625,
+     "pooled_energy": 2754.046142578125,
+     "deviation_energy_frac": 0.3000602636474789,
+     "pooled_energy_frac": 0.34642806887893157
+    },
+    {
+     "band": "256-1024",
+     "reliability_frob": 0.8675684706667453,
+     "reliability_readout": 0.8610546739981686,
+     "signal_over_noise_frob": 13.102091059463838,
+     "deviation_energy": 1256411.720703125,
+     "pooled_energy": 1384.5863037109375,
+     "deviation_energy_frac": 0.2566605091075071,
+     "pooled_energy_frac": 0.1741654041212896
+    }
+   ],
+   "top10_left_sv_max_coord": [
+    0.585,
+    0.269,
+    0.186,
+    0.241,
+    0.282,
+    0.203,
+    0.372,
+    0.29,
+    0.265,
+    0.193
+   ],
+   "top10_right_sv_max_coord": [
+    0.236,
+    0.238,
+    0.148,
+    0.174,
+    0.202,
+    0.167,
+    0.183,
+    0.24,
+    0.202,
+    0.147
+   ],
+   "singular_values_top5": [
+    29.79,
+    11.31,
+    10.26,
+    9.53,
+    9.03
+   ],
+   "effective_rank": 515.05517578125
+  },
+  "18": {
+   "experts_kept_for_split_half": 8,
+   "bands": [
+    {
+     "band": "0-16",
+     "reliability_frob": 0.949241014967166,
+     "reliability_readout": 0.9526014428677182,
+     "signal_over_noise_frob": 36.515454239951026,
+     "deviation_energy": 213824.38134765625,
+     "pooled_energy": 457.8997497558594,
+     "deviation_energy_frac": 0.1528838837731063,
+     "pooled_energy_frac": 0.13586121203907206
+    },
+    {
+     "band": "16-64",
+     "reliability_frob": 0.9419604434835034,
+     "reliability_readout": 0.9431055722901759,
+     "signal_over_noise_frob": 31.272447209473754,
+     "deviation_energy": 246149.89013671875,
+     "pooled_energy": 626.8740234375,
+     "deviation_energy_frac": 0.17599653957720893,
+     "pooled_energy_frac": 0.18599674855781814
+    },
+    {
+     "band": "64-256",
+     "reliability_frob": 0.9282634447347095,
+     "reliability_readout": 0.9268680496911953,
+     "signal_over_noise_frob": 25.2082633932315,
+     "deviation_energy": 388683.24609375,
+     "pooled_energy": 1199.1025390625,
+     "deviation_energy_frac": 0.27790752320117446,
+     "pooled_energy_frac": 0.3557798937497134
+    },
+    {
+     "band": "256-1024",
+     "reliability_frob": 0.9046845021639726,
+     "reliability_readout": 0.9003075800691583,
+     "signal_over_noise_frob": 18.72475419951921,
+     "deviation_energy": 549948.90234375,
+     "pooled_energy": 1086.4727783203125,
+     "deviation_energy_frac": 0.39321205344851035,
+     "pooled_energy_frac": 0.32236206416089414
+    }
+   ],
+   "top10_left_sv_max_coord": [
+    0.55,
+    0.219,
+    0.214,
+    0.196,
+    0.198,
+    0.259,
+    0.198,
+    0.173,
+    0.167,
+    0.253
+   ],
+   "top10_right_sv_max_coord": [
+    0.555,
+    0.206,
+    0.167,
+    0.199,
+    0.185,
+    0.191,
+    0.214,
+    0.193,
+    0.152,
+    0.195
+   ],
+   "singular_values_top5": [
+    11.53,
+    5.61,
+    5.41,
+    4.98,
+    4.79
+   ],
+   "effective_rank": 715.9888916015625
+  },
+  "21": {
+   "experts_kept_for_split_half": 7,
+   "bands": [
+    {
+     "band": "0-16",
+     "reliability_frob": 0.9671170360757994,
+     "reliability_readout": 0.9674902448768342,
+     "signal_over_noise_frob": 56.47606784914914,
+     "deviation_energy": 102797.77746582031,
+     "pooled_energy": 175.8111114501953,
+     "deviation_energy_frac": 0.1883615446284979,
+     "pooled_energy_frac": 0.07870231354244411
+    },
+    {
+     "band": "16-64",
+     "reliability_frob": 0.9409562064010735,
+     "reliability_readout": 0.9392478852398186,
+     "signal_over_noise_frob": 30.70672506629325,
+     "deviation_energy": 70377.00549316406,
+     "pooled_energy": 256.4297180175781,
+     "deviation_energy_frac": 0.12895533140712423,
+     "pooled_energy_frac": 0.11479144806349237
+    },
+    {
+     "band": "64-256",
+     "reliability_frob": 0.9222202458177244,
+     "reliability_readout": 0.9206019488949386,
+     "signal_over_noise_frob": 23.309099699865072,
+     "deviation_energy": 130162.1845703125,
+     "pooled_energy": 716.9862060546875,
+     "deviation_energy_frac": 0.23850272585937618,
+     "pooled_energy_frac": 0.3209607898446669
+    },
+    {
+     "band": "256-1024",
+     "reliability_frob": 0.9151039213069176,
+     "reliability_readout": 0.9144644652854889,
+     "signal_over_noise_frob": 21.29175074124339,
+     "deviation_energy": 242410.189453125,
+     "pooled_energy": 1084.647705078125,
+     "deviation_energy_frac": 0.4441803981050017,
+     "pooled_energy_frac": 0.4855454417187589
+    }
+   ],
+   "top10_left_sv_max_coord": [
+    0.544,
+    0.222,
+    0.257,
+    0.248,
+    0.236,
+    0.155,
+    0.192,
+    0.21,
+    0.102,
+    0.177
+   ],
+   "top10_right_sv_max_coord": [
+    0.706,
+    0.234,
+    0.273,
+    0.211,
+    0.285,
+    0.178,
+    0.213,
+    0.217,
+    0.132,
+    0.196
+   ],
+   "singular_values_top5": [
+    7.12,
+    3.59,
+    3.46,
+    3.23,
+    3.15
+   ],
+   "effective_rank": 861.6448364257812
+  },
+  "24": {
+   "experts_kept_for_split_half": 7,
+   "bands": [
+    {
+     "band": "0-16",
+     "reliability_frob": 0.960419815145994,
+     "reliability_readout": 0.9599365718099706,
+     "signal_over_noise_frob": 46.79056683501042,
+     "deviation_energy": 41246.0192565918,
+     "pooled_energy": 104.98855590820312,
+     "deviation_energy_frac": 0.207870390700939,
+     "pooled_energy_frac": 0.06269000532969779
+    },
+    {
+     "band": "16-64",
+     "reliability_frob": 0.9166678627552419,
+     "reliability_readout": 0.9162417453428365,
+     "signal_over_noise_frob": 21.523895560184517,
+     "deviation_energy": 21223.585662841797,
+     "pooled_energy": 171.86968994140625,
+     "deviation_energy_frac": 0.10696195956182365,
+     "pooled_energy_frac": 0.1026255831908096
+    },
+    {
+     "band": "64-256",
+     "reliability_frob": 0.8918904259435549,
+     "reliability_readout": 0.8904716842689139,
+     "signal_over_noise_frob": 16.293555042797326,
+     "deviation_energy": 41542.101501464844,
+     "pooled_energy": 500.194580078125,
+     "deviation_energy_frac": 0.20936257668714262,
+     "pooled_energy_frac": 0.29867256121134583
+    },
+    {
+     "band": "256-1024",
+     "reliability_frob": 0.8997119107953171,
+     "reliability_readout": 0.9001772278566014,
+     "signal_over_noise_frob": 17.931832890775926,
+     "deviation_energy": 94410.10400390625,
+     "pooled_energy": 897.6727905273438,
+     "deviation_energy_frac": 0.4758050730500948,
+     "pooled_energy_frac": 0.5360118684905818
+    }
+   ],
+   "top10_left_sv_max_coord": [
+    0.641,
+    0.431,
+    0.263,
+    0.206,
+    0.18,
+    0.265,
+    0.19,
+    0.124,
+    0.151,
+    0.221
+   ],
+   "top10_right_sv_max_coord": [
+    0.749,
+    0.394,
+    0.453,
+    0.157,
+    0.178,
+    0.191,
+    0.22,
+    0.171,
+    0.147,
+    0.214
+   ],
+   "singular_values_top5": [
+    5.13,
+    2.98,
+    2.91,
+    2.59,
+    2.32
+   ],
+   "effective_rank": 906.0437622070312
+  }
+ }
+}
