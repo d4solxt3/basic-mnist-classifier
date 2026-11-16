@@ -1,4 +1,4 @@
-<!-- Draft fragment; merged into paper.md. -->
+<!-- Draft fragment; merged into paper.md. Search-noise note: sprint/results/search_noise.json (sprint/fidelity/search_noise.py), sprint/RUNLOG.md rows E0.1-fidelity-search and E0.1-search-noise. -->
 
 ## 6 Limitations
 
@@ -25,7 +25,16 @@ and including the final-norm gain in J-lens directions.
 **Splits, seeds and the item pool.** Rounds 2 and 3 vary the fitting/held-out split (26 seeds in
 all). The router's k-means, the fitting prompts and the probe draws use one seed each, so bootstrap
 intervals capture item and split sampling but not variability over fitting prompts or router
-initialisations. All splits draw on the same 250 correctness-filtered items. Round 3 shows how easily
+initialisations. Part of the split-to-split variation is search noise: J++'s weight search (200 Adam
+steps on a sigmoid-margin surrogate, keeping the best exact iterate) is chaotic at the float level,
+and in a later check the autograd reference implementation (`safety-research/jpp_lens`) and an
+algorithmically identical reimplementation with an analytic gradient started from the same points,
+with the same surrogate and gradient at step 0, yet agreed on only 8 of 14 (split, layer) instances
+(split seeds 0 and 1). Where they differed, J++'s objective on held-out items (recall@10 at a single
+layer) moved by up to 2.1 points, with mean difference −0.05 and SD 0.66 points over all 14
+instances, and even on the fitting items, where the search maximises that objective, the two ended
+at 0.271 and 0.285 (split seed 0, layer 4).
+All splits draw on the same 250 correctness-filtered items. Round 3 shows how easily
 five overlapping splits mislead: two candidates that met round 2's criterion tie J++ over twenty
 more. The out-of-pool items (289 that the model answers wrongly) are a different population, not a
 replication on new items.
