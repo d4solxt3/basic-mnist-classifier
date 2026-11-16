@@ -1,0 +1,56 @@
+=== 03:02:50 START baseline
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3545.66it/s]
+[36s] transport metrics of fixed lenses done
+[216s] seed 0: J++ fitted
+[300s] seed 0: logit early 0.019 mid 0.016 late 0.120 best7 0.271; J-lens early 0.053 mid 0.103 late 0.185 best7 0.332; R-lens early 0.116 mid 0.136 late 0.202 best7 0.362; J++ early 0.144 mid 0.142 late 0.190 best7 0.367
+[489s] seed 1: J++ fitted
+[567s] seed 1: logit early 0.023 mid 0.014 late 0.123 best7 0.277; J-lens early 0.053 mid 0.101 late 0.181 best7 0.321; R-lens early 0.127 mid 0.144 late 0.202 best7 0.381; J++ early 0.145 mid 0.154 late 0.198 best7 0.407
+[779s] seed 2: J++ fitted
+[856s] seed 2: logit early 0.025 mid 0.012 late 0.134 best7 0.294; J-lens early 0.053 mid 0.092 late 0.193 best7 0.340; R-lens early 0.116 mid 0.137 late 0.207 best7 0.384; J++ early 0.151 mid 0.125 late 0.192 best7 0.378
+[1055s] seed 3: J++ fitted
+[1137s] seed 3: logit early 0.021 mid 0.016 late 0.135 best7 0.283; J-lens early 0.062 mid 0.112 late 0.201 best7 0.344; R-lens early 0.129 mid 0.144 late 0.219 best7 0.396; J++ early 0.165 mid 0.148 late 0.206 best7 0.397
+[1333s] seed 4: J++ fitted
+[1412s] seed 4: logit early 0.019 mid 0.014 late 0.131 best7 0.277; J-lens early 0.056 mid 0.099 late 0.196 best7 0.336; R-lens early 0.124 mid 0.140 late 0.206 best7 0.366; J++ early 0.149 mid 0.140 late 0.179 best7 0.409
+[1607s] seed 5: J++ fitted
+[1688s] seed 5: logit early 0.022 mid 0.014 late 0.136 best7 0.296; J-lens early 0.057 mid 0.105 late 0.191 best7 0.347; R-lens early 0.127 mid 0.146 late 0.208 best7 0.391; J++ early 0.169 mid 0.144 late 0.191 best7 0.400
+logit {'early.recall10': 0.0216, 'early.mrr': 0.0087, 'early.fp10_matched': 0.0001, 'early.mass_matched': 0.0001, 'early.auc_matched': 0.6384, 'early.fp10_wiki': 0.0027, 'early.mass_wiki': 0.0002, 'early.own_mass': 0.0023, 'early.tr_cos': 0.2408, 'early.tr_nmse': 0.9461, 'early.tr_kl': 8.1546, 'mid.recall10': 0.0143, 'mid.mrr': 0.0074, 'mid.fp10_matched': 0.0004, 'mid.mass_matched': 0.0001, 'mid.auc_matched': 0.659, 'mid.fp10_wiki': 0.0031, 'mid.mass_wiki': 0.0002, 'mid.own_mass': 0.0012, 'mid.tr_cos': 0.3065, 'mid.tr_nmse': 0.9114, 'mid.tr_kl': 6.4392, 'late.recall10': 0.1296, 'late.mrr': 0.0667, 'late.fp10_matched': 0.0085, 'late.mass_matched': 0.0008, 'late.auc_matched': 0.8256, 'late.fp10_wiki': 0.0041, 'late.mass_wiki': 0.0002, 'late.own_mass': 0.0276, 'late.tr_cos': 0.6349, 'late.tr_nmse': 0.5825, 'late.tr_kl': 2.9132, 'best7.recall10': 0.2829}
+J-lens {'early.recall10': 0.0558, 'early.mrr': 0.0255, 'early.fp10_matched': 0.0003, 'early.mass_matched': 0.0, 'early.auc_matched': 0.649, 'early.fp10_wiki': 0.0011, 'early.mass_wiki': 0.0002, 'early.own_mass': 0.0055, 'early.tr_cos': 0.4163, 'early.tr_nmse': 0.8272, 'early.tr_kl': 12.9899, 'mid.recall10': 0.1019, 'mid.mrr': 0.0619, 'mid.fp10_matched': 0.0004, 'mid.mass_matched': 0.0001, 'mid.auc_matched': 0.7383, 'mid.fp10_wiki': 0.0011, 'mid.mass_wiki': 0.0002, 'mid.own_mass': 0.0152, 'mid.tr_cos': 0.5312, 'mid.tr_nmse': 0.7099, 'mid.tr_kl': 11.5676, 'late.recall10': 0.1912, 'late.mrr': 0.1052, 'late.fp10_matched': 0.0104, 'late.mass_matched': 0.0013, 'late.auc_matched': 0.8486, 'late.fp10_wiki': 0.0024, 'late.mass_wiki': 0.0002, 'late.own_mass': 0.0446, 'late.tr_cos': 0.7164, 'late.tr_nmse': 0.4572, 'late.tr_kl': 5.3587, 'best7.recall10': 0.3366}
+R-lens {'early.recall10': 0.1232, 'early.mrr': 0.0858, 'early.fp10_matched': 0.0011, 'early.mass_matched': 0.0003, 'early.auc_matched': 0.6357, 'early.fp10_wiki': 0.0046, 'early.mass_wiki': 0.0005, 'early.own_mass': 0.0206, 'early.tr_cos': 0.726, 'early.tr_nmse': 0.4944, 'early.tr_kl': 6.5413, 'mid.recall10': 0.1411, 'mid.mrr': 0.0953, 'mid.fp10_matched': 0.0069, 'mid.mass_matched': 0.0004, 'mid.auc_matched': 0.725, 'mid.fp10_wiki': 0.0038, 'mid.mass_wiki': 0.0004, 'mid.own_mass': 0.0285, 'mid.tr_cos': 0.7534, 'mid.tr_nmse': 0.4437, 'mid.tr_kl': 5.4848, 'late.recall10': 0.2073, 'late.mrr': 0.1124, 'late.fp10_matched': 0.0142, 'late.mass_matched': 0.0015, 'late.auc_matched': 0.8488, 'late.fp10_wiki': 0.0034, 'late.mass_wiki': 0.0003, 'late.own_mass': 0.053, 'late.tr_cos': 0.8225, 'late.tr_nmse': 0.3171, 'late.tr_kl': 3.429, 'best7.recall10': 0.38}
+J++ {'early.recall10': 0.1538, 'early.mrr': 0.1081, 'early.fp10_matched': 0.0036, 'early.mass_matched': 0.0003, 'early.auc_matched': 0.6276, 'early.fp10_wiki': 0.0034, 'early.mass_wiki': 0.0004, 'early.own_mass': 0.0372, 'early.tr_cos': 0.7075, 'early.tr_nmse': 0.5204, 'early.tr_kl': 6.518, 'mid.recall10': 0.1419, 'mid.mrr': 0.0937, 'mid.fp10_matched': 0.0071, 'mid.mass_matched': 0.0004, 'mid.auc_matched': 0.725, 'mid.fp10_wiki': 0.0041, 'mid.mass_wiki': 0.0004, 'mid.own_mass': 0.0315, 'mid.tr_cos': 0.7454, 'mid.tr_nmse': 0.4572, 'mid.tr_kl': 5.5008, 'late.recall10': 0.1927, 'late.mrr': 0.1119, 'late.fp10_matched': 0.0125, 'late.mass_matched': 0.0014, 'late.auc_matched': 0.8454, 'late.fp10_wiki': 0.0033, 'late.mass_wiki': 0.0003, 'late.own_mass': 0.053, 'late.tr_cos': 0.7771, 'late.tr_nmse': 0.393, 'late.tr_kl': 4.5043, 'best7.recall10': 0.3931}
+done in 1688s
+=== 03:31:01 START swaps
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:  63%|██████▎   | 196/311 [00:00<00:00, 1957.33it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 2713.74it/s]
+main|J++|1.0                     n= 60 success=0.267 [0.167,0.383] edit=0.10
+main|J++|2.0                     n= 60 success=0.367 [0.250,0.483] edit=0.27
+main|J-lens|1.0                  n= 60 success=0.400 [0.283,0.517] edit=0.09
+main|J-lens|2.0                  n= 60 success=0.467 [0.333,0.583] edit=0.17
+main|R-lens|1.0                  n= 60 success=0.350 [0.233,0.467] edit=0.10
+main|R-lens|2.0                  n= 60 success=0.400 [0.283,0.517] edit=0.28
+main|logit|1.0                   n= 60 success=0.000 [0.000,0.000] edit=0.08
+main|logit|2.0                   n= 60 success=0.000 [0.000,0.000] edit=0.14
+random_null|J++|1.0              n= 60 success=0.067 [0.017,0.133] edit=0.24
+random_null|J++|2.0              n= 60 success=0.033 [0.000,0.083] edit=0.37
+random_null|J-lens|1.0           n= 60 success=0.017 [0.000,0.050] edit=0.16
+random_null|J-lens|2.0           n= 60 success=0.033 [0.000,0.083] edit=0.26
+random_null|R-lens|1.0           n= 60 success=0.050 [0.000,0.100] edit=0.23
+random_null|R-lens|2.0           n= 60 success=0.033 [0.000,0.083] edit=0.35
+random_null|logit|1.0            n= 60 success=0.000 [0.000,0.000] edit=0.11
+random_null|logit|2.0            n= 60 success=0.000 [0.000,0.000] edit=0.17
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:  65%|██████▌   | 203/311 [00:00<00:00, 2023.53it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 2809.20it/s]
+main|J++|1.0                     n= 60 success=0.417 [0.300,0.533] edit=0.14
+main|J++|2.0                     n= 60 success=0.417 [0.300,0.533] edit=0.28
+main|J-lens|1.0                  n= 60 success=0.467 [0.350,0.583] edit=0.13
+main|J-lens|2.0                  n= 60 success=0.483 [0.367,0.600] edit=0.24
+main|R-lens|1.0                  n= 60 success=0.417 [0.300,0.533] edit=0.14
+main|R-lens|2.0                  n= 60 success=0.433 [0.317,0.550] edit=0.28
+main|logit|1.0                   n= 60 success=0.017 [0.000,0.050] edit=0.09
+main|logit|2.0                   n= 60 success=0.017 [0.000,0.050] edit=0.14
+random_null|J++|1.0              n= 60 success=0.067 [0.017,0.133] edit=0.32
+random_null|J++|2.0              n= 60 success=0.017 [0.000,0.050] edit=0.47
+random_null|J-lens|1.0           n= 60 success=0.067 [0.017,0.133] edit=0.23
+random_null|J-lens|2.0           n= 60 success=0.033 [0.000,0.083] edit=0.34
+random_null|R-lens|1.0           n= 60 success=0.083 [0.017,0.150] edit=0.31
+random_null|R-lens|2.0           n= 60 success=0.017 [0.000,0.050] edit=0.44
+random_null|logit|1.0            n= 60 success=0.000 [0.000,0.000] edit=0.12
+random_null|logit|2.0            n= 60 success=0.017 [0.000,0.050] edit=0.19
+=== 03:35:17 BASELINE DONE
