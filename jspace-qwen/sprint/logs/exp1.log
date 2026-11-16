@@ -1,0 +1,389 @@
+=== 11:39:59 START TUNE
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3120.96it/s]
+[    249s] tune seed 0 layer 4: A0 train 0.271; A1 train 0.0:0.305 0.03:0.303 0.1:0.294 0.3:0.305 1.0:0.271
+[    489s] tune seed 0 layer 7: A0 train 0.272; A1 train 0.0:0.327 0.03:0.336 0.1:0.327 0.3:0.327 1.0:0.281
+[    491s] tune seed 0: held early A0 0.144 | A1 0.0:0.135 0.03:0.153 0.1:0.153 0.3:0.133 1.0:0.141
+[    724s] tune seed 1 layer 4: A0 train 0.243; A1 train 0.0:0.270 0.03:0.270 0.1:0.286 0.3:0.243 1.0:0.243
+[    966s] tune seed 1 layer 7: A0 train 0.251; A1 train 0.0:0.321 0.03:0.359 0.1:0.331 0.3:0.329 1.0:0.329
+[    969s] tune seed 1: held early A0 0.145 | A1 0.0:0.154 0.03:0.145 0.1:0.137 0.3:0.137 1.0:0.138
+[   1198s] tune seed 2 layer 4: A0 train 0.206; A1 train 0.0:0.274 0.03:0.265 0.1:0.265 0.3:0.224 1.0:0.215
+[   1454s] tune seed 2 layer 7: A0 train 0.210; A1 train 0.0:0.274 0.03:0.307 0.1:0.255 0.3:0.265 1.0:0.238
+[   1457s] tune seed 2: held early A0 0.151 | A1 0.0:0.170 0.03:0.153 0.1:0.162 0.3:0.168 1.0:0.161
+[   1714s] tune seed 3 layer 4: A0 train 0.224; A1 train 0.0:0.326 0.03:0.241 0.1:0.241 0.3:0.241 1.0:0.232
+[   1964s] tune seed 3 layer 7: A0 train 0.196; A1 train 0.0:0.238 0.03:0.311 0.1:0.205 0.3:0.215 1.0:0.205
+[   1967s] tune seed 3: held early A0 0.165 | A1 0.0:0.139 0.03:0.122 0.1:0.165 0.3:0.146 1.0:0.167
+[   2216s] tune seed 4 layer 4: A0 train 0.164; A1 train 0.0:0.243 0.03:0.234 0.1:0.220 0.3:0.182 1.0:0.173
+[   2466s] tune seed 4 layer 7: A0 train 0.224; A1 train 0.0:0.284 0.03:0.260 0.1:0.241 0.3:0.241 1.0:0.232
+[   2469s] tune seed 4: held early A0 0.149 | A1 0.0:0.156 0.03:0.154 0.1:0.143 0.3:0.152 1.0:0.152
+[   2712s] tune seed 5 layer 4: A0 train 0.253; A1 train 0.0:0.365 0.03:0.383 0.1:0.383 0.3:0.383 1.0:0.279
+[   2962s] tune seed 5 layer 7: A0 train 0.234; A1 train 0.0:0.454 0.03:0.286 0.1:0.258 0.3:0.234 1.0:0.234
+[   2965s] tune seed 5: held early A0 0.169 | A1 0.0:0.138 0.03:0.170 0.1:0.158 0.3:0.154 1.0:0.169
+[   2965s] lambda* = 1.0 (means {'0.0': 0.14883838383838383, '0.03': 0.1494462481962482, '0.1': 0.15325667388167388, '0.3': 0.14835137085137087, '1.0': 0.1545959595959596}; A0 0.1538)
+[   2965s] done
+=== 12:29:26 END rc=0
+=== 12:29:26 START CONFIRM
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:  98%|█████████▊| 304/311 [00:00<00:00, 3039.37it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3089.85it/s]
+[    171s] seed 100 layer 4: train A0 0.260 A1 0.269 A2 0.269 A3 0.159 A5 0.243
+[    335s] seed 100 layer 7: train A0 0.232 A1 0.232 A2 0.232 A3 0.168 A5 0.232
+[    451s] seed 100 layer 11: train A0 0.251 A1 0.251 A3 0.196 A5 0.224
+[    569s] seed 100 layer 14: train A0 0.246 A1 0.246 A3 0.182 A5 0.191
+[    690s] seed 100 layer 18: train A0 0.251 A1 0.251 A3 0.243 A5 0.243
+[    809s] seed 100 layer 21: train A0 0.365 A1 0.365 A3 0.282 A5 0.357
+[    925s] seed 100 layer 24: train A0 0.379 A1 0.379 A3 0.353 A5 0.379
+[   1039s] seed 100: early recall A0 0.153 A1 0.158 A2 0.152 A3 0.131 A5 0.126 | d(A1-A0) +0.005
+[   1199s] seed 101 layer 4: train A0 0.231 A1 0.264 A2 0.264 A3 0.248 A5 0.231
+[   1360s] seed 101 layer 7: train A0 0.231 A1 0.231 A2 0.231 A3 0.196 A5 0.231
+[   1476s] seed 101 layer 11: train A0 0.223 A1 0.223 A3 0.216 A5 0.225
+[   1593s] seed 101 layer 14: train A0 0.256 A1 0.256 A3 0.232 A5 0.256
+[   1717s] seed 101 layer 18: train A0 0.261 A1 0.276 A3 0.229 A5 0.261
+[   1836s] seed 101 layer 21: train A0 0.214 A1 0.399 A3 0.206 A5 0.356
+[   1952s] seed 101 layer 24: train A0 0.366 A1 0.491 A3 0.372 A5 0.366
+[   2056s] seed 101: early recall A0 0.151 A1 0.148 A2 0.151 A3 0.127 A5 0.160 | d(A1-A0) -0.003
+[   2221s] seed 102 layer 4: train A0 0.197 A1 0.225 A2 0.197 A3 0.189 A5 0.197
+[   2386s] seed 102 layer 7: train A0 0.232 A1 0.232 A2 0.399 A3 0.196 A5 0.232
+[   2509s] seed 102 layer 11: train A0 0.251 A1 0.251 A3 0.234 A5 0.251
+[   2624s] seed 102 layer 14: train A0 0.232 A1 0.232 A3 0.232 A5 0.232
+[   2736s] seed 102 layer 18: train A0 0.355 A1 0.355 A3 0.305 A5 0.374
+[   2852s] seed 102 layer 21: train A0 0.266 A1 0.280 A3 0.237 A5 0.266
+[   2963s] seed 102 layer 24: train A0 0.320 A1 0.320 A3 0.329 A5 0.334
+[   3075s] seed 102: early recall A0 0.138 A1 0.140 A2 0.117 A3 0.121 A5 0.143 | d(A1-A0) +0.001
+[   3233s] seed 103 layer 4: train A0 0.279 A1 0.279 A2 0.279 A3 0.197 A5 0.270
+[   3392s] seed 103 layer 7: train A0 0.302 A1 0.302 A2 0.302 A3 0.243 A5 0.293
+[   3508s] seed 103 layer 11: train A0 0.262 A1 0.298 A3 0.206 A5 0.262
+[   3625s] seed 103 layer 14: train A0 0.224 A1 0.232 A3 0.215 A5 0.224
+[   3754s] seed 103 layer 18: train A0 0.225 A1 0.257 A3 0.225 A5 0.234
+[   3872s] seed 103 layer 21: train A0 0.358 A1 0.358 A3 0.318 A5 0.358
+[   3992s] seed 103 layer 24: train A0 0.352 A1 0.352 A3 0.357 A5 0.352
+[   4106s] seed 103: early recall A0 0.147 A1 0.147 A2 0.147 A3 0.122 A5 0.148 | d(A1-A0) +0.000
+[   4271s] seed 104 layer 4: train A0 0.197 A1 0.215 A2 0.197 A3 0.140 A5 0.197
+[   4445s] seed 104 layer 7: train A0 0.196 A1 0.196 A2 0.196 A3 0.159 A5 0.224
+[   4568s] seed 104 layer 11: train A0 0.187 A1 0.187 A3 0.151 A5 0.206
+[   4691s] seed 104 layer 14: train A0 0.186 A1 0.213 A3 0.159 A5 0.178
+[   4819s] seed 104 layer 18: train A0 0.217 A1 0.233 A3 0.209 A5 0.217
+[   4944s] seed 104 layer 21: train A0 0.195 A1 0.204 A3 0.186 A5 0.195
+[   5070s] seed 104 layer 24: train A0 0.314 A1 0.388 A3 0.320 A5 0.314
+[   5181s] seed 104: early recall A0 0.152 A1 0.159 A2 0.152 A3 0.136 A5 0.150 | d(A1-A0) +0.008
+[   5349s] seed 105 layer 4: train A0 0.238 A1 0.293 A2 0.265 A3 0.197 A5 0.238
+[   5520s] seed 105 layer 7: train A0 0.241 A1 0.297 A2 0.269 A3 0.205 A5 0.269
+[   5782s] seed 105 layer 11: train A0 0.238 A1 0.418 A3 0.320 A5 0.260
+[   6099s] seed 105 layer 14: train A0 0.246 A1 0.246 A3 0.238 A5 0.246
+[   6419s] seed 105 layer 18: train A0 0.262 A1 0.272 A3 0.254 A5 0.276
+[   6732s] seed 105 layer 21: train A0 0.327 A1 0.327 A3 0.308 A5 0.308
+[   7051s] seed 105 layer 24: train A0 0.369 A1 0.369 A3 0.406 A5 0.369
+[   7406s] seed 105: early recall A0 0.151 A1 0.147 A2 0.148 A3 0.126 A5 0.155 | d(A1-A0) -0.004
+[   7691s] seed 106 layer 4: train A0 0.206 A1 0.215 A2 0.215 A3 0.133 A5 0.187
+[   7962s] seed 106 layer 7: train A0 0.206 A1 0.224 A2 0.206 A3 0.159 A5 0.206
+[   8089s] seed 106 layer 11: train A0 0.238 A1 0.246 A3 0.251 A5 0.238
+[   8215s] seed 106 layer 14: train A0 0.248 A1 0.257 A3 0.234 A5 0.257
+[   8345s] seed 106 layer 18: train A0 0.239 A1 0.253 A3 0.230 A5 0.239
+[   8471s] seed 106 layer 21: train A0 0.365 A1 0.365 A3 0.282 A5 0.365
+[   8594s] seed 106 layer 24: train A0 0.334 A1 0.352 A3 0.360 A5 0.352
+[   8706s] seed 106: early recall A0 0.163 A1 0.163 A2 0.163 A3 0.134 A5 0.163 | d(A1-A0) +0.000
+[   8869s] seed 107 layer 4: train A0 0.260 A1 0.260 A2 0.260 A3 0.189 A5 0.232
+[   9038s] seed 107 layer 7: train A0 0.224 A1 0.232 A2 0.224 A3 0.197 A5 0.224
+[   9154s] seed 107 layer 11: train A0 0.226 A1 0.384 A3 0.226 A5 0.224
+[   9274s] seed 107 layer 14: train A0 0.215 A1 0.215 A3 0.178 A5 0.215
+[   9397s] seed 107 layer 18: train A0 0.235 A1 0.235 A3 0.209 A5 0.226
+[   9524s] seed 107 layer 21: train A0 0.281 A1 0.290 A3 0.229 A5 0.281
+[   9641s] seed 107 layer 24: train A0 0.355 A1 0.379 A3 0.336 A5 0.371
+[   9751s] seed 107: early recall A0 0.155 A1 0.156 A2 0.155 A3 0.116 A5 0.153 | d(A1-A0) +0.001
+[   9909s] seed 108 layer 4: train A0 0.196 A1 0.254 A2 0.205 A3 0.135 A5 0.196
+[  10071s] seed 108 layer 7: train A0 0.263 A1 0.263 A2 0.263 A3 0.144 A5 0.263
+[  10194s] seed 108 layer 11: train A0 0.251 A1 0.251 A3 0.203 A5 0.251
+[  10314s] seed 108 layer 14: train A0 0.232 A1 0.232 A3 0.223 A5 0.232
+[  10428s] seed 108 layer 18: train A0 0.193 A1 0.193 A3 0.184 A5 0.193
+[  10547s] seed 108 layer 21: train A0 0.223 A1 0.274 A3 0.175 A5 0.223
+[  10666s] seed 108 layer 24: train A0 0.296 A1 0.296 A3 0.343 A5 0.296
+[  10781s] seed 108: early recall A0 0.151 A1 0.148 A2 0.151 A3 0.139 A5 0.146 | d(A1-A0) -0.003
+[  10944s] seed 109 layer 4: train A0 0.189 A1 0.215 A2 0.206 A3 0.142 A5 0.178
+[  11109s] seed 109 layer 7: train A0 0.205 A1 0.399 A2 0.348 A3 0.170 A5 0.215
+[  11225s] seed 109 layer 11: train A0 0.215 A1 0.390 A3 0.202 A5 0.197
+[  11346s] seed 109 layer 14: train A0 0.230 A1 0.230 A3 0.185 A5 0.202
+[  11462s] seed 109 layer 18: train A0 0.308 A1 0.426 A3 0.318 A5 0.362
+[  11573s] seed 109 layer 21: train A0 0.274 A1 0.274 A3 0.262 A5 0.274
+[  11690s] seed 109 layer 24: train A0 0.329 A1 0.357 A3 0.320 A5 0.366
+[  11802s] seed 109: early recall A0 0.165 A1 0.166 A2 0.173 A3 0.145 A5 0.158 | d(A1-A0) +0.002
+[  11914s] seed 110 layer 4: train A0 0.224 A1 0.232 A2 0.224
+[  12037s] seed 110 layer 7: train A0 0.224 A1 0.251 A2 0.251
+[  12115s] seed 110 layer 11: train A0 0.297 A1 0.297
+[  12193s] seed 110 layer 14: train A0 0.303 A1 0.303
+[  12270s] seed 110 layer 18: train A0 0.358 A1 0.489
+[  12349s] seed 110 layer 21: train A0 0.383 A1 0.383
+[  12420s] seed 110 layer 24: train A0 0.262 A1 0.280
+[  12486s] seed 110: early recall A0 0.151 A1 0.151 A2 0.150 | d(A1-A0) +0.000
+[  12597s] seed 111 layer 4: train A0 0.196 A1 0.196 A2 0.196
+[  12713s] seed 111 layer 7: train A0 0.213 A1 0.213 A2 0.213
+[  12790s] seed 111 layer 11: train A0 0.224 A1 0.224
+[  12866s] seed 111 layer 14: train A0 0.232 A1 0.232
+[  12942s] seed 111 layer 18: train A0 0.197 A1 0.225
+[  13017s] seed 111 layer 21: train A0 0.277 A1 0.277
+[  13089s] seed 111 layer 24: train A0 0.320 A1 0.320
+[  13156s] seed 111: early recall A0 0.143 A1 0.143 A2 0.143 | d(A1-A0) +0.000
+[  13280s] seed 112 layer 4: train A0 0.240 A1 0.240 A2 0.240
+[  13405s] seed 112 layer 7: train A0 0.240 A1 0.240 A2 0.240
+[  13478s] seed 112 layer 11: train A0 0.232 A1 0.232
+[  13549s] seed 112 layer 14: train A0 0.240 A1 0.240
+[  13618s] seed 112 layer 18: train A0 0.277 A1 0.327
+[  13687s] seed 112 layer 21: train A0 0.293 A1 0.293
+[  13757s] seed 112 layer 24: train A0 0.415 A1 0.435
+[  13820s] seed 112: early recall A0 0.160 A1 0.160 A2 0.160 | d(A1-A0) +0.000
+[  13935s] seed 113 layer 4: train A0 0.214 A1 0.214 A2 0.214
+[  14058s] seed 113 layer 7: train A0 0.189 A1 0.189 A2 0.189
+[  14127s] seed 113 layer 11: train A0 0.214 A1 0.247
+[  14197s] seed 113 layer 14: train A0 0.247 A1 0.247
+[  14264s] seed 113 layer 18: train A0 0.259 A1 0.426
+[  14334s] seed 113 layer 21: train A0 0.355 A1 0.373
+[  14400s] seed 113 layer 24: train A0 0.379 A1 0.388
+[  14462s] seed 113: early recall A0 0.161 A1 0.161 A2 0.161 | d(A1-A0) +0.000
+[  14571s] seed 114 layer 4: train A0 0.234 A1 0.234 A2 0.234
+[  14682s] seed 114 layer 7: train A0 0.312 A1 0.321 A2 0.330
+[  14751s] seed 114 layer 11: train A0 0.260 A1 0.260
+[  14819s] seed 114 layer 14: train A0 0.260 A1 0.260
+[  14885s] seed 114 layer 18: train A0 0.308 A1 0.308
+[  14955s] seed 114 layer 21: train A0 0.237 A1 0.249
+[  15023s] seed 114 layer 24: train A0 0.343 A1 0.343
+[  15085s] seed 114: early recall A0 0.131 A1 0.137 A2 0.135 | d(A1-A0) +0.006
+[  15204s] seed 115 layer 4: train A0 0.210 A1 0.210 A2 0.210
+[  15311s] seed 115 layer 7: train A0 0.374 A1 0.392 A2 0.383
+[  15377s] seed 115 layer 11: train A0 0.273 A1 0.318
+[  15448s] seed 115 layer 14: train A0 0.315 A1 0.315
+[  15516s] seed 115 layer 18: train A0 0.324 A1 0.324
+[  15588s] seed 115 layer 21: train A0 0.333 A1 0.333
+[  15658s] seed 115 layer 24: train A0 0.366 A1 0.366
+[  15719s] seed 115: early recall A0 0.135 A1 0.134 A2 0.134 | d(A1-A0) -0.001
+[  15828s] seed 116 layer 4: train A0 0.223 A1 0.232 A2 0.232
+[  15938s] seed 116 layer 7: train A0 0.221 A1 0.221 A2 0.221
+[  16004s] seed 116 layer 11: train A0 0.325 A1 0.351
+[  16071s] seed 116 layer 14: train A0 0.298 A1 0.335
+[  16138s] seed 116 layer 18: train A0 0.324 A1 0.352
+[  16207s] seed 116 layer 21: train A0 0.404 A1 0.422
+[  16275s] seed 116 layer 24: train A0 0.420 A1 0.420
+[  16343s] seed 116: early recall A0 0.158 A1 0.163 A2 0.158 | d(A1-A0) +0.005
+[  16456s] seed 117 layer 4: train A0 0.234 A1 0.243 A2 0.234
+[  16563s] seed 117 layer 7: train A0 0.232 A1 0.232 A2 0.232
+[  16629s] seed 117 layer 11: train A0 0.223 A1 0.239
+[  16696s] seed 117 layer 14: train A0 0.234 A1 0.234
+[  16765s] seed 117 layer 18: train A0 0.231 A1 0.258
+[  16832s] seed 117 layer 21: train A0 0.372 A1 0.372
+[  16900s] seed 117 layer 24: train A0 0.395 A1 0.395
+[  16960s] seed 117: early recall A0 0.136 A1 0.146 A2 0.136 | d(A1-A0) +0.010
+[  17068s] seed 118 layer 4: train A0 0.273 A1 0.282 A2 0.282
+[  17176s] seed 118 layer 7: train A0 0.232 A1 0.232 A2 0.232
+[  17241s] seed 118 layer 11: train A0 0.286 A1 0.327
+[  17306s] seed 118 layer 14: train A0 0.264 A1 0.279
+[  17369s] seed 118 layer 18: train A0 0.270 A1 0.294
+[  17432s] seed 118 layer 21: train A0 0.233 A1 0.242
+[  17496s] seed 118 layer 24: train A0 0.307 A1 0.307
+[  17554s] seed 118: early recall A0 0.139 A1 0.147 A2 0.144 | d(A1-A0) +0.008
+[  17661s] seed 119 layer 4: train A0 0.211 A1 0.229 A2 0.229
+[  17770s] seed 119 layer 7: train A0 0.344 A1 0.352 A2 0.344
+[  17834s] seed 119 layer 11: train A0 0.298 A1 0.335
+[  17898s] seed 119 layer 14: train A0 0.307 A1 0.344
+[  17963s] seed 119 layer 18: train A0 0.327 A1 0.402
+[  18028s] seed 119 layer 21: train A0 0.358 A1 0.358
+[  18090s] seed 119 layer 24: train A0 0.322 A1 0.344
+[  18148s] seed 119: early recall A0 0.159 A1 0.156 A2 0.153 | d(A1-A0) -0.003
+[  18148s] done
+=== 17:31:57 END rc=0
+=== 17:31:57 START LOTO
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 4048.37it/s]
+[    128s] LOTO multihop: A0 0.000 A1 0.000
+[    236s] LOTO multilingual: A0 0.000 A1 0.000
+[    349s] LOTO typo: A0 0.333 A1 0.333
+[    465s] LOTO association: A0 0.000 A1 0.000
+[    566s] LOTO poetry: A0 0.000 A1 0.000
+[    566s] done
+=== 17:41:25 END rc=0
+=== 17:41:25 START VERDICT
+{
+ "n_splits": 20,
+ "lambda_star": 1.0,
+ "primary_early_recall_A1_minus_A0": {
+  "mean": 0.001698683261183262,
+  "min": -0.0038961038961038974,
+  "max": 0.010389610389610365,
+  "wins": 9,
+  "ties": 6,
+  "losses": 5,
+  "n": 20
+ },
+ "early_fp10_matched_A1_minus_A0": {
+  "mean": 0.00014670714345783731,
+  "min": -0.0005194805194805195,
+  "max": 0.002000000000000001,
+  "wins": 8,
+  "ties": 8,
+  "losses": 4,
+  "n": 20
+ },
+ "early_fp10_wiki_A1_minus_A0": {
+  "mean": -5.684160515457308e-05,
+  "min": -0.000496372498013954,
+  "max": 0.00034860074538233497,
+  "wins": 5,
+  "ties": 4,
+  "losses": 11,
+  "n": 20
+ },
+ "early_recall_A1_minus_A2": {
+  "mean": 0.0025279581529581542,
+  "min": -0.00627705627705627,
+  "max": 0.02304292929292931,
+  "wins": 10,
+  "ties": 5,
+  "losses": 5,
+  "n": 20
+ },
+ "early_recall_A2_minus_A0": {
+  "mean": -0.0008292748917748921,
+  "min": -0.02156385281385284,
+  "max": 0.007846320346320351,
+  "wins": 3,
+  "ties": 11,
+  "losses": 6,
+  "n": 20
+ },
+ "criteria": {
+  "C1_mean_ge_3pt": false,
+  "C2_wins_ge_16": false,
+  "C3_no_fp_increase": true,
+  "C4_spectral_specific": false,
+  "refute_condition": true
+ },
+ "verdict": "REFUTED",
+ "guardrails": {
+  "mid_recall": {
+   "mean": 0.0009374999999999994,
+   "min": -0.005708874458874441,
+   "max": 0.005979437229437251,
+   "wins": 9,
+   "ties": 8,
+   "losses": 3,
+   "n": 20
+  },
+  "late_recall": {
+   "mean": -0.000742905242905248,
+   "min": -0.02910654160654161,
+   "max": 0.008417508417508407,
+   "wins": 11,
+   "ties": 2,
+   "losses": 7,
+   "n": 20
+  },
+  "early_mrr": {
+   "mean": 0.00027684652648950827,
+   "min": -0.0097491787870998,
+   "max": 0.005976099202480184,
+   "wins": 12,
+   "ties": 0,
+   "losses": 8,
+   "n": 20
+  },
+  "early_tr_cos": {
+   "mean": -0.002381429076194763,
+   "min": -0.01398158073425293,
+   "max": 0.007973551750183105,
+   "wins": 4,
+   "ties": 0,
+   "losses": 16,
+   "n": 20
+  },
+  "early_tr_nmse": {
+   "mean": 0.002763941138982773,
+   "min": -0.011885732412338257,
+   "max": 0.017647922039031982,
+   "wins": 14,
+   "ties": 0,
+   "losses": 6,
+   "n": 20
+  },
+  "best7": {
+   "mean": -0.0025867604617604593,
+   "min": -0.033152958152958156,
+   "max": 0.010930735930735902,
+   "wins": 11,
+   "ties": 2,
+   "losses": 7,
+   "n": 20
+  }
+ },
+ "guardrail_flags": {
+  "mid_ge_-1pt": true,
+  "late_ge_-1pt": true,
+  "mrr_same_sign": true,
+  "cos_ge_-0.02": true,
+  "nmse_le_+0.02": true
+ },
+ "secondary": {
+  "A3": {
+   "early": {
+    "mean": -0.022803571428571433,
+    "min": -0.038446969696969674,
+    "max": -0.012202380952380965,
+    "wins": 0,
+    "ties": 0,
+    "losses": 10,
+    "n": 10
+   },
+   "best7": {
+    "mean": -0.01781818181818181,
+    "min": -0.04833333333333334,
+    "max": 0.007305194805194815,
+    "wins": 3,
+    "ties": 0,
+    "losses": 7,
+    "n": 10
+   }
+  },
+  "A5": {
+   "early": {
+    "mean": -0.002381493506493504,
+    "min": -0.02675865800865801,
+    "max": 0.009632034632034658,
+    "wins": 4,
+    "ties": 1,
+    "losses": 5,
+    "n": 10
+   },
+   "best7": {
+    "mean": -0.006622294372294374,
+    "min": -0.030097402597402623,
+    "max": 0.019264069264069317,
+    "wins": 3,
+    "ties": 1,
+    "losses": 6,
+    "n": 10
+   }
+  }
+ },
+ "fit_minus_heldout_early": {
+  "A0": 0.03387527056277057,
+  "A1": 0.0421765873015873
+ },
+ "means_early": {
+  "A0": {
+   "recall10": 0.14987472943722946,
+   "mrr": 0.10741740713750665,
+   "fp10_matched": 0.002548905534798227,
+   "fp10_wiki": 0.00370407422335388,
+   "auc_matched": 0.6333985618958848
+  },
+  "A1": {
+   "recall10": 0.15157341269841268,
+   "mrr": 0.10769425366399617,
+   "fp10_matched": 0.002695612678256064,
+   "fp10_wiki": 0.003647232618199307,
+   "auc_matched": 0.6345408051123766
+  },
+  "A2": {
+   "recall10": 0.14904545454545456,
+   "mrr": 0.10750251994349957,
+   "fp10_matched": 0.0028073678171966795,
+   "fp10_wiki": 0.0037245651721587274,
+   "auc_matched": 0.6359515805270892
+  }
+ }
+}
+=== 17:41:27 END rc=0
+=== M4 skipped: C1-C3 not all met (pre-registered condition)
+=== EXP1 DONE
