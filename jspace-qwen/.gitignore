@@ -5,3 +5,4 @@ results/*.npy
 !data/
 !data/**
 data/wikitext103_records.json
+sprint/results/*.pt
