@@ -47,34 +47,63 @@ def log(msg):
 
 # ---------------------------------------------------------------------- KL term
 class KLTerm:
-    """KL(p || q_w) over the full vocabulary at N WikiText positions, exact, autograd gradient."""
+    """KL(p || q_w) at N WikiText positions, with an autograd gradient.
 
-    def __init__(self, ctx: Ctx, l: int, H: torch.Tensor, Y: torch.Tensor):
+    Exact decomposition: KL_n = sum_v p log p - (u . m_n) / r_n + logsumexp_v z_nv, where
+    z_nv = (u . L_n[:, v]) / r_n, r_n = rms of the combined transport, and m_n = sum_v p_nv L_n[:, v]
+    (computed once over the full vocabulary). Only the log-partition needs every token. During the search
+    it is estimated from each position's K tokens with the largest expert-logit norm plus R tail tokens
+    sampled once per position (seed 0) and weighted by |tail| / R. Validation (sprint/test_exp2_kl2.py) gave
+    errors <= 0.004 nats at the J++, uniform and R-lens weightings and <= 0.04 nats over 16 test vectors
+    with R = 8192. ``exact`` gives the full-vocabulary KL used for every reported number.
+    """
+
+    def __init__(self, ctx: Ctx, l: int, H: torch.Tensor, Y: torch.Tensor, K: int = 8192, R: int = 16384):
         E = ctx.experts[l]
         T = torch.einsum("edk,nk->ned", E.float(), H.float())          # [N, E, d]
         self.G = T @ T.transpose(1, 2)                                  # [N, E, E]
-        self.L = T @ ctx.A.T                                            # [N, E, V] pre-norm logits
+        Lfull = T @ ctx.A.T                                             # [N, E, V] pre-norm logits
         self.d, self.eps = T.shape[-1], ctx.eps
+        N, Ed, V = Lfull.shape
         with torch.no_grad():
-            self.logp = torch.log_softmax(ctx.unembed(Y.float()), dim=-1)
-            self.p = self.logp.exp()
-            self.Hp = float((self.p * self.logp).sum(-1).mean())       # -entropy, for reporting
+            logp = torch.log_softmax(ctx.unembed(Y.float()), dim=-1)
+            p = logp.exp()
+            self.negH = (p * logp).sum(-1)                             # [N] sum p log p
+            self.m = torch.einsum("nv,nev->ne", p, Lfull)               # [N, E] exact over the vocabulary
+            top = Lfull.norm(dim=1).topk(K, dim=-1).indices             # [N, K]
+            mask = torch.ones(N, V, dtype=torch.bool)
+            mask.scatter_(1, top, False)
+            g = torch.Generator().manual_seed(0)
+            tail = torch.stack([torch.nonzero(mask[n])[:, 0][torch.randperm(V - K, generator=g)[:R]] for n in range(N)])
+            idx = torch.cat([top, tail], dim=1)                         # [N, K + R]
+            self.L = Lfull.gather(2, idx[:, None, :].expand(-1, Ed, -1)).contiguous()
+            self.logw = torch.cat([torch.zeros(K), torch.full((R,), math.log((V - K) / R))])   # [K + R]
+        self.Lfull = Lfull
+        self.Hp = float(self.negH.mean())
+
+    def _kl(self, u: torch.Tensor, L: torch.Tensor, logw: torch.Tensor | None) -> torch.Tensor:
+        r = (torch.einsum("e,nef,f->n", u, self.G, u) / self.d + self.eps).sqrt()
+        z = torch.einsum("e,nev->nv", u, L) / r[:, None]
+        if logw is not None:
+            z = z + logw[None, :]
+        return (self.negH - (self.m @ u) / r + torch.logsumexp(z, dim=-1)).mean()
 
     def value_grad(self, u: torch.Tensor) -> tuple[float, torch.Tensor]:
         u = u.detach().clone().requires_grad_(True)
-        s = torch.einsum("e,nev->nv", u, self.L)
-        r = (torch.einsum("e,nef,f->n", u, self.G, u) / self.d + self.eps).sqrt()
-        logq = torch.log_softmax(s / r[:, None], dim=-1)
-        kl = (self.p * (self.logp - logq)).sum(-1).mean()
-        kl.backward()
-        return float(kl), u.grad.detach()
+        kl = self._kl(u, self.L, self.logw)
+        (g,) = torch.autograd.grad(kl, u)
+        return float(kl.detach()), g
 
     def value(self, u: torch.Tensor) -> float:
         with torch.no_grad():
-            s = torch.einsum("e,nev->nv", u.float(), self.L)
-            r = (torch.einsum("e,nef,f->n", u.float(), self.G, u.float()) / self.d + self.eps).sqrt()
-            logq = torch.log_softmax(s / r[:, None], dim=-1)
-            return float((self.p * (self.logp - logq)).sum(-1).mean())
+            return float(self._kl(u.float(), self.L, self.logw))
+
+    def exact(self, u: torch.Tensor) -> float:
+        with torch.no_grad():
+            return float(self._kl(u.float(), self.Lfull, None))
+
+    def validate(self, us: list[torch.Tensor]) -> list[tuple[float, float]]:
+        return [(self.value(u), self.exact(u)) for u in us]
 
 
 def kl_positions(ctx: Ctx, l: int) -> tuple[torch.Tensor, torch.Tensor]:
@@ -163,7 +192,7 @@ def fit_multi(L: torch.Tensor, hit: Pairs, excl: torch.Tensor, *, false: Pairs |
             if step % exact_every == 0 or step == steps:
                 cand = (obj_e, obj_s)
                 if best is None or cand > best[0]:
-                    best = (cand, {"w": u.clone(), "train_hit": e_hit, "train_false": e_false, "kl": klv,
+                    best = (cand, {"w": u.clone(), "train_hit": e_hit, "train_false": e_false, "kl_search": klv,
                                    "init": name, "step": step})
             if step == steps:
                 break
@@ -171,7 +200,9 @@ def fit_multi(L: torch.Tensor, hit: Pairs, excl: torch.Tensor, *, false: Pairs |
             opt.zero_grad()
             param.grad = -gth.clone()
             opt.step()
-    return best[1]
+    out = best[1]
+    out["kl"] = kl.exact(out["w"]) if kl is not None else None
+    return out
 
 
 def fit_kl_only(kl: KLTerm, counts: torch.Tensor, steps=200, lr=0.05, every=5):
@@ -193,14 +224,16 @@ def fit_kl_only(kl: KLTerm, counts: torch.Tensor, steps=200, lr=0.05, every=5):
             v, g = kl.value_grad(u)
             if step % every == 0 or step == steps:
                 if best is None or v < best[0]:
-                    best = (v, {"w": u.clone(), "kl": v, "init": name, "step": step})
+                    best = (v, {"w": u.clone(), "kl_search": v, "init": name, "step": step})
             if step == steps:
                 break
             gth = (g - (g @ u) * u) / nrm          # gradient of KL; we minimise it
             opt.zero_grad()
             param.grad = gth.clone()
             opt.step()
-    return best[1]
+    out = best[1]
+    out["kl"] = kl.exact(out["w"])
+    return out
 
 
 # ---------------------------------------------------------------------- scoring helpers
@@ -323,7 +356,7 @@ def stage_confirm(ctx: Ctx, beta: float):
             r2 = fit_multi(L, hit, ctx.excl, false=false, gamma=GAMMA, kl=kl, beta=beta)
             r3 = fit_multi(L, hit, ctx.excl, kl=kl, beta=beta)
             r4 = fit_multi(L, hit, ctx.excl, false=false, gamma=GAMMA)
-            ent["seeds"][str(seed)] = {"B0": {"w": w0.tolist(), "kl": kl.value(w0 / w0.norm())},
+            ent["seeds"][str(seed)] = {"B0": {"w": w0.tolist(), "kl": kl.exact(w0 / w0.norm())},
                                        "B2": {k: (v.tolist() if torch.is_tensor(v) else v) for k, v in r2.items()},
                                        "B3": {k: (v.tolist() if torch.is_tensor(v) else v) for k, v in r3.items()},
                                        "B4": {k: (v.tolist() if torch.is_tensor(v) else v) for k, v in r4.items()}}

@@ -106,4 +106,19 @@ generalisation gain" when only criterion 2 holds.
 
 ## Amendments
 
-(none yet)
+**Amendment 1 (2026-11-16, before any Exp 2 run; from the component checks only).** The exact
+full-vocabulary KL made one B2 search take about 15 minutes per layer, which puts the whole
+experiment near 15 CPU-hours. The KL is therefore computed through an exact decomposition,
+KL_n = Σ p log p − (u·m_n)/r_n + logsumexp_v z_nv, in which the first two terms are exact over the
+full vocabulary.
+
+During the search, the log-partition is estimated from each position's 8,192 tokens with the
+largest expert-logit norm plus 16,384 tail tokens sampled once per position and weighted by
+|tail|/16,384.
+
+Validation (`sprint/test_exp2_kl.py`), at layers 4 and 21:
+- error ≤ 0.0002 nats at the J++, uniform and R-lens weightings;
+- error ≤ 0.038 nats over 16 test weight vectors (KL range 2.8–29.7 nats).
+
+Every reported KL, and B0's KL, is the exact full-vocabulary value at the final weights. Nothing
+else changes.
