@@ -207,8 +207,6 @@ items, at layers {4, 7} and {4, 7, 11, 14}:
 
 ## Amendments
 
-(none yet)
-
 **Amendment 1 (2026-11-16, before any Exp 1 code; motivated by baseline data only).** The M4 null
 criterion "null ≤ 2%" was miscalibrated. In the swap baseline (E0.3) every lens's unrelated-word null
 is 1.7–8.3% at scale 1 (J++ 6.7%, from 4 of 60 trials). Replacement criterion: at the scale where
