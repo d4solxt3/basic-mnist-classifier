@@ -388,22 +388,26 @@ def stage_confirm(ctx: Ctx, beta: float):
 def stage_loto(ctx: Ctx, beta: float):
     res = load_json("exp2_loto.json") or {"beta_star": beta, "weights": {}, "scores": {}}
     conf = load_json("exp2_confirm.json")
+    n_reps = len(loto_folds())
     for l in LAYERS:
-        if str(l) in res["weights"]:
+        if len(res["weights"].get(str(l), {})) == n_reps:
             continue
         H, Y = kl_positions(ctx, l)
         kl = KLTerm(ctx, l, H, Y)
-        res["weights"][str(l)] = {}
+        res["weights"].setdefault(str(l), {})
         for k, rep in loto_folds():
+            key = f"{k}_{rep}"
+            if key in res["weights"][str(l)]:
+                continue                  # checkpointed per replicate (container restarts)
             fit_idx, _ = loto_fit_items(ctx, k, rep)
             its, hit, false, L = fit_inputs(ctx, fit_idx, l, 900 + 10 * k + rep)
             r0 = fit_weights(L, hit, ctx.excl)
             r2 = fit_multi(L, hit, ctx.excl, false=false, gamma=GAMMA, kl=kl, beta=beta)
-            res["weights"][str(l)][f"{k}_{rep}"] = {"B0": r0.w.tolist(), "B2": r2["w"].tolist()}
+            res["weights"][str(l)][key] = {"B0": r0.w.tolist(), "B2": r2["w"].tolist()}
             del L
+            save_json(res, "exp2_loto.json")
         del kl
         log(f"LOTO layer {l} fitted")
-        save_json(res, "exp2_loto.json")
     for k, rep in loto_folds():
         key = f"{k}_{rep}"
         if key in res["scores"]:
