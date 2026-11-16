@@ -5,8 +5,8 @@ Objective of arm B2: Surr(w) - gamma * FalseSurr(w) - beta * KL(w), on J++'s 8 L
   Surr       J++'s sigmoid-margin surrogate of pair-level macro pass@10 (fitting pairs)
   FalseSurr  the same surrogate on matched-control pairs inside the fitting items (false hits)
   KL         mean KL(softmax(unembed(h_27)) || softmax(unembed(J(w) h_l))) at 256 WikiText positions
-Arms: B0 J++ (= Exp 1's A0 on the same seeds), B1 KL-only (label-free), B2 primary, B3 Surr-beta*KL,
-B4 Surr-gamma*FalseSurr. Search: J++'s Adam (200 steps, lr 0.05, exact score every 5 steps, starts
+Arms: B0 J++ (= Exp 1's A0 on the same seeds), B1 KL-only (label-free), B2 primary. The secondary arms
+B3 (Surr - beta*KL) and B4 (Surr - gamma*FalseSurr) were dropped by Amendment 2 to save compute. Search: J++'s Adam (200 steps, lr 0.05, exact score every 5 steps, starts
 uniform / best single expert / top-3), surrogate gradients analytic, KL gradient by autograd.
 
 Stages: --stage tune (beta on seeds 0-2), confirm (seeds 100-109), loto (20 fold-replicates), verdict.
@@ -33,6 +33,7 @@ from sprintfit import combine, fit_rows  # noqa: E402
 from jspace import paths as P  # noqa: E402
 
 BETAS = [0.03, 0.1, 0.3]
+ARMS = ("B0", "B1", "B2")          # B3/B4 dropped by Amendment 2 (compute)
 GAMMA = 1.0
 N_KL = 256
 TUNE_SEEDS = [0, 1, 2]
@@ -339,7 +340,7 @@ def stage_tune(ctx: Ctx):
 
 
 def stage_confirm(ctx: Ctx, beta: float):
-    """Layer-major fitting of B1-B4 on seeds 100-109 (B0 = Exp 1's A0), then evaluation per seed."""
+    """Layer-major fitting of B1 and B2 on seeds 100-109 (B0 = Exp 1's A0), then evaluation per seed."""
     res = load_json("exp2_confirm.json") or {"beta_star": beta, "gamma": GAMMA, "weights": {}, "per_seed": {}}
     e1 = load_json("exp1_confirm.json")
     for l in LAYERS:
@@ -354,14 +355,11 @@ def stage_confirm(ctx: Ctx, beta: float):
             its, hit, false, L = fit_inputs(ctx, fit_idx, l, seed)
             w0 = torch.tensor(e1["per_seed"][str(seed)]["weights"]["A0"][str(l)]["w"])
             r2 = fit_multi(L, hit, ctx.excl, false=false, gamma=GAMMA, kl=kl, beta=beta)
-            r3 = fit_multi(L, hit, ctx.excl, kl=kl, beta=beta)
-            r4 = fit_multi(L, hit, ctx.excl, false=false, gamma=GAMMA)
+            # B3/B4 (secondary attribution arms) dropped by Amendment 2 to save compute
             ent["seeds"][str(seed)] = {"B0": {"w": w0.tolist(), "kl": kl.exact(w0 / w0.norm())},
-                                       "B2": {k: (v.tolist() if torch.is_tensor(v) else v) for k, v in r2.items()},
-                                       "B3": {k: (v.tolist() if torch.is_tensor(v) else v) for k, v in r3.items()},
-                                       "B4": {k: (v.tolist() if torch.is_tensor(v) else v) for k, v in r4.items()}}
+                                       "B2": {k: (v.tolist() if torch.is_tensor(v) else v) for k, v in r2.items()}}
             del L
-            log(f"layer {l} seed {seed}: train hit B2 {r2['train_hit']:.3f} B3 {r3['train_hit']:.3f} B4 {r4['train_hit']:.3f}; "
+            log(f"layer {l} seed {seed}: train hit B2 {r2['train_hit']:.3f} false {r2['train_false']:.3f}; "
                 f"KL B0 {ent['seeds'][str(seed)]['B0']['kl']:.2f} B1 {b1['kl']:.2f} B2 {r2['kl']:.2f}")
         res["weights"][str(l)] = ent
         del kl
@@ -371,7 +369,7 @@ def stage_confirm(ctx: Ctx, beta: float):
             continue
         fit_idx, held_idx = ctx.split(seed)
         summ, fitg = {}, {}
-        for arm in ("B0", "B1", "B2", "B3", "B4"):
+        for arm in ARMS:
             maps = {l: combine(ctx.experts[l], torch.tensor(res["weights"][str(l)]["B1"]["w"] if arm == "B1"
                                                             else res["weights"][str(l)]["seeds"][str(seed)][arm]["w"]))
                     for l in LAYERS}
@@ -437,9 +435,9 @@ def stage_verdict():
 
     def gap(arm, s):
         return float(np.mean([R[sd]["fit_split"][arm][s] - R[sd]["results"][arm][s]["recall10"] for sd in seeds]))
-    gaps = {arm: float(np.mean([gap(arm, s) for s in STRATA])) for arm in ("B0", "B1", "B2", "B3", "B4")}
+    gaps = {arm: float(np.mean([gap(arm, s) for s in STRATA])) for arm in ARMS}
     best7 = {arm: stat([R[s]["results"][arm]["best7_recall10"] - R[s]["results"]["B0"]["best7_recall10"] for s in seeds])
-             for arm in ("B1", "B2", "B3", "B4")}
+             for arm in ARMS if arm != "B0"}
     fpm = stat([R[s]["results"]["B2"]["early"]["fp10_matched"] - R[s]["results"]["B0"]["early"]["fp10_matched"] for s in seeds])
     c1 = lo["B2"]["mean"] >= 0.02 and lo["B2"]["wins"] >= 14
     c2 = gaps["B2"] <= 0.5 * gaps["B0"]
@@ -450,7 +448,7 @@ def stage_verdict():
     if verdict != "CONFIRMED" and c2 and not c1:
         verdict += " (reduces overfitting without generalisation gain)"
     means = {}
-    for arm in ("B0", "B1", "B2", "B3", "B4"):
+    for arm in ARMS:
         means[arm] = {"best7": float(np.mean([R[s]["results"][arm]["best7_recall10"] for s in seeds])),
                       **{f"{st}_recall10": float(np.mean([R[s]["results"][arm][st]["recall10"] for s in seeds])) for st in STRATA},
                       "early_fp10_matched": float(np.mean([R[s]["results"][arm]["early"]["fp10_matched"] for s in seeds])),
@@ -469,8 +467,7 @@ def stage_verdict():
                   f"J++ (B0): LOTO best-of-7 {np.mean([loto['scores'][k]['B0']['best7'] for k in keys]):.4f}; gap {gaps['B0']:.4f}",
                   f"B2: LOTO d {lo['B2']['mean']:+.4f} (W {lo['B2']['wins']}/{lo['B2']['n']}); gap {gaps['B2']:.4f}; "
                   f"standard best-of-7 d {best7['B2']['mean']:+.4f}; dFP@10 matched {fpm['mean']:+.4f}",
-                  f"B1 KL-only LOTO d {lo['B1']['mean']:+.4f}, standard d {best7['B1']['mean']:+.4f}; B3/B4 standard d "
-                  f"{best7['B3']['mean']:+.4f}/{best7['B4']['mean']:+.4f}",
+                  f"B1 KL-only LOTO d {lo['B1']['mean']:+.4f}, standard d {best7['B1']['mean']:+.4f} (B3/B4 dropped, Amendment 2)",
                   f"{verdict} (beta*={conf['beta_star']}, gamma={GAMMA})")
     return out
 

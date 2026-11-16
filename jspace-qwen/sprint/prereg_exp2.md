@@ -122,3 +122,10 @@ Validation (`sprint/test_exp2_kl.py`), at layers 4 and 21:
 
 Every reported KL, and B0's KL, is the exact full-vocabulary value at the final weights. Nothing
 else changes.
+
+**Amendment 2 (2026-11-16, during the tuning stage, before the confirmation and leave-one-task-out
+stages; at the user's request, for compute).** The secondary arms B3 (Surr − β·KL) and B4
+(Surr − γ·FalseSurr) are dropped. This saves about 2.2 of about 10 CPU-hours.
+- Unchanged: the primary test (leave-one-task-out, 20 fold-replicates), all four confirm/refute
+  criteria, B0, B1, B2 and β tuning. None of the criteria involve B3 or B4.
+- Lost: attributing any B2 effect to its KL term versus its false-positive term.
