@@ -1,0 +1,283 @@
+=== 17:42:08 START TUNE
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3526.81it/s]
+[    237s] tune layer 4 seed 0: b0.03: hit 0.285 kl 5.80 b0.1: hit 0.271 kl 5.13 b0.3: hit 0.205 kl 4.77
+[    459s] tune layer 4 seed 1: b0.03: hit 0.221 kl 5.67 b0.1: hit 0.204 kl 4.91 b0.3: hit 0.154 kl 4.69
+[    683s] tune layer 4 seed 2: b0.03: hit 0.197 kl 5.21 b0.1: hit 0.183 kl 4.75 b0.3: hit 0.161 kl 4.70
+[    912s] tune layer 7 seed 0: b0.03: hit 0.238 kl 5.47 b0.1: hit 0.237 kl 4.76 b0.3: hit 0.183 kl 4.35
+[   1141s] tune layer 7 seed 1: b0.03: hit 0.243 kl 5.29 b0.1: hit 0.189 kl 4.37 b0.3: hit 0.171 kl 4.26
+[   1368s] tune layer 7 seed 2: b0.03: hit 0.210 kl 4.92 b0.1: hit 0.196 kl 4.68 b0.3: hit 0.152 kl 4.25
+[   1596s] tune layer 11 seed 0: b0.03: hit 0.243 kl 4.85 b0.1: hit 0.259 kl 4.75 b0.3: hit 0.217 kl 4.11
+[   1819s] tune layer 11 seed 1: b0.03: hit 0.262 kl 4.56 b0.1: hit 0.259 kl 4.16 b0.3: hit 0.162 kl 3.86
+[   2039s] tune layer 11 seed 2: b0.03: hit 0.220 kl 4.50 b0.1: hit 0.202 kl 4.16 b0.3: hit 0.140 kl 3.84
+[   2264s] tune layer 14 seed 0: b0.03: hit 0.240 kl 5.00 b0.1: hit 0.194 kl 4.20 b0.3: hit 0.177 kl 3.58
+[   2487s] tune layer 14 seed 1: b0.03: hit 0.251 kl 4.43 b0.1: hit 0.225 kl 4.05 b0.3: hit 0.180 kl 3.59
+[   2712s] tune layer 14 seed 2: b0.03: hit 0.229 kl 4.31 b0.1: hit 0.197 kl 3.81 b0.3: hit 0.135 kl 3.55
+[   2942s] tune layer 18 seed 0: b0.03: hit 0.264 kl 4.51 b0.1: hit 0.246 kl 4.07 b0.3: hit 0.220 kl 3.63
+[   3170s] tune layer 18 seed 1: b0.03: hit 0.281 kl 4.08 b0.1: hit 0.227 kl 3.36 b0.3: hit 0.204 kl 3.13
+[   3391s] tune layer 18 seed 2: b0.03: hit 0.289 kl 5.13 b0.1: hit 0.197 kl 3.42 b0.3: hit 0.162 kl 3.19
+[   3616s] tune layer 21 seed 0: b0.03: hit 0.270 kl 2.89 b0.1: hit 0.254 kl 2.35 b0.3: hit 0.237 kl 2.25
+[   3841s] tune layer 21 seed 1: b0.03: hit 0.250 kl 2.71 b0.1: hit 0.211 kl 2.24 b0.3: hit 0.211 kl 2.23
+[   4064s] tune layer 21 seed 2: b0.03: hit 0.362 kl 4.06 b0.1: hit 0.348 kl 3.53 b0.3: hit 0.198 kl 2.24
+[   4280s] tune layer 24 seed 0: b0.03: hit 0.284 kl 1.67 b0.1: hit 0.275 kl 1.52 b0.3: hit 0.266 kl 1.44
+[   4497s] tune layer 24 seed 1: b0.03: hit 0.332 kl 1.66 b0.1: hit 0.332 kl 1.55 b0.3: hit 0.314 kl 1.44
+[   4721s] tune layer 24 seed 2: b0.03: hit 0.325 kl 2.55 b0.1: hit 0.216 kl 1.49 b0.3: hit 0.207 kl 1.42
+[   4733s] beta* = 0.03 ({'0.03': 0.36670634920634915, '0.1': 0.34727032227032223, '0.3': 0.32826479076479076})
+[   4733s] done
+=== 19:01:03 END rc=0
+=== 19:01:03 START CONFIRM
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3863.98it/s]
+[    130s] layer 4 seed 100: train hit B2 0.260 false 0.000; KL B0 6.44 B1 4.65 B2 5.31
+[    209s] layer 4 seed 101: train hit B2 0.222 false 0.000; KL B0 6.17 B1 4.65 B2 5.40
+[    285s] layer 4 seed 102: train hit B2 0.206 false 0.000; KL B0 6.84 B1 4.65 B2 5.25
+[    360s] layer 4 seed 103: train hit B2 0.270 false 0.000; KL B0 6.05 B1 4.65 B2 5.36
+[    439s] layer 4 seed 104: train hit B2 0.197 false 0.000; KL B0 5.95 B1 4.65 B2 5.17
+[    517s] layer 4 seed 105: train hit B2 0.220 false 0.000; KL B0 5.83 B1 4.65 B2 5.09
+[    597s] layer 4 seed 106: train hit B2 0.206 false 0.000; KL B0 6.90 B1 4.65 B2 5.30
+[    674s] layer 4 seed 107: train hit B2 0.225 false 0.003; KL B0 7.16 B1 4.65 B2 5.43
+[    753s] layer 4 seed 108: train hit B2 0.188 false 0.000; KL B0 6.97 B1 4.65 B2 5.44
+[    831s] layer 4 seed 109: train hit B2 0.170 false 0.005; KL B0 6.12 B1 4.65 B2 5.37
+[    951s] layer 7 seed 100: train hit B2 0.232 false 0.000; KL B0 6.05 B1 4.21 B2 5.18
+[   1024s] layer 7 seed 101: train hit B2 0.231 false 0.000; KL B0 6.12 B1 4.21 B2 5.08
+[   1099s] layer 7 seed 102: train hit B2 0.232 false 0.000; KL B0 6.26 B1 4.21 B2 5.27
+[   1174s] layer 7 seed 103: train hit B2 0.302 false 0.000; KL B0 5.81 B1 4.21 B2 5.60
+[   1248s] layer 7 seed 104: train hit B2 0.187 false 0.000; KL B0 6.31 B1 4.21 B2 4.86
+[   1323s] layer 7 seed 105: train hit B2 0.219 false 0.000; KL B0 5.70 B1 4.21 B2 4.50
+[   1398s] layer 7 seed 106: train hit B2 0.170 false 0.000; KL B0 6.61 B1 4.21 B2 4.81
+[   1471s] layer 7 seed 107: train hit B2 0.224 false 0.003; KL B0 6.21 B1 4.21 B2 5.44
+[   1548s] layer 7 seed 108: train hit B2 0.237 false 0.000; KL B0 6.53 B1 4.21 B2 5.07
+[   1626s] layer 7 seed 109: train hit B2 0.170 false 0.000; KL B0 7.99 B1 4.21 B2 4.91
+[   1752s] layer 11 seed 100: train hit B2 0.224 false 0.000; KL B0 5.29 B1 3.83 B2 4.26
+[   1830s] layer 11 seed 101: train hit B2 0.216 false 0.000; KL B0 6.83 B1 3.83 B2 5.26
+[   1908s] layer 11 seed 102: train hit B2 0.243 false 0.003; KL B0 5.64 B1 3.83 B2 5.12
+[   1982s] layer 11 seed 103: train hit B2 0.253 false 0.000; KL B0 5.26 B1 3.83 B2 4.44
+[   2058s] layer 11 seed 104: train hit B2 0.176 false 0.000; KL B0 6.00 B1 3.83 B2 4.36
+[   2135s] layer 11 seed 105: train hit B2 0.251 false 0.000; KL B0 4.93 B1 3.83 B2 4.67
+[   2211s] layer 11 seed 106: train hit B2 0.243 false 0.000; KL B0 6.81 B1 3.83 B2 5.15
+[   2286s] layer 11 seed 107: train hit B2 0.211 false 0.000; KL B0 5.65 B1 3.83 B2 4.74
+[   2360s] layer 11 seed 108: train hit B2 0.245 false 0.003; KL B0 6.53 B1 3.83 B2 5.33
+[   2436s] layer 11 seed 109: train hit B2 0.214 false 0.000; KL B0 7.34 B1 3.83 B2 4.94
+[   2555s] layer 14 seed 100: train hit B2 0.246 false 0.000; KL B0 4.63 B1 3.51 B2 4.22
+[   2631s] layer 14 seed 101: train hit B2 0.256 false 0.000; KL B0 5.24 B1 3.51 B2 4.47
+[   2710s] layer 14 seed 102: train hit B2 0.232 false 0.003; KL B0 5.95 B1 3.51 B2 4.89
+[   2789s] layer 14 seed 103: train hit B2 0.206 false 0.000; KL B0 5.40 B1 3.51 B2 4.56
+[   2867s] layer 14 seed 104: train hit B2 0.194 false 0.000; KL B0 6.07 B1 3.51 B2 4.27
+[   2940s] layer 14 seed 105: train hit B2 0.224 false 0.000; KL B0 5.80 B1 3.51 B2 4.66
+[   3016s] layer 14 seed 106: train hit B2 0.243 false 0.003; KL B0 5.48 B1 3.51 B2 4.92
+[   3090s] layer 14 seed 107: train hit B2 0.234 false 0.003; KL B0 5.64 B1 3.51 B2 4.33
+[   3168s] layer 14 seed 108: train hit B2 0.232 false 0.000; KL B0 5.98 B1 3.51 B2 4.99
+[   3246s] layer 14 seed 109: train hit B2 0.206 false 0.000; KL B0 6.10 B1 3.51 B2 4.50
+[   3375s] layer 18 seed 100: train hit B2 0.251 false 0.000; KL B0 4.10 B1 3.06 B2 3.84
+[   3452s] layer 18 seed 101: train hit B2 0.261 false 0.000; KL B0 4.51 B1 3.06 B2 4.09
+[   3527s] layer 18 seed 102: train hit B2 0.383 false 0.000; KL B0 6.03 B1 3.06 B2 4.65
+[   3601s] layer 18 seed 103: train hit B2 0.216 false 0.000; KL B0 5.03 B1 3.06 B2 4.03
+[   3676s] layer 18 seed 104: train hit B2 0.191 false 0.000; KL B0 4.65 B1 3.06 B2 3.62
+[   3752s] layer 18 seed 105: train hit B2 0.253 false 0.000; KL B0 4.78 B1 3.06 B2 4.39
+[   3829s] layer 18 seed 106: train hit B2 0.211 false 0.000; KL B0 4.80 B1 3.06 B2 3.78
+[   3908s] layer 18 seed 107: train hit B2 0.209 false 0.000; KL B0 4.56 B1 3.06 B2 4.02
+[   3988s] layer 18 seed 108: train hit B2 0.175 false 0.000; KL B0 5.81 B1 3.06 B2 4.09
+[   4070s] layer 18 seed 109: train hit B2 0.320 false 0.003; KL B0 6.17 B1 3.06 B2 4.77
+[   4200s] layer 21 seed 100: train hit B2 0.282 false 0.000; KL B0 4.48 B1 2.23 B2 3.75
+[   4281s] layer 21 seed 101: train hit B2 0.206 false 0.004; KL B0 4.61 B1 2.23 B2 3.02
+[   4363s] layer 21 seed 102: train hit B2 0.228 false 0.000; KL B0 10.98 B1 2.23 B2 4.02
+[   4444s] layer 21 seed 103: train hit B2 0.275 false 0.000; KL B0 5.80 B1 2.23 B2 3.56
+[   4529s] layer 21 seed 104: train hit B2 0.186 false 0.000; KL B0 4.09 B1 2.23 B2 3.40
+[   4611s] layer 21 seed 105: train hit B2 0.300 false 0.000; KL B0 5.31 B1 2.23 B2 3.20
+[   4698s] layer 21 seed 106: train hit B2 0.273 false 0.000; KL B0 7.51 B1 2.23 B2 3.44
+[   4786s] layer 21 seed 107: train hit B2 0.290 false 0.000; KL B0 4.48 B1 2.23 B2 3.47
+[   4871s] layer 21 seed 108: train hit B2 0.227 false 0.000; KL B0 7.11 B1 2.23 B2 4.09
+[   4954s] layer 21 seed 109: train hit B2 0.256 false 0.003; KL B0 6.51 B1 2.23 B2 3.94
+[   5085s] layer 24 seed 100: train hit B2 0.343 false 0.250; KL B0 3.41 B1 1.40 B2 2.24
+[   5162s] layer 24 seed 101: train hit B2 0.348 false 0.004; KL B0 3.14 B1 1.40 B2 1.98
+[   5240s] layer 24 seed 102: train hit B2 0.353 false 0.000; KL B0 3.46 B1 1.40 B2 2.59
+[   5319s] layer 24 seed 103: train hit B2 0.348 false 0.125; KL B0 2.82 B1 1.40 B2 2.33
+[   5401s] layer 24 seed 104: train hit B2 0.379 false 0.000; KL B0 2.86 B1 1.40 B2 2.06
+[   5482s] layer 24 seed 105: train hit B2 0.360 false 0.000; KL B0 2.87 B1 1.40 B2 2.04
+[   5562s] layer 24 seed 106: train hit B2 0.334 false 0.125; KL B0 1.79 B1 1.40 B2 1.79
+[   5639s] layer 24 seed 107: train hit B2 0.347 false 0.000; KL B0 3.33 B1 1.40 B2 2.16
+[   5720s] layer 24 seed 108: train hit B2 0.296 false 0.000; KL B0 2.63 B1 1.40 B2 2.40
+[   5798s] layer 24 seed 109: train hit B2 0.329 false 0.003; KL B0 3.23 B1 1.40 B2 2.30
+[   5863s] seed 100: best7 B0 0.387 B1 0.282 B2 0.411
+[   5928s] seed 101: best7 B0 0.385 B1 0.292 B2 0.398
+[   5995s] seed 102: best7 B0 0.396 B1 0.300 B2 0.389
+[   6059s] seed 103: best7 B0 0.388 B1 0.278 B2 0.388
+[   6122s] seed 104: best7 B0 0.407 B1 0.305 B2 0.411
+[   6186s] seed 105: best7 B0 0.385 B1 0.276 B2 0.393
+[   6250s] seed 106: best7 B0 0.407 B1 0.290 B2 0.380
+[   6313s] seed 107: best7 B0 0.423 B1 0.283 B2 0.399
+[   6376s] seed 108: best7 B0 0.397 B1 0.296 B2 0.386
+[   6441s] seed 109: best7 B0 0.405 B1 0.303 B2 0.393
+[   6441s] done
+=== 20:48:27 END rc=0
+=== 20:48:27 START LOTO
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3634.70it/s]
+[   1925s] LOTO layer 4 fitted
+[   3815s] LOTO layer 7 fitted
+=== 22:18:13 RESUMED after container restart
+=== 22:18:13 START LOTO
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   2%|▏         | 6/311 [00:00<00:46,  6.55it/s]Loading weights:   3%|▎         | 10/311 [00:01<00:43,  6.94it/s]Loading weights:   4%|▎         | 11/311 [00:02<01:11,  4.19it/s]Loading weights:   5%|▍         | 15/311 [00:02<00:53,  5.49it/s]Loading weights:   6%|▌         | 19/311 [00:04<01:11,  4.09it/s]Loading weights:   7%|▋         | 23/311 [00:04<00:50,  5.72it/s]Loading weights:   8%|▊         | 25/311 [00:04<00:49,  5.84it/s]Loading weights:  10%|█         | 32/311 [00:04<00:31,  8.98it/s]Loading weights:  11%|█         | 34/311 [00:05<00:37,  7.34it/s]Loading weights:  11%|█▏        | 35/311 [00:05<00:38,  7.17it/s]Loading weights:  12%|█▏        | 36/311 [00:06<00:50,  5.43it/s]Loading weights:  14%|█▍        | 44/311 [00:06<00:23, 11.52it/s]Loading weights:  16%|█▌        | 50/311 [00:06<00:15, 16.45it/s]Loading weights:  18%|█▊        | 56/311 [00:06<00:12, 20.76it/s]Loading weights:  19%|█▉        | 60/311 [00:07<00:19, 12.94it/s]Loading weights:  20%|██        | 63/311 [00:07<00:22, 10.88it/s]Loading weights:  21%|██        | 65/311 [00:08<00:29,  8.23it/s]Loading weights:  22%|██▏       | 68/311 [00:08<00:25,  9.37it/s]Loading weights:  23%|██▎       | 72/311 [00:08<00:29,  8.24it/s]Loading weights:  25%|██▍       | 77/311 [00:09<00:31,  7.49it/s]Loading weights:  26%|██▌       | 80/311 [00:10<00:29,  7.94it/s]Loading weights:  27%|██▋       | 84/311 [00:10<00:32,  6.90it/s]Loading weights:  29%|██▊       | 89/311 [00:11<00:23,  9.26it/s]Loading weights:  30%|███       | 94/311 [00:11<00:20, 10.73it/s]Loading weights:  31%|███       | 96/311 [00:12<00:34,  6.26it/s]Loading weights:  33%|███▎      | 102/311 [00:12<00:24,  8.49it/s]Loading weights:  33%|███▎      | 104/311 [00:12<00:22,  9.06it/s]Loading weights:  34%|███▍      | 106/311 [00:13<00:26,  7.78it/s]Loading weights:  35%|███▍      | 108/311 [00:13<00:22,  8.83it/s]Loading weights:  35%|███▌      | 110/311 [00:13<00:20,  9.87it/s]Loading weights:  36%|███▌      | 112/311 [00:13<00:24,  8.13it/s]Loading weights:  38%|███▊      | 118/311 [00:14<00:14, 13.09it/s]Loading weights:  39%|███▉      | 121/311 [00:14<00:15, 12.61it/s]Loading weights:  41%|████      | 126/311 [00:14<00:10, 17.76it/s]Loading weights:  42%|████▏     | 132/311 [00:14<00:08, 22.13it/s]Loading weights:  43%|████▎     | 135/311 [00:14<00:09, 19.35it/s]Loading weights:  44%|████▍     | 138/311 [00:15<00:17,  9.99it/s]Loading weights:  45%|████▌     | 140/311 [00:15<00:17,  9.72it/s]Loading weights:  46%|████▌     | 142/311 [00:16<00:33,  5.08it/s]Loading weights:  46%|████▋     | 144/311 [00:17<00:29,  5.66it/s]Loading weights:  47%|████▋     | 146/311 [00:17<00:27,  5.97it/s]Loading weights:  49%|████▊     | 151/311 [00:17<00:17,  9.25it/s]Loading weights:  50%|████▉     | 155/311 [00:17<00:14, 10.67it/s]Loading weights:  51%|█████     | 159/311 [00:18<00:13, 10.99it/s]Loading weights:  52%|█████▏    | 161/311 [00:18<00:15,  9.50it/s]Loading weights:  53%|█████▎    | 165/311 [00:18<00:12, 11.99it/s]Loading weights:  55%|█████▍    | 171/311 [00:19<00:15,  8.98it/s]Loading weights:  56%|█████▌    | 173/311 [00:19<00:14,  9.54it/s]Loading weights:  56%|█████▋    | 175/311 [00:19<00:13, 10.06it/s]Loading weights:  58%|█████▊    | 181/311 [00:20<00:10, 12.89it/s]Loading weights:  59%|█████▉    | 183/311 [00:20<00:10, 12.76it/s]Loading weights:  59%|█████▉    | 185/311 [00:20<00:09, 13.13it/s]Loading weights:  60%|██████    | 188/311 [00:20<00:10, 11.83it/s]Loading weights:  63%|██████▎   | 195/311 [00:20<00:06, 18.84it/s]Loading weights:  64%|██████▎   | 198/311 [00:21<00:09, 11.92it/s]Loading weights:  64%|██████▍   | 200/311 [00:21<00:09, 11.42it/s]Loading weights:  66%|██████▌   | 204/311 [00:22<00:13,  8.09it/s]Loading weights:  67%|██████▋   | 208/311 [00:23<00:14,  7.08it/s]Loading weights:  68%|██████▊   | 210/311 [00:23<00:16,  6.15it/s]Loading weights:  70%|███████   | 218/311 [00:23<00:08, 10.61it/s]Loading weights:  71%|███████   | 220/311 [00:24<00:08, 11.00it/s]Loading weights:  72%|███████▏  | 223/311 [00:24<00:10,  8.76it/s]Loading weights:  73%|███████▎  | 227/311 [00:24<00:07, 10.60it/s]Loading weights:  74%|███████▎  | 229/311 [00:25<00:07, 10.30it/s]Loading weights:  75%|███████▍  | 233/311 [00:25<00:08,  8.90it/s]Loading weights:  76%|███████▌  | 237/311 [00:26<00:08,  8.98it/s]Loading weights:  77%|███████▋  | 239/311 [00:26<00:11,  6.31it/s]Loading weights:  78%|███████▊  | 243/311 [00:27<00:08,  7.97it/s]Loading weights:  79%|███████▉  | 245/311 [00:28<00:16,  4.11it/s]Loading weights:  81%|████████  | 251/311 [00:28<00:08,  6.77it/s]Loading weights:  81%|████████▏ | 253/311 [00:29<00:09,  5.83it/s]Loading weights:  83%|████████▎ | 258/311 [00:29<00:06,  8.67it/s]Loading weights:  84%|████████▍ | 261/311 [00:29<00:05,  8.71it/s]Loading weights: 100%|██████████| 311/311 [00:29<00:00, 10.45it/s]
+[   2219s] LOTO layer 11 fitted
+[   4089s] LOTO layer 14 fitted
+=== 23:29:49 RESUMED after container restart
+=== 23:29:49 START LOTO
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   1%|          | 2/311 [00:00<01:38,  3.12it/s]Loading weights:   1%|          | 3/311 [00:00<01:41,  3.04it/s]Loading weights:   1%|▏         | 4/311 [00:01<01:38,  3.13it/s]Loading weights:   2%|▏         | 5/311 [00:01<01:21,  3.73it/s]Loading weights:   2%|▏         | 7/311 [00:02<01:33,  3.26it/s]Loading weights:   4%|▍         | 13/311 [00:02<00:41,  7.19it/s]Loading weights:   5%|▌         | 16/311 [00:02<00:37,  7.81it/s]Loading weights:   6%|▌         | 19/311 [00:03<00:38,  7.55it/s]Loading weights:   9%|▉         | 29/311 [00:03<00:27, 10.36it/s]Loading weights:  10%|█         | 32/311 [00:04<00:24, 11.61it/s]Loading weights:  11%|█         | 34/311 [00:04<00:24, 11.21it/s]Loading weights:  12%|█▏        | 36/311 [00:04<00:22, 12.03it/s]Loading weights:  12%|█▏        | 38/311 [00:04<00:22, 12.09it/s]Loading weights:  13%|█▎        | 40/311 [00:04<00:27,  9.73it/s]Loading weights:  14%|█▎        | 42/311 [00:05<00:27,  9.83it/s]Loading weights:  16%|█▌        | 49/311 [00:05<00:21, 12.30it/s]Loading weights:  16%|█▋        | 51/311 [00:05<00:20, 12.78it/s]Loading weights:  17%|█▋        | 54/311 [00:06<00:27,  9.51it/s]Loading weights:  19%|█▊        | 58/311 [00:06<00:32,  7.68it/s]Loading weights:  19%|█▉        | 59/311 [00:07<00:44,  5.71it/s]Loading weights:  19%|█▉        | 60/311 [00:08<01:05,  3.86it/s]Loading weights:  20%|█▉        | 62/311 [00:08<00:55,  4.46it/s]Loading weights:  20%|██        | 63/311 [00:09<01:27,  2.84it/s]Loading weights:  21%|██        | 64/311 [00:09<01:23,  2.96it/s]Loading weights:  22%|██▏       | 67/311 [00:10<00:57,  4.21it/s]Loading weights:  22%|██▏       | 69/311 [00:10<00:58,  4.15it/s]Loading weights:  23%|██▎       | 71/311 [00:10<00:49,  4.82it/s]Loading weights:  23%|██▎       | 72/311 [00:11<00:54,  4.41it/s]Loading weights:  23%|██▎       | 73/311 [00:11<00:50,  4.70it/s]Loading weights:  24%|██▍       | 74/311 [00:11<00:50,  4.69it/s]Loading weights:  25%|██▍       | 77/311 [00:11<00:35,  6.51it/s]Loading weights:  26%|██▌       | 81/311 [00:12<00:31,  7.39it/s]Loading weights:  27%|██▋       | 84/311 [00:12<00:28,  7.91it/s]Loading weights:  27%|██▋       | 85/311 [00:13<00:38,  5.94it/s]Loading weights:  28%|██▊       | 88/311 [00:13<00:34,  6.50it/s]Loading weights:  29%|██▊       | 89/311 [00:13<00:42,  5.25it/s]Loading weights:  29%|██▉       | 90/311 [00:14<00:50,  4.41it/s]Loading weights:  29%|██▉       | 91/311 [00:15<01:16,  2.89it/s]Loading weights:  30%|██▉       | 93/311 [00:15<00:59,  3.68it/s]Loading weights:  30%|███       | 94/311 [00:15<00:57,  3.78it/s]Loading weights:  31%|███       | 95/311 [00:15<00:54,  3.98it/s]Loading weights:  32%|███▏      | 101/311 [00:16<00:26,  8.07it/s]Loading weights:  34%|███▍      | 105/311 [00:16<00:18, 11.36it/s]Loading weights:  34%|███▍      | 107/311 [00:16<00:20,  9.78it/s]Loading weights:  35%|███▌      | 109/311 [00:16<00:24,  8.23it/s]Loading weights:  36%|███▋      | 113/311 [00:17<00:19, 10.27it/s]Loading weights:  38%|███▊      | 118/311 [00:17<00:15, 12.47it/s]Loading weights:  39%|███▊      | 120/311 [00:17<00:14, 13.02it/s]Loading weights:  39%|███▉      | 122/311 [00:17<00:13, 14.03it/s]Loading weights:  40%|███▉      | 124/311 [00:17<00:13, 13.45it/s]Loading weights:  41%|████      | 126/311 [00:18<00:15, 12.02it/s]Loading weights:  41%|████      | 128/311 [00:18<00:17, 10.71it/s]Loading weights:  42%|████▏     | 130/311 [00:18<00:19,  9.24it/s]Loading weights:  43%|████▎     | 134/311 [00:19<00:20,  8.62it/s]Loading weights:  43%|████▎     | 135/311 [00:19<00:24,  7.32it/s]Loading weights:  44%|████▎     | 136/311 [00:19<00:34,  5.09it/s]Loading weights:  45%|████▍     | 139/311 [00:20<00:27,  6.20it/s]Loading weights:  45%|████▌     | 140/311 [00:20<00:36,  4.67it/s]Loading weights:  45%|████▌     | 141/311 [00:20<00:34,  4.90it/s]Loading weights:  46%|████▌     | 142/311 [00:21<00:48,  3.49it/s]Loading weights:  48%|████▊     | 150/311 [00:21<00:17,  9.46it/s]Loading weights:  49%|████▉     | 152/311 [00:21<00:16,  9.53it/s]Loading weights:  50%|████▉     | 154/311 [00:22<00:15, 10.44it/s]Loading weights:  50%|█████     | 157/311 [00:22<00:12, 12.12it/s]Loading weights:  52%|█████▏    | 161/311 [00:22<00:11, 13.53it/s]Loading weights:  52%|█████▏    | 163/311 [00:22<00:13, 10.80it/s]Loading weights:  54%|█████▎    | 167/311 [00:23<00:15,  9.35it/s]Loading weights:  55%|█████▍    | 171/311 [00:23<00:12, 11.24it/s]Loading weights:  56%|█████▌    | 173/311 [00:23<00:12, 11.04it/s]Loading weights:  56%|█████▋    | 175/311 [00:24<00:18,  7.24it/s]Loading weights:  58%|█████▊    | 179/311 [00:24<00:16,  7.90it/s]Loading weights:  58%|█████▊    | 180/311 [00:25<00:18,  7.01it/s]Loading weights:  59%|█████▉    | 183/311 [00:26<00:32,  3.97it/s]Loading weights:  59%|█████▉    | 185/311 [00:26<00:26,  4.67it/s]Loading weights:  60%|██████    | 188/311 [00:27<00:23,  5.33it/s]Loading weights: 100%|██████████| 311/311 [00:27<00:00, 11.50it/s]
+[   2025s] LOTO layer 18 fitted
+[   3894s] LOTO layer 21 fitted
+[   5841s] LOTO layer 24 fitted
+[   5843s] LOTO multihop rep 0: best7 B0 0.714 B2 0.643 B1 0.464
+[   5845s] LOTO multihop rep 1: best7 B0 0.679 B2 0.607 B1 0.464
+[   5846s] LOTO multihop rep 2: best7 B0 0.679 B2 0.679 B1 0.464
+[   5848s] LOTO multihop rep 3: best7 B0 0.643 B2 0.679 B1 0.464
+[   5850s] LOTO multilingual rep 0: best7 B0 0.367 B2 0.450 B1 0.344
+[   5851s] LOTO multilingual rep 1: best7 B0 0.400 B2 0.433 B1 0.344
+[   5853s] LOTO multilingual rep 2: best7 B0 0.394 B2 0.433 B1 0.344
+[   5854s] LOTO multilingual rep 3: best7 B0 0.361 B2 0.433 B1 0.344
+[   5857s] LOTO typo rep 0: best7 B0 0.844 B2 0.812 B1 0.604
+[   5860s] LOTO typo rep 1: best7 B0 0.833 B2 0.833 B1 0.604
+[   5863s] LOTO typo rep 2: best7 B0 0.823 B2 0.823 B1 0.604
+[   5866s] LOTO typo rep 3: best7 B0 0.854 B2 0.792 B1 0.604
+[   5869s] LOTO association rep 0: best7 B0 0.000 B2 0.000 B1 0.000
+[   5872s] LOTO association rep 1: best7 B0 0.000 B2 0.000 B1 0.000
+[   5875s] LOTO association rep 2: best7 B0 0.000 B2 0.000 B1 0.000
+[   5878s] LOTO association rep 3: best7 B0 0.010 B2 0.000 B1 0.000
+[   5878s] LOTO poetry rep 0: best7 B0 0.000 B2 0.000 B1 0.000
+[   5879s] LOTO poetry rep 1: best7 B0 0.000 B2 0.000 B1 0.000
+[   5880s] LOTO poetry rep 2: best7 B0 0.000 B2 0.000 B1 0.000
+[   5881s] LOTO poetry rep 3: best7 B0 0.000 B2 0.000 B1 0.000
+[   5881s] done
+=== 01:08:53 END rc=0
+=== 01:08:53 START VERDICT
+{
+ "beta_star": 0.03,
+ "gamma": 1.0,
+ "n_splits": 10,
+ "n_loto": 20,
+ "loto_best7_vs_B0": {
+  "B2": {
+   "mean": 0.0008391955266955243,
+   "min": -0.07142857142857151,
+   "max": 0.08333333333333337,
+   "wins": 5,
+   "ties": 10,
+   "losses": 5,
+   "n": 20
+  },
+  "B1": {
+   "mean": -0.09745941558441559,
+   "min": -0.25,
+   "max": 0.0,
+   "wins": 0,
+   "ties": 7,
+   "losses": 13,
+   "n": 20
+  }
+ },
+ "loto_strata_B2_vs_B0": {
+  "early": {
+   "mean": 0.05348958333333333,
+   "min": -0.017857142857142856,
+   "max": 0.48958333333333337,
+   "wins": 9,
+   "ties": 10,
+   "losses": 1,
+   "n": 20
+  },
+  "mid": {
+   "mean": 0.007572375541125553,
+   "min": -0.13541666666666663,
+   "max": 0.21875000000000006,
+   "wins": 5,
+   "ties": 10,
+   "losses": 5,
+   "n": 20
+  },
+  "late": {
+   "mean": -0.013143187830687833,
+   "min": -0.12152777777777779,
+   "max": 0.01666666666666669,
+   "wins": 7,
+   "ties": 8,
+   "losses": 5,
+   "n": 20
+  }
+ },
+ "standard_best7_vs_B0": {
+  "B1": {
+   "mean": -0.10724278499278497,
+   "min": -0.13926767676767665,
+   "max": -0.09307359307359309,
+   "wins": 0,
+   "ties": 0,
+   "losses": 10,
+   "n": 10
+  },
+  "B2": {
+   "mean": -0.0031100288600288462,
+   "min": -0.02705627705627711,
+   "max": 0.024458874458874458,
+   "wins": 4,
+   "ties": 1,
+   "losses": 5,
+   "n": 10
+  }
+ },
+ "early_fp10_matched_B2_minus_B0": {
+  "mean": 0.001861425808234319,
+  "min": -0.008,
+  "max": 0.008051948051948053,
+  "wins": 7,
+  "ties": 0,
+  "losses": 3,
+  "n": 10
+ },
+ "overfit_gap": {
+  "B0": 0.04774994409424233,
+  "B1": -0.024142031214399645,
+  "B2": 0.037388278144857096
+ },
+ "means": {
+  "B0": {
+   "best7": 0.3977929292929293,
+   "early_recall10": 0.15249783549783552,
+   "mid_recall10": 0.14446446608946606,
+   "late_recall10": 0.1966592111592112,
+   "early_fp10_matched": 0.002842383795667792,
+   "early_fp10_wiki": 0.004052784133993752,
+   "early_tr_kl": 6.538959264755249,
+   "early_tr_cos": 0.7099463731050492,
+   "gap": 0.04774994409424233
+  },
+  "B1": {
+   "best7": 0.2905501443001443,
+   "early_recall10": 0.08353625541125542,
+   "mid_recall10": 0.08991341991341992,
+   "late_recall10": 0.14094035594035592,
+   "early_fp10_matched": 0.016090360456687935,
+   "early_fp10_wiki": 0.005108488802929985,
+   "early_tr_kl": 4.516659736633301,
+   "early_tr_cos": 0.7513591349124908,
+   "gap": -0.024142031214399645
+  },
+  "B2": {
+   "best7": 0.3946829004329004,
+   "early_recall10": 0.14659090909090908,
+   "mid_recall10": 0.14268632756132754,
+   "late_recall10": 0.2004585137085137,
+   "early_fp10_matched": 0.00470380960390211,
+   "early_fp10_wiki": 0.0043329763712560854,
+   "early_tr_kl": 5.288592219352722,
+   "early_tr_cos": 0.7396639466285706,
+   "gap": 0.037388278144857096
+  }
+ },
+ "criteria": {
+  "C1_loto": false,
+  "C2_gap_halved": false,
+  "C3_no_loss": true,
+  "C4_fp": true,
+  "refute": true
+ },
+ "verdict": "REFUTED"
+}
+=== 01:08:54 END rc=0
+=== M4 skipped: confirm criteria 1-4 not all met (pre-registered condition)
+=== EXP2 DONE
